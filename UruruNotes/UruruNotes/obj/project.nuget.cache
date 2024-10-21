@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "PPqk63NymUH9r8irjsZVgg4M76yf5jP2sgiuhwjuIccfowwUnml3SgLSbMuIJbWqNUZALHcBW69YAmAMtXmblg==",
+  "dgSpecHash": "ErUXNg1aAgx2JYyz+lJFPjJfKIvuZEVlr0yt5H7SKBjnqgHlLVFUfIAUnxhgMubs2Cxs8AdKl8jAT/APylxYPA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\dd\\source\\repos\\UruruNotes\\UruruNotes\\UruruNotes.csproj",
+  "projectFilePath": "C:\\Users\\dd\\Documents\\GitHub\\UruruNote\\UruruNotes\\UruruNotes\\UruruNotes.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\dd\\.nuget\\packages\\commonservicelocator\\2.0.2\\commonservicelocator.2.0.2.nupkg.sha512",
     "C:\\Users\\dd\\.nuget\\packages\\libuv\\1.9.1\\libuv.1.9.1.nupkg.sha512",
