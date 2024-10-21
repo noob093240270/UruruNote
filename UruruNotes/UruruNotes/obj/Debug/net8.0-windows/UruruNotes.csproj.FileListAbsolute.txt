@@ -1,0 +1,4 @@
+C:\Users\dd\source\repos\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\UruruNotes.csproj.AssemblyReference.cache
+C:\Users\dd\source\repos\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\App.baml
+C:\Users\dd\source\repos\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\App.g.cs
+C:\Users\dd\source\repos\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\UruruNotes_MarkupCompile.cache
