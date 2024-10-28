@@ -2,3 +2,45 @@ C:\Users\dd\source\repos\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\UruruNot
 C:\Users\dd\source\repos\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\App.baml
 C:\Users\dd\source\repos\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\App.g.cs
 C:\Users\dd\source\repos\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\UruruNotes_MarkupCompile.cache
+D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\bin\Debug\net8.0-windows\UruruNotes.exe
+D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\bin\Debug\net8.0-windows\UruruNotes.deps.json
+D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\bin\Debug\net8.0-windows\UruruNotes.runtimeconfig.json
+D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\bin\Debug\net8.0-windows\UruruNotes.dll
+D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\bin\Debug\net8.0-windows\UruruNotes.pdb
+D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\bin\Debug\net8.0-windows\CommonServiceLocator.dll
+D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\bin\Debug\net8.0-windows\MaterialDesignColors.dll
+D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\bin\Debug\net8.0-windows\MaterialDesignThemes.Wpf.dll
+D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\bin\Debug\net8.0-windows\Microsoft.CodeAnalysis.dll
+D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\bin\Debug\net8.0-windows\Microsoft.CodeAnalysis.CSharp.dll
+D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\bin\Debug\net8.0-windows\Microsoft.CodeAnalysis.VisualBasic.dll
+D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\bin\Debug\net8.0-windows\Microsoft.Xaml.Behaviors.dll
+D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\bin\Debug\net8.0-windows\GalaSoft.MvvmLight.Extras.dll
+D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\bin\Debug\net8.0-windows\GalaSoft.MvvmLight.Platform.dll
+D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\bin\Debug\net8.0-windows\GalaSoft.MvvmLight.dll
+D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\bin\Debug\net8.0-windows\System.Windows.Interactivity.dll
+D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\bin\Debug\net8.0-windows\runtimes\debian-x64\native\libuv.so
+D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\bin\Debug\net8.0-windows\runtimes\fedora-x64\native\libuv.so
+D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\bin\Debug\net8.0-windows\runtimes\opensuse-x64\native\libuv.so
+D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\bin\Debug\net8.0-windows\runtimes\osx\native\libuv.dylib
+D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\bin\Debug\net8.0-windows\runtimes\rhel-x64\native\libuv.so
+D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\bin\Debug\net8.0-windows\runtimes\win7-arm\native\libuv.dll
+D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\bin\Debug\net8.0-windows\runtimes\win7-x64\native\libuv.dll
+D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\bin\Debug\net8.0-windows\runtimes\win7-x86\native\libuv.dll
+D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\UruruNotes.csproj.AssemblyReference.cache
+D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\Views\MainWindow.baml
+D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\App.baml
+D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\Views\MainWindow.g.cs
+D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\App.g.cs
+D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\UruruNotes_MarkupCompile.cache
+D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\UruruNotes.g.resources
+D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\UruruNotes.GeneratedMSBuildEditorConfig.editorconfig
+D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\UruruNotes.AssemblyInfoInputs.cache
+D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\UruruNotes.AssemblyInfo.cs
+D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\UruruNotes.csproj.CoreCompileInputs.cache
+D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\UruruNotes.sourcelink.json
+D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\UruruNotes.csproj.Up2Date
+D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\UruruNotes.dll
+D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\refint\UruruNotes.dll
+D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\UruruNotes.pdb
+D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\UruruNotes.genruntimeconfig.cache
+D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\ref\UruruNotes.dll
