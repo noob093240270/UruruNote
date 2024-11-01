@@ -1,0 +1,14 @@
+﻿<Window x:Class="UruruNote.Views.MarkdownViewer"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Markdown Viewer" Height="450" Width="800">
+    <Grid>
+        <TextBox x:Name="MarkdownTextBox" 
+                 TextWrapping="Wrap" 
+                 AcceptsReturn="True" 
+                 VerticalScrollBarVisibility="Auto" 
+                 HorizontalScrollBarVisibility="Auto" 
+                 FontFamily="Consolas"
+                 FontSize="14"/>
+    </Grid>
+</Window>
