@@ -23,7 +23,7 @@ namespace UruruNotes.Views
     {
 
 
-        
+
 
         public MainWindow()
         {
@@ -71,7 +71,7 @@ namespace UruruNotes.Views
         private void CreateNewFileButton_Click(object sender, RoutedEventArgs e)
         {
             var viewModel = DataContext as MainViewModel; // Получаем доступ к ViewModel
-            viewModel?.CreateNewMarkdownFileCommand.Execute(null); 
+            viewModel?.CreateNewMarkdownFileCommand.Execute(null);
         }
 
 

@@ -1,20 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\m1kraze\\Desktop\\Проект 2 Курс\\UruruNote\\UruruNotes\\UruruNotes\\UruruNotes.csproj": {}
+    "C:\\Users\\dd\\Documents\\GitHub\\UruruNote\\UruruNotes\\UruruNotes\\UruruNotes.csproj": {}
   },
   "projects": {
-    "C:\\Users\\m1kraze\\Desktop\\Проект 2 Курс\\UruruNote\\UruruNotes\\UruruNotes\\UruruNotes.csproj": {
+    "C:\\Users\\dd\\Documents\\GitHub\\UruruNote\\UruruNotes\\UruruNotes\\UruruNotes.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\m1kraze\\Desktop\\Проект 2 Курс\\UruruNote\\UruruNotes\\UruruNotes\\UruruNotes.csproj",
+        "projectUniqueName": "C:\\Users\\dd\\Documents\\GitHub\\UruruNote\\UruruNotes\\UruruNotes\\UruruNotes.csproj",
         "projectName": "UruruNotes",
-        "projectPath": "C:\\Users\\m1kraze\\Desktop\\Проект 2 Курс\\UruruNote\\UruruNotes\\UruruNotes\\UruruNotes.csproj",
-        "packagesPath": "C:\\Users\\m1kraze\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\m1kraze\\Desktop\\Проект 2 Курс\\UruruNote\\UruruNotes\\UruruNotes\\obj\\",
+        "projectPath": "C:\\Users\\dd\\Documents\\GitHub\\UruruNote\\UruruNotes\\UruruNotes\\UruruNotes.csproj",
+        "packagesPath": "C:\\Users\\dd\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\dd\\Documents\\GitHub\\UruruNote\\UruruNotes\\UruruNotes\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\m1kraze\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\dd\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -22,6 +26,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -34,11 +39,6 @@
           "warnAsError": [
             "NU1605"
           ]
-        },
-        "restoreAuditProperties": {
-          "enableAudit": "true",
-          "auditLevel": "low",
-          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -48,6 +48,10 @@
             "MaterialDesignThemes": {
               "target": "Package",
               "version": "[5.1.0, )"
+            },
+            "MaterialDesignThemes.MahApps": {
+              "target": "Package",
+              "version": "[3.1.0, )"
             },
             "MvvmLightLibs": {
               "target": "Package",
@@ -73,7 +77,7 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

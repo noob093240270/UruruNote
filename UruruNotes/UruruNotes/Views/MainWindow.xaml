@@ -12,65 +12,121 @@
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </Window.Resources>
 
-    <Grid x:Name="MainGrid" ShowGridLines="False">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="35pt" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="50pt" />
-        </Grid.RowDefinitions>
+    <Grid x:Name="MainGrid" ShowGridLines="False"  VerticalAlignment="Stretch">
 
-        <!-- Заголовок -->
-        <StackPanel Orientation="Horizontal" Grid.Row="0" HorizontalAlignment="Right" Margin="0,10,10,0">
-            <Button Content="Создать новый файл" 
-                    Click="CreateNewFileButton_Click" 
-                    Margin="0,0,10,0" />
-        </StackPanel>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200" MaxWidth="200" />
+            <ColumnDefinition Width="auto" />
+            
+        </Grid.ColumnDefinitions>
 
-        <StackPanel Orientation="Vertical">
+       
+        <Grid>
+            
+            <Grid.RowDefinitions>
+                <RowDefinition Height="20pt" />
+                <RowDefinition Height="*" />
+
+            </Grid.RowDefinitions>
+
+            <!-- Дерево файлов -->
+            <materialDesign:Card Grid.Column="0" Grid.Row="1" VerticalAlignment="Stretch">
+
+                <Grid>
+                    <!-- Верхняя строка для TreeView -->
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" MinHeight="100"/>
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+
+                    <TreeView  Grid.Row="0" ItemsSource="{Binding Files}" 
+                              SelectedItemChanged="TreeView_SelectedItemChanged" 
+                              Margin="10,10,10,10"
+                              >
+                        <TreeView.ItemTemplate>
+                            <HierarchicalDataTemplate ItemsSource="{Binding SubItems}">
+                                <TextBlock Text="{Binding FileName}" />
+                            </HierarchicalDataTemplate>
+                        </TreeView.ItemTemplate>
+                    </TreeView>
+
+
+                    <!-- Стек кнопок создания файла и папки -->
+                    <Grid Grid.Row="1" Margin="0,0,0,10">
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0" HorizontalAlignment="Center">
+                            <Button Content="Создать новый файл" 
+                                    Click="CreateNewFileButton_Click" 
+                                    FontSize="8"
+                                    Padding="3"
+                        />
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" HorizontalAlignment="Center">
+                            <Button Content="Создать новую папку" 
+                                    Click="CreateNewFileButton_Click"
+                                    FontSize="8"
+                                    Padding="3"
+                        />
+                        </StackPanel>
+
+                    </Grid>
+
+
+                </Grid>
+            </materialDesign:Card>
+
+
+        </Grid>
+
+
+
+
+        <!-- 
+        <StackPanel Orientation="Vertical" Margin="-621,359,621,-339" Grid.Row="3">
             <StackPanel Orientation="Horizontal">
-                <!-- <Image Source="C:\Users\dd\source\repos\UruruNotes\UruruNotes\Resources\homeButton.png" Height="20" Margin="20,0,0,0"/> -->
                 <DockPanel LastChildFill="True">
                     <TextBlock DockPanel.Dock="Top"
-                           Text="My daily tasks"
-                           FontSize="14pt"
-                           Margin="10pt,0,0,0" />
+                   Text="My daily tasks"
+                   FontSize="14pt"
+                   Margin="10pt,0,0,0" />
                 </DockPanel>
             </StackPanel>
+        </StackPanel> 
+        -->
 
 
-        </StackPanel>
 
-        <!-- Дерево файлов -->
-        <materialDesign:Card Grid.Row="2" Margin="0,0,10,0">
-            <TreeView ItemsSource="{Binding Files}" 
-                      SelectedItemChanged="TreeView_SelectedItemChanged" 
-                      Margin="10,10,395,0">
-                <TreeView.ItemTemplate>
-                    <HierarchicalDataTemplate ItemsSource="{Binding SubItems}">
-                        <TextBlock Text="{Binding FileName}" />
-                    </HierarchicalDataTemplate>
-                </TreeView.ItemTemplate>
-            </TreeView>
-        </materialDesign:Card>
-
-        <Button Content="Создать начальный файл Markdown"
-        Command="{Binding CreateInitialMarkdownFileCommand}" 
-        Visibility="{Binding IsCreateButtonVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
-        Grid.Column="2" 
-        Grid.Row="2" 
-        HorizontalAlignment="Right" 
-        VerticalAlignment="Center" 
-        Margin="0,0,20,0" />
-
-        <GridSplitter Grid.Column="1"
-                      ShowsPreview="False"
-                      Width="5"
-                      HorizontalAlignment="Center"
-                      VerticalAlignment="Stretch"
-                      Grid.RowSpan="6" />
 
         
+        <!--
+        <Button Content="Создать начальный файл Markdown"
+            Command="{Binding CreateInitialMarkdownFileCommand}" 
+            Visibility="{Binding IsCreateButtonVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
+            Grid.Column="2" 
+            Grid.Row="2" 
+            HorizontalAlignment="Right" 
+            VerticalAlignment="Center" 
+            Margin="0,0,20,0" 
+        />
+        -->
+        
+
+        <!--
+        <GridSplitter
+              ShowsPreview="False"
+              Width="6"
+              HorizontalAlignment="Center"
+              Grid.RowSpan="3" />
+        -->
+        
+
+
     </Grid>
 </Window>
 

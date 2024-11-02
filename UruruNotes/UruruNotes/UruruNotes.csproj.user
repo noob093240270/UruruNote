@@ -21,6 +21,9 @@
     <Page Update="Views\MarkdownViewer.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Views\NewFolderWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Views\NewFileWindow.xaml">
       <SubType>Designer</SubType>
     </Page>

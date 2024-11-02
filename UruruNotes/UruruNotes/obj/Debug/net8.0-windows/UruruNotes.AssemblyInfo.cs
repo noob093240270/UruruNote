@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("UruruNotes")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+85e95071d7866646b108b599b2f844e569af4c2d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4634b79a5ba59c7d0ba40cb8b3430b94dfc53800")]
 [assembly: System.Reflection.AssemblyProductAttribute("UruruNotes")]
 [assembly: System.Reflection.AssemblyTitleAttribute("UruruNotes")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
