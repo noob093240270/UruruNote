@@ -8,8 +8,7 @@ namespace UruruNotes.Views
 {
     public partial class NewFolderWindow : Window
     {
-        // Событие, которое передает название папки
-        public event EventHandler<string> FolderCreated;
+        public string FolderName { get; private set; }
 
         public NewFolderWindow()
         {
@@ -18,22 +17,17 @@ namespace UruruNotes.Views
 
         private void CreateButton_Click(object sender, RoutedEventArgs e)
         {
-            // Получаем название папки из TextBox
-            string folderName = FolderNameTextBox.Text.Trim();
-
-            // Проверяем, что название не пустое
-            if (!string.IsNullOrEmpty(folderName))
+            FolderName = FolderNameTextBox.Text.Trim();
+            if (!string.IsNullOrEmpty(FolderName))
             {
-                // Вызываем событие и передаем название папки
-                FolderCreated?.Invoke(this, folderName);
-
-                // Закрываем окно
-                this.Close();
+                DialogResult = true;
+                Close();
             }
             else
             {
-                MessageBox.Show("Введите название папки.");
+                MessageBox.Show("Введите имя папки.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
     }
+
 }

@@ -21,21 +21,19 @@ namespace UruruNotes.Views
     /// </summary>
     public partial class MainWindow : Window
     {
-
-
-
-
+        public ObservableCollection<FolderItem> Files { get; set; }
         public MainWindow()
         {
             InitializeComponent();
             DataContext = new MainViewModel(); // Установка DataContext на ViewModel
+            Files = new ObservableCollection<FolderItem>();
         }
 
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
+        //private void Button_Click(object sender, RoutedEventArgs e)
+        //{
 
-        }
+        //}
 
         /*private void CreateNewFileButton_Click(object sender, RoutedEventArgs e)
         {
@@ -75,17 +73,18 @@ namespace UruruNotes.Views
         }
 
 
-
-
-
-
-
+        private void CreateNewFolderButton_Click(object sender, RoutedEventArgs e)
+        {
+            var viewModel = DataContext as MainViewModel;
+            viewModel?.CreateFolderCommand.Execute(null);
+        }
 
 
 
 
         private MarkdownViewer _currentMarkdownViewer; // Ссылка на текущее открытое окно
 
+        
         private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             var viewModel = DataContext as MainViewModel;
@@ -132,5 +131,6 @@ namespace UruruNotes.Views
             }
         }
 
+        
     }
 }

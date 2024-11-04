@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
-        xmlns:local="clr-namespace:UruruNotes.Helpers"
+        xmlns:local="clr-namespace:UruruNotes.Models"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
 
@@ -39,16 +39,35 @@
                         <RowDefinition Height="auto" />
                     </Grid.RowDefinitions>
 
-                    <TreeView  Grid.Row="0" ItemsSource="{Binding Files}" 
-                              SelectedItemChanged="TreeView_SelectedItemChanged" 
-                              Margin="10,10,10,10"
-                              >
-                        <TreeView.ItemTemplate>
-                            <HierarchicalDataTemplate ItemsSource="{Binding SubItems}">
-                                <TextBlock Text="{Binding FileName}" />
-                            </HierarchicalDataTemplate>
-                        </TreeView.ItemTemplate>
-                    </TreeView>
+                    <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Margin="5,5,5,5">
+
+                        <StackPanel Grid.Row="0">
+                            <TreeView ItemsSource="{Binding Folders}"
+                                      Margin="10,10,10,10"
+                                      >
+                                    <TreeView.ItemTemplate >
+                                        <HierarchicalDataTemplate ItemsSource="{Binding SubFolders}">
+                                            <TextBlock Text="{Binding FileName}" />
+                                        </HierarchicalDataTemplate>
+                                    </TreeView.ItemTemplate>
+                            </TreeView>
+
+                            <TreeView   ItemsSource="{Binding Files}" 
+                                       SelectedItemChanged="TreeView_SelectedItemChanged"
+                                       Margin="10,10,10,10"
+                                       >
+                                    <TreeView.ItemTemplate>
+                                        <HierarchicalDataTemplate ItemsSource="{Binding SubItems}">
+                                            <TextBlock Text="{Binding FileName}" />
+                                        </HierarchicalDataTemplate>
+                                    </TreeView.ItemTemplate>
+                            </TreeView>
+
+                        </StackPanel>
+
+                    </ScrollViewer>
+                    
+                   
 
 
                     <!-- Стек кнопок создания файла и папки -->
@@ -69,7 +88,7 @@
 
                         <StackPanel Grid.Column="1" HorizontalAlignment="Center">
                             <Button Content="Создать новую папку" 
-                                    Click="CreateNewFileButton_Click"
+                                    Click="CreateNewFolderButton_Click"
                                     FontSize="8"
                                     Padding="3"
                         />
