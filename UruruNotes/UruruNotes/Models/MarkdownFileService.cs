@@ -7,21 +7,21 @@ namespace UruruNote.Models
     {
         private readonly string _directoryPath;
 
-        public MarkdownFileService()
+        public MarkdownFileService(/*string dirPath*/)
         {
-            // Путь к папке внутри директории приложения
+            //_directoryPath = dirPath;
+            //Путь к папке внутри директории приложения
             _directoryPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "MarkdownFiles");
 
-            // Создание папки, если она не существует
+            //Создание папки, если она не существует
             if (!Directory.Exists(_directoryPath))
             {
                 Directory.CreateDirectory(_directoryPath);
             }
         }
 
-        public string CreateMarkdownFile(string fileName)
+        public string CreateMarkdownFile(string filePath)
         {
-            string filePath = Path.Combine(_directoryPath, fileName);
 
             try
             {

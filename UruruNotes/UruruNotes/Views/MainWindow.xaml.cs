@@ -80,6 +80,18 @@ namespace UruruNotes.Views
         }
 
 
+        private void AddFileMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if ((sender as MenuItem)?.DataContext is FolderItem selectedFolder)
+            {
+                if (DataContext is MainViewModel viewModel)
+                {
+                    viewModel.AddFileCommand.Execute(selectedFolder);
+                }
+            }
+        }
+
+
 
 
         private MarkdownViewer _currentMarkdownViewer; // Ссылка на текущее открытое окно

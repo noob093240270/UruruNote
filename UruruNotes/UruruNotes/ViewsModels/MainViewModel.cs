@@ -133,6 +133,18 @@ namespace UruruNote.ViewsModels
 
         public ICommand CreateFolderCommand { get; }
 
+        // команда для добавления файла в папку ПКМ
+
+        private ICommand _addFileCommand;
+        public ICommand AddFileCommand
+        {
+            get
+            {
+                return _addFileCommand ??= new RelayCommand<FolderItem>(AddFile);
+            }
+        }
+
+
         public string RootDirectory { get; } = Path.Combine(Directory.GetCurrentDirectory(), "MyFolders");
 
         public MainViewModel()
@@ -156,11 +168,82 @@ namespace UruruNote.ViewsModels
             }
             Folders = new ObservableCollection<FolderItem>();
             CreateFolderCommand = new RelayCommand(CreateFolder);
+            //AddFileCommand = new RelayCommand<FolderItem>(AddFile); // Используем параметр типа FolderItem
             LoadFolders();
 
 
 
         }
+
+        #region CreateFileInFolder
+
+
+        private void AddFile(FolderItem selectedFolder)
+        {
+
+            MessageBox.Show("Добавление файла началось в папке: " + selectedFolder.FileName);
+            // Открываем окно для ввода имени нового файла
+            var newFileWindow = new NewFileWindow();
+
+            
+
+            // Подписка на событие FileCreated, чтобы обновить список файлов после создания
+            newFileWindow.FileCreated += (filePath) =>
+            {
+                // Добавляем файл в коллекцию `Files` выбранной папки
+                selectedFolder.Files.Add(new FileItem
+                {
+                    FileName = Path.GetFileName(filePath),
+                    FilePath = filePath
+                });
+            };
+
+
+
+            if (newFileWindow.ShowDialog() == true)
+            {
+                // Получаем имя файла от пользователя
+                string fileName = newFileWindow.FileName;
+
+                // Указываем путь к файлу в выбранной папке
+                string filePath = Path.Combine(selectedFolder.FilePath, fileName + ".md");
+
+                // Создаем файл через MarkdownFileService
+                var markdownService = new MarkdownFileService();
+
+                // Проверяем, существует ли уже файл
+                if (markdownService.IsMarkdownFileExists(filePath))
+                {
+                    MessageBox.Show("Файл уже существует в этой папке.");
+                    return;
+                }
+
+                try
+                {
+                    // Создаем файл
+                    markdownService.CreateMarkdownFile(filePath);
+
+                    // Устанавливаем флаг, что файл был создан
+                    IsFileCreated = true;
+
+                    // Обновляем коллекцию файлов
+                    selectedFolder.Files.Add(new FileItem
+                    {
+                        FileName = Path.GetFileName(filePath),
+                        FilePath = filePath
+                    });
+
+                    MessageBox.Show("Файл успешно создан: " + filePath);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Ошибка при создании файла: " + ex.Message);
+                }
+            }
+        }
+
+
+        #endregion
 
 
         #region CreateFolder
@@ -208,7 +291,7 @@ namespace UruruNote.ViewsModels
                 {
                     FileName = Path.GetFileName(dir),
                     FilePath = dir,
-                    SubItems = LoadFoldersRecursively(dir) // Загружаем вложенные папки
+                    SubFolders = LoadFoldersRecursively(dir) // Загружаем вложенные папки
                 };
                 folders.Add(folder);
             }
