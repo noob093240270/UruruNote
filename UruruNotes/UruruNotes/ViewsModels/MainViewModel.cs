@@ -25,15 +25,30 @@ namespace UruruNote.ViewsModels
             if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
         }*/
 
-
-
-
         public UserSettings userSettings { get; set; }
 
 
 
         #region Settings
 
+        // Добавленное свойство команды для открытия настроек
+        private ICommand _openSettingsCommand;
+        public ICommand OpenSettingsCommand
+        {
+            get
+            {
+                // Инициализируем команду
+                return _openSettingsCommand ??= new RelayCommand(OpenSettings);
+            }
+        }
+
+        // Метод для открытия окна настроек
+        private void OpenSettings()
+        {
+            // Создаем новое окно настроек и показываем его
+            var settingsWindow = new SettingsWindow();
+            settingsWindow.Show();
+        }
 
         /*private bool _isDarkModeEanbled;
         public bool IsDarkModeEnabled
@@ -185,7 +200,7 @@ namespace UruruNote.ViewsModels
             // Открываем окно для ввода имени нового файла
             var newFileWindow = new NewFileWindow();
 
-            
+
 
             // Подписка на событие FileCreated, чтобы обновить список файлов после создания
             newFileWindow.FileCreated += (filePath) =>
@@ -354,7 +369,7 @@ namespace UruruNote.ViewsModels
                 MessageBox.Show(ex.Message);
             }
         }
-        
+
 
         private void CreateNewMarkdownFile()
         {
@@ -380,7 +395,7 @@ namespace UruruNote.ViewsModels
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-        
+
         public ICommand LoadFilesCommand { get; }
 
         public void LoadFiles()

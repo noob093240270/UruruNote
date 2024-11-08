@@ -142,7 +142,14 @@ namespace UruruNotes.Views
                 }
             }
         }
+        // Обработчик для значка настроек (шестеренка)
+        private void SettingsIcon_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            // Открываем окно настроек
+            var settingsWindow = new SettingsWindow();
+            settingsWindow.ShowDialog();
+        }
 
-        
+
     }
 }

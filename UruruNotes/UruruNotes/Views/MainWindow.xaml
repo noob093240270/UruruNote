@@ -12,22 +12,26 @@
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </Window.Resources>
 
-    <Grid x:Name="MainGrid" ShowGridLines="False"  VerticalAlignment="Stretch">
+    <Grid x:Name="MainGrid" ShowGridLines="False"  VerticalAlignment="Stretch" RenderTransformOrigin="0.502,0.501">
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200" MaxWidth="200" />
             <ColumnDefinition Width="auto" />
-            
+            <ColumnDefinition Width="193*"/>
+            <ColumnDefinition Width="7*"/>
+            <ColumnDefinition Width="0*"/>
+
         </Grid.ColumnDefinitions>
 
-       
+
         <Grid>
-            
+
             <Grid.RowDefinitions>
                 <RowDefinition Height="20pt" />
                 <RowDefinition Height="*" />
 
             </Grid.RowDefinitions>
+
 
             <!-- Дерево файлов -->
             <materialDesign:Card Grid.Column="0" Grid.Row="1" VerticalAlignment="Stretch">
@@ -69,18 +73,18 @@
                                        SelectedItemChanged="TreeView_SelectedItemChanged"
                                        Margin="10,10,10,10"
                                        >
-                                    <TreeView.ItemTemplate>
-                                        <HierarchicalDataTemplate ItemsSource="{Binding SubItems}">
-                                            <TextBlock Text="{Binding FileName}" />
-                                        </HierarchicalDataTemplate>
-                                    </TreeView.ItemTemplate>
+                                <TreeView.ItemTemplate>
+                                    <HierarchicalDataTemplate ItemsSource="{Binding SubItems}">
+                                        <TextBlock Text="{Binding FileName}" />
+                                    </HierarchicalDataTemplate>
+                                </TreeView.ItemTemplate>
                             </TreeView>
 
                         </StackPanel>
 
                     </ScrollViewer>
-                    
-                   
+
+
 
 
                     <!-- Стек кнопок создания файла и папки -->
@@ -115,6 +119,13 @@
 
 
         </Grid>
+        <materialDesign:PackIcon Kind="Settings"
+                         Width="31" Height="25"
+                         Foreground="LightSkyBlue"
+                         Cursor="Hand"
+                         HorizontalAlignment="Right"
+                         ToolTip="Настройки"
+                         MouseUp="SettingsIcon_MouseUp" Grid.Column="2" RenderTransformOrigin="0.912,0.678" Grid.ColumnSpan="2"/>
 
 
 
@@ -135,7 +146,7 @@
 
 
 
-        
+
         <!--
         <Button Content="Создать начальный файл Markdown"
             Command="{Binding CreateInitialMarkdownFileCommand}" 
@@ -147,7 +158,7 @@
             Margin="0,0,20,0" 
         />
         -->
-        
+
 
         <!--
         <GridSplitter
@@ -156,7 +167,7 @@
               HorizontalAlignment="Center"
               Grid.RowSpan="3" />
         -->
-        
+
 
 
     </Grid>
