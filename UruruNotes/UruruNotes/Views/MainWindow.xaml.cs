@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.IO;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -149,6 +150,97 @@ namespace UruruNotes.Views
             var settingsWindow = new SettingsWindow();
             settingsWindow.ShowDialog();
         }
+
+        // Обработчик для сворачивания и разворачивания treeview
+        private void ToggleVisibilityButton_Click(object sender, RoutedEventArgs e)
+        {
+            var button = sender as Button;
+
+            if (TreeViewGrid.Visibility == Visibility.Visible)
+            {
+                TreeViewGrid.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                TreeViewGrid.Visibility = Visibility.Visible;
+            }
+        }
+
+
+
+
+        private void SearchButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Если поле поиска скрыто, показать его; если оно показано, скрыть его
+            SearchTextBox.Visibility = SearchTextBox.Visibility == Visibility.Collapsed
+                ? Visibility.Visible
+                : Visibility.Collapsed;
+
+            // Автоматически устанавливаем фокус на поле поиска при его открытии
+            if (SearchTextBox.Visibility == Visibility.Visible)
+            {
+                SearchTextBox.Focus();
+            }
+        }
+
+        /*
+
+        private void SearchTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                string query = SearchTextBox.Text;
+                PerformSearch(query); // Метод для выполнения поиска по введенному тексту
+            }
+        }
+
+        private void PerformSearch(string query)
+        {
+            // Временный вывод для проверки содержимого Files
+            foreach (var file in Files)
+            {
+                Console.WriteLine($"File in collection: {file.FileName}");
+            }
+
+            var foundFile = Files.FirstOrDefault(file => file.FileName.Contains(query, StringComparison.OrdinalIgnoreCase));
+
+            if (foundFile != null)
+            {
+                OpenFile(foundFile); // Открываем найденный файл
+            }
+            else
+            {
+                MessageBox.Show("Файл не найден.");
+            }
+        }
+
+
+
+        private void OpenFile(FileItem file)
+        {
+            try
+            {
+                // Предположим, что FilePath указывает на местоположение файла
+                if (File.Exists(file.FilePath))
+                {
+                    string fileContent = File.ReadAllText(file.FilePath); // Читаем содержимое файла
+                    SearchTextBox.Text = fileContent; // Отображаем содержимое файла в TextBox
+                }
+                else
+                {
+                    MessageBox.Show("Файл не найден на диске.");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при открытии файла: {ex.Message}");
+            }
+        }*/
+
+
+
+
+
 
 
     }

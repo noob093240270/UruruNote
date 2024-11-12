@@ -4,16 +4,16 @@
 winexe
 C#
 .cs
-C:\Users\user\Documents\GitHub\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\
+C:\Users\dd\Documents\GitHub\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\
 UruruNotes
 none
 false
 TRACE;DEBUG;NET;NET8_0;NETCOREAPP
-C:\Users\user\Documents\GitHub\UruruNote\UruruNotes\UruruNotes\App.xaml
+C:\Users\dd\Documents\GitHub\UruruNote\UruruNotes\UruruNotes\App.xaml
 6-1480008911
 
 19-747340135
-2092091900005
+2091053081332
 ViewsModels\SettingsWindow.xaml;Views\MainWindow.xaml;Views\MarkdownViewer.xaml;Views\NewFileWindow.xaml;Views\NewFolderWindow.xaml;Views\SettingsWindow.xaml;
 
 False

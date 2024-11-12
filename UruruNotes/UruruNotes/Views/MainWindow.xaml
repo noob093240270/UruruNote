@@ -12,164 +12,180 @@
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </Window.Resources>
 
-    <Grid x:Name="MainGrid" ShowGridLines="False"  VerticalAlignment="Stretch" RenderTransformOrigin="0.502,0.501">
 
+    <Grid Background="#FF383838">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200" MaxWidth="200" />
-            <ColumnDefinition Width="auto" />
-            <ColumnDefinition Width="193*"/>
-            <ColumnDefinition Width="7*"/>
-            <ColumnDefinition Width="0*"/>
-
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-
-        <Grid>
-
-            <Grid.RowDefinitions>
-                <RowDefinition Height="20pt" />
-                <RowDefinition Height="*" />
-
-            </Grid.RowDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30" />
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
 
-            <!-- Дерево файлов -->
-            <materialDesign:Card Grid.Column="0" Grid.Row="1" VerticalAlignment="Stretch">
 
-                <Grid>
-                    <!-- Верхняя строка для TreeView -->
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*" MinHeight="100"/>
-                        <RowDefinition Height="auto" />
-                    </Grid.RowDefinitions>
+        <Border Grid.ColumnSpan="2"
+                BorderBrush="#FF636161"
+                BorderThickness="3"
+                >
+            <Grid Grid.Row="0" 
+                  Background="#FF636161"
+                  Grid.Column="1"   
+              >
 
-                    <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Margin="5,5,5,5">
+                <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal">
+                    <!-- Кнопка для сворачивания и разворачивания -->
+                    <Button Width="25" Height="25" Click="ToggleVisibilityButton_Click" Focusable="False" BorderThickness="0"
+                            HorizontalAlignment="Left"
+                            
+                            >
+                        <Button.Background>
+                            <ImageBrush ImageSource="pack://application:,,,/UruruNotes;component/Resources/treeview.png" />
+                        </Button.Background>
+                    </Button>
 
-                        <StackPanel Grid.Row="0">
+                    <Button Width="25" Height="25" Click="SearchButton_Click" BorderThickness="0" Margin="5,0" Focusable="False">
+                        <Button.Background>
+                            <ImageBrush ImageSource="pack://application:,,,/UruruNotes;component/Resources/magnifier.png" />
+                        </Button.Background>
+                    </Button>
 
-                            <TreeView ItemsSource="{Binding Folders}" Margin="10,10,10,10">
-                                <!-- Шаблон для отображения корневых папок и их содержимого -->
-                                <TreeView.ItemTemplate>
-                                    <HierarchicalDataTemplate ItemsSource="{Binding CompositeSubItems}">
-                                        <StackPanel Orientation="Horizontal">
-                                            <!-- Заголовок папки или файла -->
+                    <!-- Поле поиска -->
+                    <TextBox x:Name="SearchTextBox"
+                             IsReadOnly="True" 
+                             VerticalScrollBarVisibility="Auto" 
+                             HorizontalScrollBarVisibility="Auto" 
+                             Margin="10" />  
+
+
+                </StackPanel>
+
+                <Image Source="pack://application:,,,/UruruNotes;component/Resources/settingsbutton.png"
+                   Width="31" Height="25"
+                   Margin="0,0,5,0"
+                   Cursor="Hand"
+                   HorizontalAlignment="Right"
+                   ToolTip="Настройки"
+                   MouseUp="SettingsIcon_MouseUp"
+                   />
+
+            </Grid>
+        </Border>
+
+
+        <Grid Grid.Row="1" x:Name="MainGrid" ShowGridLines="False" Grid.RowSpan="2" Grid.ColumnSpan="2" >
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200" MaxWidth="300" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+
+            <Grid Grid.Column="0" Background="#FF636161" x:Name="TreeViewGrid">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+
+                </Grid.RowDefinitions>
+
+                
+
+                <!-- Дерево файлов -->
+                <materialDesign:Card Grid.Column="0" Grid.Row="1" VerticalAlignment="Stretch" Background="#FF636161">
+
+                    <Grid >
+                        <!-- Верхняя строка для TreeView -->
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" MinHeight="100"/>
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
+
+                        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Margin="5,5,5,5">
+
+                            <StackPanel Grid.Row="0">
+
+                                <TreeView ItemsSource="{Binding Folders}" Margin="10,10,10,10">
+                                    <!-- Шаблон для отображения корневых папок и их содержимого -->
+                                    <TreeView.ItemTemplate>
+                                        <HierarchicalDataTemplate ItemsSource="{Binding CompositeSubItems}">
+                                            <StackPanel Orientation="Horizontal">
+                                                <!-- Заголовок папки или файла -->
+                                                <TextBlock Text="{Binding FileName}" />
+
+                                                <!-- Контекстное меню для добавления файлов в папки -->
+                                                <StackPanel.ContextMenu>
+                                                    <ContextMenu>
+                                                        <MenuItem Header="Добавить файл" Click="AddFileMenuItem_Click" />
+                                                    </ContextMenu>
+                                                </StackPanel.ContextMenu>
+                                            </StackPanel>
+                                        </HierarchicalDataTemplate>
+                                    </TreeView.ItemTemplate>
+                                </TreeView>
+
+
+
+
+                                <TreeView   ItemsSource="{Binding Files}" 
+                                   SelectedItemChanged="TreeView_SelectedItemChanged"
+                                   Margin="10,10,10,10"
+                                   >
+                                    <TreeView.ItemTemplate>
+                                        <HierarchicalDataTemplate ItemsSource="{Binding SubItems}">
                                             <TextBlock Text="{Binding FileName}" />
+                                        </HierarchicalDataTemplate>
+                                    </TreeView.ItemTemplate>
+                                </TreeView>
 
-                                            <!-- Контекстное меню для добавления файлов в папки -->
-                                            <StackPanel.ContextMenu>
-                                                <ContextMenu>
-                                                    <MenuItem Header="Добавить файл" Click="AddFileMenuItem_Click" />
-                                                </ContextMenu>
-                                            </StackPanel.ContextMenu>
-                                        </StackPanel>
-                                    </HierarchicalDataTemplate>
-                                </TreeView.ItemTemplate>
-                            </TreeView>
+                            </StackPanel>
+
+                        </ScrollViewer>
 
 
 
 
-                            <TreeView   ItemsSource="{Binding Files}" 
-                                       SelectedItemChanged="TreeView_SelectedItemChanged"
-                                       Margin="10,10,10,10"
-                                       >
-                                <TreeView.ItemTemplate>
-                                    <HierarchicalDataTemplate ItemsSource="{Binding SubItems}">
-                                        <TextBlock Text="{Binding FileName}" />
-                                    </HierarchicalDataTemplate>
-                                </TreeView.ItemTemplate>
-                            </TreeView>
+                        <!-- Стек кнопок создания файла и папки -->
+                        <Grid Grid.Row="1" Margin="0,0,0,10">
 
-                        </StackPanel>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
 
-                    </ScrollViewer>
+                            <StackPanel Grid.Column="0" HorizontalAlignment="Center">
+                                <Button Content="Создать новый файл" 
+                                Click="CreateNewFileButton_Click" 
+                                FontSize="8"
+                                Padding="3" Background="#FFD6D6D6" BorderBrush="#FF636161"
+                                />
+                            </StackPanel>
 
+                            <StackPanel Grid.Column="1" HorizontalAlignment="Center">
+                                <Button Content="Создать новую папку" 
+                                Click="CreateNewFolderButton_Click"
+                                FontSize="8"
+                                Padding="3"
+                                Background="#FFD6D6D6"
+                                BorderBrush="#FF636161"
+                                />
+                            </StackPanel>
 
+                        </Grid>
 
-
-                    <!-- Стек кнопок создания файла и папки -->
-                    <Grid Grid.Row="1" Margin="0,0,0,10">
-
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-
-                        <StackPanel Grid.Column="0" HorizontalAlignment="Center">
-                            <Button Content="Создать новый файл" 
-                                    Click="CreateNewFileButton_Click" 
-                                    FontSize="8"
-                                    Padding="3"
-                        />
-                        </StackPanel>
-
-                        <StackPanel Grid.Column="1" HorizontalAlignment="Center">
-                            <Button Content="Создать новую папку" 
-                                    Click="CreateNewFolderButton_Click"
-                                    FontSize="8"
-                                    Padding="3"
-                        />
-                        </StackPanel>
 
                     </Grid>
+                </materialDesign:Card>
 
 
-                </Grid>
-            </materialDesign:Card>
-
+            </Grid>
 
         </Grid>
-        <materialDesign:PackIcon Kind="Settings"
-                         Width="31" Height="25"
-                         Foreground="LightSkyBlue"
-                         Cursor="Hand"
-                         HorizontalAlignment="Right"
-                         ToolTip="Настройки"
-                         MouseUp="SettingsIcon_MouseUp" Grid.Column="2" RenderTransformOrigin="0.912,0.678" Grid.ColumnSpan="2"/>
-
-
-
-
-        <!-- 
-        <StackPanel Orientation="Vertical" Margin="-621,359,621,-339" Grid.Row="3">
-            <StackPanel Orientation="Horizontal">
-                <DockPanel LastChildFill="True">
-                    <TextBlock DockPanel.Dock="Top"
-                   Text="My daily tasks"
-                   FontSize="14pt"
-                   Margin="10pt,0,0,0" />
-                </DockPanel>
-            </StackPanel>
-        </StackPanel> 
-        -->
-
-
-
-
-
-        <!--
-        <Button Content="Создать начальный файл Markdown"
-            Command="{Binding CreateInitialMarkdownFileCommand}" 
-            Visibility="{Binding IsCreateButtonVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
-            Grid.Column="2" 
-            Grid.Row="2" 
-            HorizontalAlignment="Right" 
-            VerticalAlignment="Center" 
-            Margin="0,0,20,0" 
-        />
-        -->
-
-
-        <!--
-        <GridSplitter
-              ShowsPreview="False"
-              Width="6"
-              HorizontalAlignment="Center"
-              Grid.RowSpan="3" />
-        -->
-
-
 
     </Grid>
+
+
+
 </Window>
 
