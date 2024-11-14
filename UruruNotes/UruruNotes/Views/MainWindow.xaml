@@ -46,6 +46,7 @@
                         </Button.Background>
                     </Button>
 
+                    <!--кнопка (за)лупы-->
                     <Button Width="25" Height="25" Click="SearchButton_Click" BorderThickness="0" Margin="5,0" Focusable="False">
                         <Button.Background>
                             <ImageBrush ImageSource="pack://application:,,,/UruruNotes;component/Resources/magnifier.png" />
@@ -54,10 +55,18 @@
 
                     <!-- Поле поиска -->
                     <TextBox x:Name="SearchTextBox"
+                             Width="200"
+                             Height="30"
+                             Margin="5,0,0,0"
+                             Visibility="Collapsed"
+                             KeyDown="SearchTextBox_KeyDown"/>
+
+                    <TextBox x:Name="FileContentTextBox" 
                              IsReadOnly="True" 
                              VerticalScrollBarVisibility="Auto" 
                              HorizontalScrollBarVisibility="Auto" 
-                             Margin="10" />  
+                             Margin="5,0" />
+
 
 
                 </StackPanel>

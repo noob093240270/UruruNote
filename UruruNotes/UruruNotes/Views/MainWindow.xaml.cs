@@ -22,12 +22,13 @@ namespace UruruNotes.Views
     /// </summary>
     public partial class MainWindow : Window
     {
-        public ObservableCollection<FolderItem> Files { get; set; }
+        public ObservableCollection<FolderItem> Folders { get; set; }
+        public ObservableCollection<FileItem> Files { get; set; }
         public MainWindow()
         {
             InitializeComponent();
             DataContext = new MainViewModel(); // Установка DataContext на ViewModel
-            Files = new ObservableCollection<FolderItem>();
+            Folders = new ObservableCollection<FolderItem>();
         }
 
 
@@ -171,7 +172,7 @@ namespace UruruNotes.Views
 
         private void SearchButton_Click(object sender, RoutedEventArgs e)
         {
-            // Если поле поиска скрыто, показать его; если оно показано, скрыть его
+            // Если поле поиска скрыто, показать его, если оно показано, скрыть его
             SearchTextBox.Visibility = SearchTextBox.Visibility == Visibility.Collapsed
                 ? Visibility.Visible
                 : Visibility.Collapsed;
@@ -183,7 +184,7 @@ namespace UruruNotes.Views
             }
         }
 
-        /*
+        
 
         private void SearchTextBox_KeyDown(object sender, KeyEventArgs e)
         {
@@ -196,13 +197,14 @@ namespace UruruNotes.Views
 
         private void PerformSearch(string query)
         {
-            // Временный вывод для проверки содержимого Files
-            foreach (var file in Files)
+            var viewModel = DataContext as MainViewModel;
+            /*
+            foreach (var file in viewModel.Files)
             {
                 Console.WriteLine($"File in collection: {file.FileName}");
-            }
+            }*/
 
-            var foundFile = Files.FirstOrDefault(file => file.FileName.Contains(query, StringComparison.OrdinalIgnoreCase));
+            var foundFile = viewModel.Files.FirstOrDefault(file => file.FileName.Contains(query, StringComparison.OrdinalIgnoreCase));
 
             if (foundFile != null)
             {
@@ -216,26 +218,20 @@ namespace UruruNotes.Views
 
 
 
+
         private void OpenFile(FileItem file)
         {
             try
             {
-                // Предположим, что FilePath указывает на местоположение файла
-                if (File.Exists(file.FilePath))
-                {
-                    string fileContent = File.ReadAllText(file.FilePath); // Читаем содержимое файла
-                    SearchTextBox.Text = fileContent; // Отображаем содержимое файла в TextBox
-                }
-                else
-                {
-                    MessageBox.Show("Файл не найден на диске.");
-                }
+                var viewModel = DataContext as MainViewModel;
+                viewModel.SelectedTreeViewItemChanged(file);
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Ошибка при открытии файла: {ex.Message}");
             }
-        }*/
+        }
+
 
 
 
