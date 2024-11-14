@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\calendar.png" />
     <None Remove="Resources\homeButton.png" />
     <None Remove="Resources\magnifier.png" />
     <None Remove="Resources\settingsbutton.png" />
@@ -28,6 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\calendar.png" />
     <Resource Include="Resources\homeButton.png" />
     <Resource Include="Resources\magnifier.png" />
     <Resource Include="Resources\settingsbutton.png" />

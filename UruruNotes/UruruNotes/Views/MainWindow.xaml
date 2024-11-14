@@ -46,12 +46,33 @@
                         </Button.Background>
                     </Button>
 
+                    <!-- Кнопка календаря -->
+                    <Button x:Name="Сalendar" Width="25" Height="25" Margin="5,0" Click="CalendarButton_Click">
+                        <Button.BorderBrush>
+                            <ImageBrush />
+                        </Button.BorderBrush>
+                        <Button.Background>
+                            <ImageBrush ImageSource="pack://application:,,,/UruruNotes;component/Resources/calendar.png" />
+                        </Button.Background>
+                    </Button>
+
+                    <!-- Кнопка для возвращения на начальную страницу -->
+                    <Button x:Name="HomePage" Width="25" Height="25" Margin="5,0" Click="HomePageButton_Click">
+                        <Button.BorderBrush>
+                            <ImageBrush />
+                        </Button.BorderBrush>
+                        <Button.Background>
+                            <ImageBrush ImageSource="pack://application:,,,/UruruNotes;component/Resources/homeButton.png" />
+                        </Button.Background>
+                    </Button>
+
                     <!--кнопка (за)лупы-->
                     <Button Width="25" Height="25" Click="SearchButton_Click" BorderThickness="0" Margin="5,0" Focusable="False">
                         <Button.Background>
                             <ImageBrush ImageSource="pack://application:,,,/UruruNotes;component/Resources/magnifier.png" />
                         </Button.Background>
                     </Button>
+
 
                     <!-- Поле поиска -->
                     <TextBox x:Name="SearchTextBox"
@@ -67,9 +88,8 @@
                              HorizontalScrollBarVisibility="Auto" 
                              Margin="5,0" />
 
-
-
                 </StackPanel>
+
 
                 <Image Source="pack://application:,,,/UruruNotes;component/Resources/settingsbutton.png"
                    Width="31" Height="25"
@@ -99,7 +119,7 @@
 
                 </Grid.RowDefinitions>
 
-                
+
 
                 <!-- Дерево файлов -->
                 <materialDesign:Card Grid.Column="0" Grid.Row="1" VerticalAlignment="Stretch" Background="#FF636161">
@@ -189,6 +209,8 @@
 
 
             </Grid>
+            <!--"Фрэйм для отображения страниц в правой части экрана"-->
+            <Frame x:Name="PageFrame" NavigationUIVisibility="Hidden" Grid.Column="1"/>
 
         </Grid>
 
