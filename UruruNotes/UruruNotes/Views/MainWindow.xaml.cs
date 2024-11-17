@@ -24,17 +24,11 @@ namespace UruruNotes.Views
     {
         public ObservableCollection<FolderItem> Folders { get; set; }
         public ObservableCollection<FileItem> Files { get; set; }
-        List<Page> list; // Список хранящий страницы
-        int index; // Индекс страниц
         public MainWindow()
         {
             InitializeComponent();
             DataContext = new MainViewModel(); // Установка DataContext на ViewModel
             Folders = new ObservableCollection<FolderItem>();
-            this.list = new List<Page>();
-            index = 0;
-            list.Add(new CalendarPage()); // Добавляем страницу с календарём
-            list.Add(new HomePage());
         }
 
 
@@ -237,35 +231,17 @@ namespace UruruNotes.Views
                 MessageBox.Show($"Ошибка при открытии файла: {ex.Message}");
             }
         }
-        // Начальная страница
-        private void HomePageButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (PageFrame.Content != null && index != 0)
-            {
-                index--;
-                PageFrame.Content = list[index];
-            }
-        }
+        
         // Страница с календарём
         private void CalendarButton_Click(object sender, RoutedEventArgs e)
         {
-            // Еслм фрейм пуст то 
-            if (PageFrame.Content == null)
-            {
-                PageFrame.Content = list[index];
-            }
-            else // Если фрейм отображает какую-то страницу
-            {
-                index++; // Увеличиваем индекс
-                if (index < list.Count)
-                {
-                    PageFrame.Content = list[index]; // Загружаем в фрейм следующую страницу
-                }
-                else // если страница последняя
-                {
-                    index--;
-                }
-            }
+            PageFrame.Content = new CalendarPage();
+        }
+
+        // Начальная страница
+        private void HomePageButton_Click(object sender, RoutedEventArgs e)
+        {
+            PageFrame.Content = new HomePage();
         }
     }
 }
