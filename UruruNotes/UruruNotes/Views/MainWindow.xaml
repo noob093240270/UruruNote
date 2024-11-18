@@ -6,11 +6,14 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
         xmlns:local="clr-namespace:UruruNotes.Models"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="UruruNote" Height="490" Width="800" Icon="/Views/homeButton.png" Background="Black">
 
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </Window.Resources>
+    <Window.Foreground>
+        <SolidColorBrush Color="#FFF9F9F9" Opacity="0.2"/>
+    </Window.Foreground>
 
 
     <Grid Background="#FF383838">
@@ -34,6 +37,10 @@
                   Background="#FF636161"
                   Grid.Column="1"   
               >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="241*"/>
+                    <ColumnDefinition Width="553*"/>
+                </Grid.ColumnDefinitions>
 
                 <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal">
                     <!-- Кнопка для сворачивания и разворачивания -->
@@ -93,11 +100,11 @@
 
                 <Image Source="pack://application:,,,/UruruNotes;component/Resources/settingsbutton.png"
                    Width="31" Height="25"
-                   Margin="0,0,5,0"
+                   Margin="517,0,0,-1"
                    Cursor="Hand"
-                   HorizontalAlignment="Right"
+                   HorizontalAlignment="Left"
                    ToolTip="Настройки"
-                   MouseUp="SettingsIcon_MouseUp"
+                   MouseUp="SettingsIcon_MouseUp" Grid.Column="1"
                    />
 
             </Grid>
