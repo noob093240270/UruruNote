@@ -195,67 +195,51 @@ namespace UruruNote.ViewsModels
 
         private void AddFile(FolderItem selectedFolder)
         {
-
-            MessageBox.Show("Добавление файла началось в папке: " + selectedFolder.FileName);
-            // Открываем окно для ввода имени нового файла
-            var newFileWindow = new NewFileWindow();
-
-
-
-            // Подписка на событие FileCreated, чтобы обновить список файлов после создания
-            newFileWindow.FileCreated += (filePath) =>
+            if (selectedFolder == null)
             {
-                // Добавляем файл в коллекцию `Files` выбранной папки
+                MessageBox.Show("Не выбрана папка для добавления файла.");
+                return;
+            }
+
+            // Открываем окно для ввода имени файла
+            var newFileWindow = new NewFileWindow();
+            if (newFileWindow.ShowDialog() != true)
+            {
+                return; // Если окно было закрыто
+            }
+
+            // Получаем имя нового файла
+            string fileName = newFileWindow.FileName + ".md";
+            string filePath = Path.Combine(selectedFolder.FilePath, fileName);
+
+            // Проверяем, существует ли файл
+            if (File.Exists(filePath))
+            {
+                MessageBox.Show("Файл уже существует.");
+                return;
+            }
+
+            try
+            {
+                // Создаем файл
+                var markdownService = new MarkdownFileService();
+                markdownService.CreateMarkdownFile(filePath);
+
+                // Добавляем файл в коллекцию
                 selectedFolder.Files.Add(new FileItem
                 {
-                    FileName = Path.GetFileName(filePath),
+                    FileName = fileName,
                     FilePath = filePath
                 });
-            };
 
-
-
-            if (newFileWindow.ShowDialog() == true)
+                MessageBox.Show("Файл успешно создан: " + filePath);
+            }
+            catch (Exception ex)
             {
-                // Получаем имя файла от пользователя
-                string fileName = newFileWindow.FileName;
-
-                // Указываем путь к файлу в выбранной папке
-                string filePath = Path.Combine(selectedFolder.FilePath, fileName + ".md");
-
-                // Создаем файл через MarkdownFileService
-                var markdownService = new MarkdownFileService();
-
-                // Проверяем, существует ли уже файл
-                if (markdownService.IsMarkdownFileExists(filePath))
-                {
-                    MessageBox.Show("Файл уже существует в этой папке.");
-                    return;
-                }
-
-                try
-                {
-                    // Создаем файл
-                    markdownService.CreateMarkdownFile(filePath);
-
-                    // Устанавливаем флаг, что файл был создан
-                    IsFileCreated = true;
-
-                    // Обновляем коллекцию файлов
-                    selectedFolder.Files.Add(new FileItem
-                    {
-                        FileName = Path.GetFileName(filePath),
-                        FilePath = filePath
-                    });
-
-                    MessageBox.Show("Файл успешно создан: " + filePath);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Ошибка при создании файла: " + ex.Message);
-                }
+                MessageBox.Show($"Ошибка при создании файла: {ex.Message}");
             }
         }
+
 
 
         #endregion
@@ -423,7 +407,23 @@ namespace UruruNote.ViewsModels
             }
         }
 
+        private object _selectedItem;
+        public object SelectedItem
+        {
+            get => _selectedItem;
+            set
+            {
+                if (_selectedItem != value)
+                {
+                    _selectedItem = value;
+                    OnPropertyChanged(); // уведомление о смене значения
+                }
+            }
+        }
+
         #endregion
+
+        public event Action<UserControl> OpenFileRequest;
 
         public void SelectedTreeViewItemChanged(FileItem fileItem)
         {
@@ -433,9 +433,13 @@ namespace UruruNote.ViewsModels
                 return; // Игнорируем, если выбранный элемент null
             }
 
-            // Создаем новое окно для выбранного файла
-            var markdownViewer = new MarkdownViewer(fileItem.FilePath);
-            markdownViewer.Show();
+            // Создаем новый объект MarkdownViewer
+            var markdownViewer = new MarkdownViewer(fileItem);
+
+            // Если есть подписчики на событие, вызываем его
+            OpenFileRequest?.Invoke(markdownViewer);  // Передаем UserControl (MarkdownViewer)
         }
+
+
     }
 }

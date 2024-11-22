@@ -13,7 +13,7 @@ namespace UruruNotes.Models
         public string FilePath { get; set; }
 
         // Добавляем свойство для подэлементов
-        public ObservableCollection<FileItem> SubItems { get; set; } = new ObservableCollection<FileItem>();
+        //public ObservableCollection<FileItem> SubItems { get; set; } = new ObservableCollection<FileItem>();
 
     }
 

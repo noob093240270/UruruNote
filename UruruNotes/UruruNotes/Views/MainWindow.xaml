@@ -139,18 +139,15 @@
                         </Grid.RowDefinitions>
 
                         <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Margin="5,5,5,5">
-
                             <StackPanel Grid.Row="0">
 
-                                <TreeView ItemsSource="{Binding Folders}" Margin="10,10,10,10">
-                                    <!-- Шаблон для отображения корневых папок и их содержимого -->
-                                    <TreeView.ItemTemplate>
+                                <!-- Первый TreeView для папок -->
+                                <TreeView ItemsSource="{Binding Folders}" Margin="10,10,10,10" SelectedItemChanged="TreeView_SelectedItemChanged"
+                          PreviewMouseLeftButtonDown="TreeView_PreviewMouseLeftButtonDown">
+                                    <TreeView.ItemTemplate> 
                                         <HierarchicalDataTemplate ItemsSource="{Binding CompositeSubItems}">
                                             <StackPanel Orientation="Horizontal">
-                                                <!-- Заголовок папки или файла -->
                                                 <TextBlock Text="{Binding FileName}" />
-
-                                                <!-- Контекстное меню для добавления файлов в папки -->
                                                 <StackPanel.ContextMenu>
                                                     <ContextMenu>
                                                         <MenuItem Header="Добавить файл" Click="AddFileMenuItem_Click" />
@@ -161,13 +158,9 @@
                                     </TreeView.ItemTemplate>
                                 </TreeView>
 
-
-
-
-                                <TreeView   ItemsSource="{Binding Files}" 
-                                   SelectedItemChanged="TreeView_SelectedItemChanged"
-                                   Margin="10,10,10,10"
-                                   >
+                                <!-- Второй TreeView для файлов -->
+                                <TreeView ItemsSource="{Binding Files}" SelectedItemChanged="TreeView_SelectedItemChanged"
+                          Margin="10,10,10,10" PreviewMouseLeftButtonDown="TreeView_PreviewMouseLeftButtonDown">
                                     <TreeView.ItemTemplate>
                                         <HierarchicalDataTemplate ItemsSource="{Binding SubItems}">
                                             <TextBlock Text="{Binding FileName}" />
@@ -218,6 +211,7 @@
             </Grid>
             <!--"Фрэйм для отображения страниц в правой части экрана"-->
             <Frame x:Name="PageFrame" NavigationUIVisibility="Hidden" Grid.Column="1"/>
+
 
         </Grid>
 

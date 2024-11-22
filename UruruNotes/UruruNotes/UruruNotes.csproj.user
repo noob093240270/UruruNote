@@ -13,6 +13,9 @@
     <Compile Update="HomePage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="MarkdownViewerPage.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="ViewsModels\SettingsWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -31,6 +34,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="HomePage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="MarkdownViewerPage.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="ViewsModels\SettingsWindow.xaml">

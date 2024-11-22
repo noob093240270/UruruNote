@@ -1,24 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Users\\sa\\Documents\\1 тима\\ЮФУ\\UruruNotes\\Project\\UruruNote\\UruruNotes\\UruruNotes\\UruruNotes.csproj": {}
+    "C:\\Users\\m1kraze\\Desktop\\проект2курс\\UruruNote\\UruruNotes\\UruruNotes\\UruruNotes.csproj": {}
   },
   "projects": {
-    "D:\\Users\\sa\\Documents\\1 тима\\ЮФУ\\UruruNotes\\Project\\UruruNote\\UruruNotes\\UruruNotes\\UruruNotes.csproj": {
+    "C:\\Users\\m1kraze\\Desktop\\проект2курс\\UruruNote\\UruruNotes\\UruruNotes\\UruruNotes.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Users\\sa\\Documents\\1 тима\\ЮФУ\\UruruNotes\\Project\\UruruNote\\UruruNotes\\UruruNotes\\UruruNotes.csproj",
+        "projectUniqueName": "C:\\Users\\m1kraze\\Desktop\\проект2курс\\UruruNote\\UruruNotes\\UruruNotes\\UruruNotes.csproj",
         "projectName": "UruruNotes",
-        "projectPath": "D:\\Users\\sa\\Documents\\1 тима\\ЮФУ\\UruruNotes\\Project\\UruruNote\\UruruNotes\\UruruNotes\\UruruNotes.csproj",
-        "packagesPath": "C:\\Users\\sa\\.nuget\\packages\\",
-        "outputPath": "D:\\Users\\sa\\Documents\\1 тима\\ЮФУ\\UruruNotes\\Project\\UruruNote\\UruruNotes\\UruruNotes\\obj\\",
+        "projectPath": "C:\\Users\\m1kraze\\Desktop\\проект2курс\\UruruNote\\UruruNotes\\UruruNotes\\UruruNotes.csproj",
+        "packagesPath": "C:\\Users\\m1kraze\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\m1kraze\\Desktop\\проект2курс\\UruruNote\\UruruNotes\\UruruNotes\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "D:\\Visual Studio\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\sa\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\m1kraze\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -26,7 +22,6 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -82,7 +77,7 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.404/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

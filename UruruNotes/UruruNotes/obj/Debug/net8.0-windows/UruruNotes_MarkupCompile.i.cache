@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\
+C:\Users\m1kraze\Desktop\проект2курс\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\
 UruruNotes
 none
 false
 TRACE;DEBUG;NET;NET8_0;NETCOREAPP
-D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\App.xaml
-8-1003632045
+C:\Users\m1kraze\Desktop\проект2курс\UruruNote\UruruNotes\UruruNotes\App.xaml
+92044704745
 
-23-1093532233
-2091782558399
-CalendarPage.xaml;HomePage.xaml;ViewsModels\SettingsWindow.xaml;Views\MainWindow.xaml;Views\MarkdownViewer.xaml;Views\NewFileWindow.xaml;Views\NewFolderWindow.xaml;Views\SettingsWindow.xaml;
+24-1181288797
+209176069075
+CalendarPage.xaml;HomePage.xaml;MarkdownViewerPage.xaml;ViewsModels\SettingsWindow.xaml;Views\MainWindow.xaml;Views\MarkdownViewer.xaml;Views\NewFileWindow.xaml;Views\NewFolderWindow.xaml;Views\SettingsWindow.xaml;
 
 True
 
