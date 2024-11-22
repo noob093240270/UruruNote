@@ -1,30 +1,38 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "D:\\Users\\sa\\Documents\\1 \u0442\u0438\u043C\u0430\\\u042E\u0424\u0423\\UruruNotes\\Project\\UruruNote\\UruruNotes\\",
+  "WorkspaceRootPath": "C:\\Users\\user\\Documents\\GitHub\\UruruNote\\UruruNotes\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{E86752DC-FC7A-4203-AAED-B3165F7C114A}|UruruNotes\\UruruNotes.csproj|d:\\users\\sa\\documents\\1 \u0442\u0438\u043C\u0430\\\u044E\u0444\u0443\\ururunotes\\project\\ururunote\\ururunotes\\ururunotes\\views\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "AbsoluteMoniker": "D:0:0:{E86752DC-FC7A-4203-AAED-B3165F7C114A}|UruruNotes\\UruruNotes.csproj|c:\\users\\user\\documents\\github\\ururunote\\ururunotes\\ururunotes\\views\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{E86752DC-FC7A-4203-AAED-B3165F7C114A}|UruruNotes\\UruruNotes.csproj|solutionrelative:ururunotes\\views\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E86752DC-FC7A-4203-AAED-B3165F7C114A}|UruruNotes\\UruruNotes.csproj|d:\\users\\sa\\documents\\1 \u0442\u0438\u043C\u0430\\\u044E\u0444\u0443\\ururunotes\\project\\ururunote\\ururunotes\\ururunotes\\calendarpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{E86752DC-FC7A-4203-AAED-B3165F7C114A}|UruruNotes\\UruruNotes.csproj|solutionrelative:ururunotes\\calendarpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E86752DC-FC7A-4203-AAED-B3165F7C114A}|UruruNotes\\UruruNotes.csproj|d:\\users\\sa\\documents\\1 \u0442\u0438\u043C\u0430\\\u044E\u0444\u0443\\ururunotes\\project\\ururunote\\ururunotes\\ururunotes\\views\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{E86752DC-FC7A-4203-AAED-B3165F7C114A}|UruruNotes\\UruruNotes.csproj|c:\\users\\user\\documents\\github\\ururunote\\ururunotes\\ururunotes\\views\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{E86752DC-FC7A-4203-AAED-B3165F7C114A}|UruruNotes\\UruruNotes.csproj|solutionrelative:ururunotes\\views\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E86752DC-FC7A-4203-AAED-B3165F7C114A}|UruruNotes\\UruruNotes.csproj|d:\\users\\sa\\documents\\1 \u0442\u0438\u043C\u0430\\\u044E\u0444\u0443\\ururunotes\\project\\ururunote\\ururunotes\\ururunotes\\calendarpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{E86752DC-FC7A-4203-AAED-B3165F7C114A}|UruruNotes\\UruruNotes.csproj|c:\\users\\user\\documents\\github\\ururunote\\ururunotes\\ururunotes\\views\\markdownviewer.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E86752DC-FC7A-4203-AAED-B3165F7C114A}|UruruNotes\\UruruNotes.csproj|solutionrelative:ururunotes\\views\\markdownviewer.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E86752DC-FC7A-4203-AAED-B3165F7C114A}|UruruNotes\\UruruNotes.csproj|c:\\users\\user\\documents\\github\\ururunote\\ururunotes\\ururunotes\\views\\markdownviewer.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{E86752DC-FC7A-4203-AAED-B3165F7C114A}|UruruNotes\\UruruNotes.csproj|solutionrelative:ururunotes\\views\\markdownviewer.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E86752DC-FC7A-4203-AAED-B3165F7C114A}|UruruNotes\\UruruNotes.csproj|c:\\users\\user\\documents\\github\\ururunote\\ururunotes\\ururunotes\\calendarpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{E86752DC-FC7A-4203-AAED-B3165F7C114A}|UruruNotes\\UruruNotes.csproj|solutionrelative:ururunotes\\calendarpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E86752DC-FC7A-4203-AAED-B3165F7C114A}|UruruNotes\\UruruNotes.csproj|c:\\users\\user\\documents\\github\\ururunote\\ururunotes\\ururunotes\\calendarpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{E86752DC-FC7A-4203-AAED-B3165F7C114A}|UruruNotes\\UruruNotes.csproj|solutionrelative:ururunotes\\calendarpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E86752DC-FC7A-4203-AAED-B3165F7C114A}|UruruNotes\\UruruNotes.csproj|d:\\users\\sa\\documents\\1 \u0442\u0438\u043C\u0430\\\u044E\u0444\u0443\\ururunotes\\project\\ururunote\\ururunotes\\ururunotes\\homepage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{E86752DC-FC7A-4203-AAED-B3165F7C114A}|UruruNotes\\UruruNotes.csproj|solutionrelative:ururunotes\\homepage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+      "AbsoluteMoniker": "D:0:0:{E86752DC-FC7A-4203-AAED-B3165F7C114A}|UruruNotes\\UruruNotes.csproj|c:\\users\\user\\documents\\github\\ururunote\\ururunotes\\ururunotes\\app.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{E86752DC-FC7A-4203-AAED-B3165F7C114A}|UruruNotes\\UruruNotes.csproj|solutionrelative:ururunotes\\app.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E86752DC-FC7A-4203-AAED-B3165F7C114A}|UruruNotes\\UruruNotes.csproj|d:\\users\\sa\\documents\\1 \u0442\u0438\u043C\u0430\\\u044E\u0444\u0443\\ururunotes\\project\\ururunote\\ururunotes\\ururunotes\\app.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{E86752DC-FC7A-4203-AAED-B3165F7C114A}|UruruNotes\\UruruNotes.csproj|solutionrelative:ururunotes\\app.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+      "AbsoluteMoniker": "D:0:0:{E86752DC-FC7A-4203-AAED-B3165F7C114A}|UruruNotes\\UruruNotes.csproj|c:\\users\\user\\documents\\github\\ururunote\\ururunotes\\ururunotes\\homepage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{E86752DC-FC7A-4203-AAED-B3165F7C114A}|UruruNotes\\UruruNotes.csproj|solutionrelative:ururunotes\\homepage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     }
   ],
   "DocumentGroupContainers": [
@@ -34,15 +42,85 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "MainWindow.xaml",
+              "DocumentMoniker": "C:\\Users\\user\\Documents\\GitHub\\UruruNote\\UruruNotes\\UruruNotes\\Views\\MainWindow.xaml",
+              "RelativeDocumentMoniker": "UruruNotes\\Views\\MainWindow.xaml",
+              "ToolTip": "C:\\Users\\user\\Documents\\GitHub\\UruruNote\\UruruNotes\\UruruNotes\\Views\\MainWindow.xaml",
+              "RelativeToolTip": "UruruNotes\\Views\\MainWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-10-31T20:13:50.119Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "MainWindow.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\user\\Documents\\GitHub\\UruruNote\\UruruNotes\\UruruNotes\\Views\\MainWindow.xaml.cs",
+              "RelativeDocumentMoniker": "UruruNotes\\Views\\MainWindow.xaml.cs",
+              "ToolTip": "C:\\Users\\user\\Documents\\GitHub\\UruruNote\\UruruNotes\\UruruNotes\\Views\\MainWindow.xaml.cs",
+              "RelativeToolTip": "UruruNotes\\Views\\MainWindow.xaml.cs",
+              "ViewState": "AgIAANUAAAAAAAAAAAAAABEAAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-31T20:04:06.226Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "MarkdownViewer.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\user\\Documents\\GitHub\\UruruNote\\UruruNotes\\UruruNotes\\Views\\MarkdownViewer.xaml.cs",
+              "RelativeDocumentMoniker": "UruruNotes\\Views\\MarkdownViewer.xaml.cs",
+              "ToolTip": "C:\\Users\\user\\Documents\\GitHub\\UruruNote\\UruruNotes\\UruruNotes\\Views\\MarkdownViewer.xaml.cs",
+              "RelativeToolTip": "UruruNotes\\Views\\MarkdownViewer.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAABDAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-21T22:38:04.607Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "MarkdownViewer.xaml",
+              "DocumentMoniker": "C:\\Users\\user\\Documents\\GitHub\\UruruNote\\UruruNotes\\UruruNotes\\Views\\MarkdownViewer.xaml",
+              "RelativeDocumentMoniker": "UruruNotes\\Views\\MarkdownViewer.xaml",
+              "ToolTip": "C:\\Users\\user\\Documents\\GitHub\\UruruNote\\UruruNotes\\UruruNotes\\Views\\MarkdownViewer.xaml",
+              "RelativeToolTip": "UruruNotes\\Views\\MarkdownViewer.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-11-21T22:34:09.142Z"
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 5,
+              "Title": "CalendarPage.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\user\\Documents\\GitHub\\UruruNote\\UruruNotes\\UruruNotes\\CalendarPage.xaml.cs",
+              "RelativeDocumentMoniker": "UruruNotes\\CalendarPage.xaml.cs",
+              "ToolTip": "C:\\Users\\user\\Documents\\GitHub\\UruruNote\\UruruNotes\\UruruNotes\\CalendarPage.xaml.cs",
+              "RelativeToolTip": "UruruNotes\\CalendarPage.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAAiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-17T17:43:41.112Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "HomePage.xaml",
+              "DocumentMoniker": "C:\\Users\\user\\Documents\\GitHub\\UruruNote\\UruruNotes\\UruruNotes\\HomePage.xaml",
+              "RelativeDocumentMoniker": "UruruNotes\\HomePage.xaml",
+              "ToolTip": "C:\\Users\\user\\Documents\\GitHub\\UruruNote\\UruruNotes\\UruruNotes\\HomePage.xaml",
+              "RelativeToolTip": "UruruNotes\\HomePage.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-11-17T17:43:55.739Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
               "Title": "App.xaml",
-              "DocumentMoniker": "D:\\Users\\sa\\Documents\\1 \u0442\u0438\u043C\u0430\\\u042E\u0424\u0423\\UruruNotes\\Project\\UruruNote\\UruruNotes\\UruruNotes\\App.xaml",
+              "DocumentMoniker": "C:\\Users\\user\\Documents\\GitHub\\UruruNote\\UruruNotes\\UruruNotes\\App.xaml",
               "RelativeDocumentMoniker": "UruruNotes\\App.xaml",
-              "ToolTip": "D:\\Users\\sa\\Documents\\1 \u0442\u0438\u043C\u0430\\\u042E\u0424\u0423\\UruruNotes\\Project\\UruruNote\\UruruNotes\\UruruNotes\\App.xaml",
+              "ToolTip": "C:\\Users\\user\\Documents\\GitHub\\UruruNote\\UruruNotes\\UruruNotes\\App.xaml",
               "RelativeToolTip": "UruruNotes\\App.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
               "WhenOpened": "2024-11-18T20:24:36.845Z",
@@ -51,61 +129,13 @@
             {
               "$type": "Document",
               "DocumentIndex": 4,
-              "Title": "HomePage.xaml",
-              "DocumentMoniker": "D:\\Users\\sa\\Documents\\1 \u0442\u0438\u043C\u0430\\\u042E\u0424\u0423\\UruruNotes\\Project\\UruruNote\\UruruNotes\\UruruNotes\\HomePage.xaml",
-              "RelativeDocumentMoniker": "UruruNotes\\HomePage.xaml",
-              "ToolTip": "D:\\Users\\sa\\Documents\\1 \u0442\u0438\u043C\u0430\\\u042E\u0424\u0423\\UruruNotes\\Project\\UruruNote\\UruruNotes\\UruruNotes\\HomePage.xaml",
-              "RelativeToolTip": "UruruNotes\\HomePage.xaml",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2024-11-17T17:43:55.739Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "CalendarPage.xaml.cs",
-              "DocumentMoniker": "D:\\Users\\sa\\Documents\\1 \u0442\u0438\u043C\u0430\\\u042E\u0424\u0423\\UruruNotes\\Project\\UruruNote\\UruruNotes\\UruruNotes\\CalendarPage.xaml.cs",
-              "RelativeDocumentMoniker": "UruruNotes\\CalendarPage.xaml.cs",
-              "ToolTip": "D:\\Users\\sa\\Documents\\1 \u0442\u0438\u043C\u0430\\\u042E\u0424\u0423\\UruruNotes\\Project\\UruruNote\\UruruNotes\\UruruNotes\\CalendarPage.xaml.cs",
-              "RelativeToolTip": "UruruNotes\\CalendarPage.xaml.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAAiAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-17T17:43:41.112Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
               "Title": "CalendarPage.xaml",
-              "DocumentMoniker": "D:\\Users\\sa\\Documents\\1 \u0442\u0438\u043C\u0430\\\u042E\u0424\u0423\\UruruNotes\\Project\\UruruNote\\UruruNotes\\UruruNotes\\CalendarPage.xaml",
+              "DocumentMoniker": "C:\\Users\\user\\Documents\\GitHub\\UruruNote\\UruruNotes\\UruruNotes\\CalendarPage.xaml",
               "RelativeDocumentMoniker": "UruruNotes\\CalendarPage.xaml",
-              "ToolTip": "D:\\Users\\sa\\Documents\\1 \u0442\u0438\u043C\u0430\\\u042E\u0424\u0423\\UruruNotes\\Project\\UruruNote\\UruruNotes\\UruruNotes\\CalendarPage.xaml",
+              "ToolTip": "C:\\Users\\user\\Documents\\GitHub\\UruruNote\\UruruNotes\\UruruNotes\\CalendarPage.xaml",
               "RelativeToolTip": "UruruNotes\\CalendarPage.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2024-11-17T17:43:27.638Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "MainWindow.xaml",
-              "DocumentMoniker": "D:\\Users\\sa\\Documents\\1 \u0442\u0438\u043C\u0430\\\u042E\u0424\u0423\\UruruNotes\\Project\\UruruNote\\UruruNotes\\UruruNotes\\Views\\MainWindow.xaml",
-              "RelativeDocumentMoniker": "UruruNotes\\Views\\MainWindow.xaml",
-              "ToolTip": "D:\\Users\\sa\\Documents\\1 \u0442\u0438\u043C\u0430\\\u042E\u0424\u0423\\UruruNotes\\Project\\UruruNote\\UruruNotes\\UruruNotes\\Views\\MainWindow.xaml*",
-              "RelativeToolTip": "UruruNotes\\Views\\MainWindow.xaml*",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2024-10-31T20:13:50.119Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "MainWindow.xaml.cs",
-              "DocumentMoniker": "D:\\Users\\sa\\Documents\\1 \u0442\u0438\u043C\u0430\\\u042E\u0424\u0423\\UruruNotes\\Project\\UruruNote\\UruruNotes\\UruruNotes\\Views\\MainWindow.xaml.cs",
-              "RelativeDocumentMoniker": "UruruNotes\\Views\\MainWindow.xaml.cs",
-              "ToolTip": "D:\\Users\\sa\\Documents\\1 \u0442\u0438\u043C\u0430\\\u042E\u0424\u0423\\UruruNotes\\Project\\UruruNote\\UruruNotes\\UruruNotes\\Views\\MainWindow.xaml.cs",
-              "RelativeToolTip": "UruruNotes\\Views\\MainWindow.xaml.cs",
-              "ViewState": "AgIAANgAAAAAAAAAAAAIwCAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-31T20:04:06.226Z"
+              "WhenOpened": "2024-11-17T17:43:27.638Z"
             }
           ]
         }

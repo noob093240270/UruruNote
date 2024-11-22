@@ -99,12 +99,11 @@
 
 
                 <Image Source="pack://application:,,,/UruruNotes;component/Resources/settingsbutton.png"
-                   Width="31" Height="25"
                    Margin="517,0,0,-1"
                    Cursor="Hand"
-                   HorizontalAlignment="Left"
+                   HorizontalAlignment="Right"
                    ToolTip="Настройки"
-                   MouseUp="SettingsIcon_MouseUp" Grid.Column="1"
+                   MouseUp="SettingsIcon_MouseUp" Grid.Column="1" VerticalAlignment="Top"
                    />
 
             </Grid>
@@ -218,6 +217,14 @@
             </Grid>
             <!--"Фрэйм для отображения страниц в правой части экрана"-->
             <Frame x:Name="PageFrame" NavigationUIVisibility="Hidden" Grid.Column="1"/>
+            <TextBox x:Name="FileContentTextBoxDisplay"
+                         IsReadOnly="True"
+                         BorderThickness="0"
+                         VerticalScrollBarVisibility="Auto"
+                         HorizontalScrollBarVisibility="Auto"
+                         BorderBrush="Transparent"
+                         Padding="15"
+                         TextWrapping="Wrap" Grid.Column="1" RenderTransformOrigin="0.493,0.496"/>
 
         </Grid>
 

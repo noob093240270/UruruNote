@@ -16,11 +16,15 @@ namespace UruruNote.Views
 
         private void LoadFileContent(string filePath)
         {
-
-                MarkdownTextBox.Text = File.ReadAllText(filePath);
-
+            try
+            {
+                // Читаем содержимое файла и отображаем его в TextBox
+                MarkdownTextBox.Text = File.ReadAllText(filePath); 
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при открытии файла: {ex.Message}");
+            }
         }
     }
-
-
 }

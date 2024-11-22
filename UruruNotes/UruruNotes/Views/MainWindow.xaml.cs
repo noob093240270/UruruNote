@@ -1,17 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using System.IO;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using UruruNote.Models;
-using UruruNote.Views;
 using UruruNote.ViewsModels;
 using UruruNotes.Models;
 
@@ -96,17 +87,19 @@ namespace UruruNotes.Views
 
 
 
-        private MarkdownViewer _currentMarkdownViewer; // Ссылка на текущее открытое окно
 
-        
+
         private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             var viewModel = DataContext as MainViewModel;
             if (viewModel != null)
             {
                 var selectedItem = e.NewValue as FileItem;
-                viewModel.SelectedTreeViewItemChanged(selectedItem); // Передаем выбранный элемент
 
+                if (selectedItem != null)
+                {
+                    DisplayFileContent(selectedItem);
+                }
                 // Очищаем выделение
                 var treeView = sender as TreeView;
                 if (treeView != null)
@@ -115,7 +108,29 @@ namespace UruruNotes.Views
                 }
             }
         }
+        private void OpenFileOnlyIfCreated(FileItem file) //метод для открытия только созданных файлов
+        {
 
+            if (File.Exists(file.FilePath))
+            {
+                DisplayFileContent(file); // Открываем файл, если он существует
+            }
+        }
+        private void DisplayFileContent(FileItem file)
+        {
+            try
+            {
+                // Читаем содержимое файла
+                string content = File.ReadAllText(file.FilePath);
+
+                // Отображаем содержимое в TextBox (FileContentTextBox)
+                FileContentTextBoxDisplay.Text = content;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при чтении файла: {ex.Message}");
+            }
+        }
 
 
         private void UnselectAll(TreeView treeView)
@@ -184,7 +199,7 @@ namespace UruruNotes.Views
             }
         }
 
-        
+
 
         private void SearchTextBox_KeyDown(object sender, KeyEventArgs e)
         {
@@ -208,30 +223,26 @@ namespace UruruNotes.Views
 
             if (foundFile != null)
             {
-                OpenFile(foundFile); // Открываем найденный файл
+                DisplayFileContent(foundFile); // Открываем найденный файл
             }
             else
             {
                 MessageBox.Show("Файл не найден.");
             }
         }
-
-
-
-
         private void OpenFile(FileItem file)
         {
             try
             {
-                var viewModel = DataContext as MainViewModel;
-                viewModel.SelectedTreeViewItemChanged(file);
+
+                DisplayFileContent(file);
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Ошибка при открытии файла: {ex.Message}");
             }
         }
-        
+
         // Страница с календарём
         private void CalendarButton_Click(object sender, RoutedEventArgs e)
         {

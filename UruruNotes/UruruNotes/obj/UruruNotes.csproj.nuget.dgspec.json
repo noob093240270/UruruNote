@@ -1,24 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Users\\sa\\Documents\\1 тима\\ЮФУ\\UruruNotes\\Project\\UruruNote\\UruruNotes\\UruruNotes\\UruruNotes.csproj": {}
+    "C:\\Users\\user\\Documents\\GitHub\\UruruNote\\UruruNotes\\UruruNotes\\UruruNotes.csproj": {}
   },
   "projects": {
-    "D:\\Users\\sa\\Documents\\1 тима\\ЮФУ\\UruruNotes\\Project\\UruruNote\\UruruNotes\\UruruNotes\\UruruNotes.csproj": {
+    "C:\\Users\\user\\Documents\\GitHub\\UruruNote\\UruruNotes\\UruruNotes\\UruruNotes.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Users\\sa\\Documents\\1 тима\\ЮФУ\\UruruNotes\\Project\\UruruNote\\UruruNotes\\UruruNotes\\UruruNotes.csproj",
+        "projectUniqueName": "C:\\Users\\user\\Documents\\GitHub\\UruruNote\\UruruNotes\\UruruNotes\\UruruNotes.csproj",
         "projectName": "UruruNotes",
-        "projectPath": "D:\\Users\\sa\\Documents\\1 тима\\ЮФУ\\UruruNotes\\Project\\UruruNote\\UruruNotes\\UruruNotes\\UruruNotes.csproj",
-        "packagesPath": "C:\\Users\\sa\\.nuget\\packages\\",
-        "outputPath": "D:\\Users\\sa\\Documents\\1 тима\\ЮФУ\\UruruNotes\\Project\\UruruNote\\UruruNotes\\UruruNotes\\obj\\",
+        "projectPath": "C:\\Users\\user\\Documents\\GitHub\\UruruNote\\UruruNotes\\UruruNotes\\UruruNotes.csproj",
+        "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\user\\Documents\\GitHub\\UruruNote\\UruruNotes\\UruruNotes\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "D:\\Visual Studio\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\sa\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -26,7 +22,6 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
