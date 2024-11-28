@@ -13,7 +13,6 @@ using UruruNote.Views;
 using UruruNotes;
 using UruruNotes.Models;
 using UruruNotes.Views;
-using UruruNotes.ViewsModels;
 
 namespace UruruNote.ViewsModels
 {
@@ -172,20 +171,23 @@ namespace UruruNote.ViewsModels
 
             IsFileCreated = markdownService.IsMarkdownFileExists(fileName);*/
 
-            Files = new ObservableCollection<FileItem>();
-            CreateNewMarkdownFileCommand = new RelayCommand(CreateNewMarkdownFile);
-            LoadFiles();
+            
 
             /*
             string folderPath = Path.Combine(Directory.GetCurrentDirectory(), "MyFolder");
             Directory.CreateDirectory(folderPath);*/
+
             if (!Directory.Exists(RootDirectory))
             {
                 Directory.CreateDirectory(RootDirectory);
             }
+
+            Files = new ObservableCollection<FileItem>();
+            CreateNewMarkdownFileCommand = new RelayCommand(CreateNewMarkdownFile);
+            LoadFiles();
+
             Folders = new ObservableCollection<FolderItem>();
             CreateFolderCommand = new RelayCommand(CreateFolder);
-            //AddFileCommand = new RelayCommand<FolderItem>(AddFile); // Используем параметр типа FolderItem
             LoadFolders();
 
             OpenCalendarCommand = new RelayCommand(OpenCalendar);
@@ -199,67 +201,48 @@ namespace UruruNote.ViewsModels
 
         private void AddFile(FolderItem selectedFolder)
         {
-
-            MessageBox.Show("Добавление файла началось в папке: " + selectedFolder.FileName);
-            // Открываем окно для ввода имени нового файла
-            var newFileWindow = new NewFileWindow();
-
-
-
-            // Подписка на событие FileCreated, чтобы обновить список файлов после создания
-            newFileWindow.FileCreated += (filePath) =>
+            if (selectedFolder == null)
             {
-                // Добавляем файл в коллекцию `Files` выбранной папки
+                MessageBox.Show("Не выбрана папка для добавления файла.");
+                return;
+            }
+
+            var newFileWindow = new NewFileWindow();
+            if (newFileWindow.ShowDialog() != true)
+            {
+                return;
+            }
+
+            string fileName = newFileWindow.FileName + ".md";
+            string filePath = Path.Combine(selectedFolder.FilePath, fileName);
+
+            // Проверяем уникальность
+            if (!IsFileNameUnique(fileName, selectedFolder))
+            {
+                MessageBox.Show("Файл с таким именем уже существует в этом или другом каталоге.");
+                return;
+            }
+
+            try
+            {
+                var markdownService = new MarkdownFileService();
+                markdownService.CreateMarkdownFile(filePath);
+
                 selectedFolder.Files.Add(new FileItem
                 {
-                    FileName = Path.GetFileName(filePath),
+                    FileName = fileName,
                     FilePath = filePath
                 });
-            };
 
-
-
-            if (newFileWindow.ShowDialog() == true)
+                MessageBox.Show("Файл успешно создан: " + filePath);
+            }
+            catch (Exception ex)
             {
-                // Получаем имя файла от пользователя
-                string fileName = newFileWindow.FileName;
-
-                // Указываем путь к файлу в выбранной папке
-                string filePath = Path.Combine(selectedFolder.FilePath, fileName + ".md");
-
-                // Создаем файл через MarkdownFileService
-                var markdownService = new MarkdownFileService();
-
-                // Проверяем, существует ли уже файл
-                if (markdownService.IsMarkdownFileExists(filePath))
-                {
-                    MessageBox.Show("Файл уже существует в этой папке.");
-                    return;
-                }
-
-                try
-                {
-                    // Создаем файл
-                    markdownService.CreateMarkdownFile(filePath);
-
-                    // Устанавливаем флаг, что файл был создан
-                    IsFileCreated = true;
-
-                    // Обновляем коллекцию файлов
-                    selectedFolder.Files.Add(new FileItem
-                    {
-                        FileName = Path.GetFileName(filePath),
-                        FilePath = filePath
-                    });
-
-                    MessageBox.Show("Файл успешно создан: " + filePath);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Ошибка при создании файла: " + ex.Message);
-                }
+                MessageBox.Show($"Ошибка при создании файла: {ex.Message}");
             }
         }
+
+
 
 
         #endregion
@@ -270,9 +253,18 @@ namespace UruruNote.ViewsModels
         private void CreateFolder()
         {
             var newFolderWindow = new NewFolderWindow();
+
+            // Если диалог с названием папки был подтвержден
             if (newFolderWindow.ShowDialog() == true)
             {
                 var folderName = newFolderWindow.FolderName;
+
+                // Проверяем уникальность имени папки
+                if (!IsFolderNameUnique(folderName))
+                {
+                    MessageBox.Show("Папка с таким именем уже существует.");
+                    return;
+                }
 
                 // Создаем папку на диске
                 var folderPath = Path.Combine(RootDirectory, folderName);
@@ -286,6 +278,12 @@ namespace UruruNote.ViewsModels
                 Folders.Add(newFolder);
             }
         }
+
+        private bool IsFolderNameUnique(string folderName)
+        {
+            return !Folders.Any(f => f.FileName.Equals(folderName, StringComparison.OrdinalIgnoreCase));
+        }
+
 
 
         // Метод для загрузки структуры папок из файловой системы
@@ -310,13 +308,21 @@ namespace UruruNote.ViewsModels
                 {
                     FileName = Path.GetFileName(dir),
                     FilePath = dir,
-                    SubFolders = LoadFoldersRecursively(dir) // Загружаем вложенные папки
+                    SubFolders = LoadFoldersRecursively(dir), // Загружаем вложенные папки
+                    Files = new ObservableCollection<FileItem>(
+                        Directory.GetFiles(dir, "*.md").Select(filePath => new FileItem
+                        {
+                            FileName = Path.GetFileName(filePath),
+                            FilePath = filePath
+                        })
+                    )
                 };
                 folders.Add(folder);
             }
 
             return folders;
         }
+
 
 
         #endregion
@@ -377,21 +383,39 @@ namespace UruruNote.ViewsModels
 
         private void CreateNewMarkdownFile()
         {
-            NewFileWindow newFileWindow = new NewFileWindow();
+            var newFileWindow = new NewFileWindow();
 
-            // Подписка на событие FileCreated
-            newFileWindow.FileCreated += (filePath) =>
+            newFileWindow.FileCreated += (fileName) =>
             {
-                // Добавляем новый файл в коллекцию
+                // Убираем расширение .md, если оно уже есть
+                if (fileName.EndsWith(".md", StringComparison.OrdinalIgnoreCase))
+                {
+                    fileName = fileName.Substring(0, fileName.Length - 3); // Убираем расширение .md
+                }
+
+                string filePath = Path.Combine(RootDirectory, fileName + ".md");
+
+                // Проверяем уникальность
+                if (!IsFileNameUnique(fileName))
+                {
+                    MessageBox.Show("Файл с таким именем уже существует.");
+                    return;
+                }
+
+                var markdownService = new MarkdownFileService();
+                markdownService.CreateMarkdownFile(filePath);
                 Files.Add(new FileItem
                 {
-                    FileName = Path.GetFileName(filePath),
+                    FileName = fileName + ".md",
                     FilePath = filePath
                 });
             };
 
             newFileWindow.ShowDialog();
         }
+
+
+
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -404,11 +428,9 @@ namespace UruruNote.ViewsModels
 
         public void LoadFiles()
         {
-            string directoryPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "MarkdownFiles");
-
-            if (Directory.Exists(directoryPath))
+            if (Directory.Exists(RootDirectory))
             {
-                var files = Directory.GetFiles(directoryPath)
+                var files = Directory.GetFiles(RootDirectory, "*.md")
                     .Select(filePath => new FileItem
                     {
                         FileName = Path.GetFileName(filePath),
@@ -423,11 +445,28 @@ namespace UruruNote.ViewsModels
             }
             else
             {
-                MessageBox.Show("Папка не найдена: " + directoryPath);
+                MessageBox.Show("Папка не найдена: " + RootDirectory);
+            }
+        }
+
+
+        private object _selectedItem;
+        public object SelectedItem
+        {
+            get => _selectedItem;
+            set
+            {
+                if (_selectedItem != value)
+                {
+                    _selectedItem = value;
+                    OnPropertyChanged(); // уведомление о смене значения
+                }
             }
         }
 
         #endregion
+
+        public event Action<UserControl> OpenFileRequest;
 
         public void SelectedTreeViewItemChanged(FileItem fileItem)
         {
@@ -437,11 +476,12 @@ namespace UruruNote.ViewsModels
                 return; // Игнорируем, если выбранный элемент null
             }
 
-            // Создаем новое окно для выбранного файла
-            var markdownViewer = new MarkdownViewer(fileItem.FilePath);
-            markdownViewer.Show();
-        }
+            // Создаем новый объект MarkdownViewer
+            var markdownViewer = new MarkdownViewer(fileItem);
 
+            // Если есть подписчики на событие, вызываем его
+            OpenFileRequest?.Invoke(markdownViewer);  // Передаем UserControl (MarkdownViewer)
+        }
 
         #region Calendar
 
@@ -453,6 +493,49 @@ namespace UruruNote.ViewsModels
             var calendarWindow = new CalendarPage();
             calendarWindow.ShowDialog(); // Если хотите, чтобы окно было модальным
         }
+
+
+        private bool IsFileNameUnique(string fileName, FolderItem targetFolder = null)
+        {
+            // Проверяем файлы в общем каталоге (если targetFolder == null)
+            if (targetFolder == null)
+            {
+                if (Files.Any(file => file.FileName.Equals(fileName, StringComparison.OrdinalIgnoreCase)))
+                {
+                    return false;
+                }
+
+                // Проверяем файлы во всех папках
+                foreach (var folder in Folders)
+                {
+                    if (!IsFileNameUnique(fileName, folder))
+                    {
+                        return false;
+                    }
+                }
+            }
+            else
+            {
+                // Проверяем файлы в указанной папке
+                if (targetFolder.Files.Any(file => file.FileName.Equals(fileName, StringComparison.OrdinalIgnoreCase)))
+                {
+                    return false;
+                }
+
+                // Рекурсивная проверка в подкаталогах
+                foreach (var subFolder in targetFolder.SubFolders)
+                {
+                    if (!IsFileNameUnique(fileName, subFolder))
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true; // Имя уникально
+        }
+
+
 
 
         #endregion

@@ -17,6 +17,18 @@ namespace UruruNotes.Models
         public ObservableCollection<FolderItem> SubFolders { get; set; } = new ObservableCollection<FolderItem>();
         public ObservableCollection<FileItem> Files { get; set; } = new ObservableCollection<FileItem>();
 
+        // Проверка уникальности имени папки
+        public bool IsFolderNameUnique(string folderName)
+        {
+            return !SubFolders.Any(f => f.FileName.Equals(folderName, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public bool IsFolderNameUniqueInRoot(string folderName)
+        {
+            return !Files.Any(f => f.FileName.Equals(folderName, StringComparison.OrdinalIgnoreCase)) &&
+                   !SubFolders.Any(f => f.FileName.Equals(folderName, StringComparison.OrdinalIgnoreCase));
+        }
+
         public CompositeCollection CompositeSubItems
         {
             get

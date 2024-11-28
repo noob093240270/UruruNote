@@ -22,9 +22,14 @@ namespace UruruNote.Models
 
         public string CreateMarkdownFile(string filePath)
         {
-
             try
             {
+                // Проверяем, существует ли файл с таким путем
+                if (File.Exists(filePath))
+                {
+                    throw new Exception("Файл уже существует.");
+                }
+
                 using (StreamWriter writer = new StreamWriter(filePath))
                 {
                     // Заголовок первого уровня
@@ -39,7 +44,6 @@ namespace UruruNote.Models
                     writer.WriteLine("3. Поспать");
                     writer.WriteLine();
 
-
                     // Заключение
                     writer.WriteLine("### Дополнительная информация");
                     writer.WriteLine("Этот файл создан автоматически для организации задач на день.");
@@ -52,6 +56,7 @@ namespace UruruNote.Models
                 throw new Exception("Ошибка при создании файла: " + ex.Message);
             }
         }
+
 
 
         public bool IsMarkdownFileExists(string fileName)

@@ -1,14 +1,27 @@
-﻿<Window x:Class="UruruNote.Views.MarkdownViewer"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Markdown Viewer" Height="450" Width="800">
+﻿<UserControl x:Class="UruruNote.Views.MarkdownViewer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Width="600" Height="400">
     <Grid>
-        <TextBox x:Name="MarkdownTextBox" 
-                 TextWrapping="Wrap" 
-                 AcceptsReturn="True" 
-                 VerticalScrollBarVisibility="Auto" 
-                 HorizontalScrollBarVisibility="Auto" 
-                 FontFamily="Consolas"
-                 FontSize="14"/>
+        <!-- RichTextBox для редактирования содержимого -->
+        <RichTextBox Name="MarkdownRichTextBox" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Margin="10" 
+                     PreviewKeyDown="MarkdownRichTextBox_PreviewKeyDown">
+            <RichTextBox.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Жирный" Click="BoldMenuItem_Click"/>
+                    <MenuItem Header="Курсив" Click="ItalicMenuItem_Click"/>
+                    <MenuItem Header="Зачеркнутый" Click="StrikethroughMenuItem_Click"/>
+                    <MenuItem Header="Выделенный" Click="HighlightMenuItem_Click"/>
+                </ContextMenu>
+            </RichTextBox.ContextMenu>
+        </RichTextBox>
+
+        <!-- Кнопка для сохранения -->
+        <Button Content="Сохранить" 
+                VerticalAlignment="Bottom" 
+                HorizontalAlignment="Right" 
+                Margin="10" 
+                Width="100" 
+                Click="SaveButton_Click"/>
     </Grid>
-</Window>
+</UserControl>
