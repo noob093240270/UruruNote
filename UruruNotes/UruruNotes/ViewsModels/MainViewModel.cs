@@ -10,8 +10,10 @@ using System.Windows.Input;
 using GalaSoft.MvvmLight.Command;
 using UruruNote.Models;
 using UruruNote.Views;
+using UruruNotes;
 using UruruNotes.Models;
 using UruruNotes.Views;
+using UruruNotes.ViewsModels;
 
 namespace UruruNote.ViewsModels
 {
@@ -185,6 +187,8 @@ namespace UruruNote.ViewsModels
             CreateFolderCommand = new RelayCommand(CreateFolder);
             //AddFileCommand = new RelayCommand<FolderItem>(AddFile); // Используем параметр типа FolderItem
             LoadFolders();
+
+            OpenCalendarCommand = new RelayCommand(OpenCalendar);
 
 
 
@@ -437,5 +441,21 @@ namespace UruruNote.ViewsModels
             var markdownViewer = new MarkdownViewer(fileItem.FilePath);
             markdownViewer.Show();
         }
+
+
+        #region Calendar
+
+        public ICommand OpenCalendarCommand { get; }
+
+        private void OpenCalendar()
+        {
+            // Создаём и открываем окно календаря
+            var calendarWindow = new CalendarPage();
+            calendarWindow.ShowDialog(); // Если хотите, чтобы окно было модальным
+        }
+
+
+        #endregion
+
     }
 }

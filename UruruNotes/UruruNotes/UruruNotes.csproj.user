@@ -7,13 +7,10 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="CalendarPage.xaml.cs">
+    <Compile Update="Views\CalendarPage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="HomePage.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="ViewsModels\SettingsWindow.xaml.cs">
+    <Compile Update="Views\HomePage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\MarkdownViewer.xaml.cs">
@@ -25,15 +22,15 @@
     <Compile Update="Views\SettingsWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\TaskCreationWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="CalendarPage.xaml">
+    <Page Update="Views\CalendarPage.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="HomePage.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="ViewsModels\SettingsWindow.xaml">
+    <Page Update="Views\HomePage.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\MainWindow.xaml">
@@ -49,6 +46,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\SettingsWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\TaskCreationWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>

@@ -12,17 +12,22 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using UruruNotes.ViewsModels;
 
 namespace UruruNotes
 {
     /// <summary>
     /// Логика взаимодействия для CalendarPage.xaml
     /// </summary>
-    public partial class CalendarPage : Page
+    public partial class CalendarPage : Window
     {
+        
+
         public CalendarPage()
         {
             InitializeComponent();
+            DataContext = new CalendarViewModel();
         }
+
     }
 }

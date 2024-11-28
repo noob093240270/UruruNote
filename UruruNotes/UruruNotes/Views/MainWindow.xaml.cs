@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using UruruNote.ViewsModels;
 using UruruNotes.Models;
+using UruruNotes.ViewsModels;
 
 namespace UruruNotes.Views
 {
@@ -13,13 +14,16 @@ namespace UruruNotes.Views
     /// </summary>
     public partial class MainWindow : Window
     {
+        public CalendarViewModel CalendarViewModel { get; set; }
         public ObservableCollection<FolderItem> Folders { get; set; }
         public ObservableCollection<FileItem> Files { get; set; }
+        
         public MainWindow()
         {
             InitializeComponent();
             DataContext = new MainViewModel(); // Установка DataContext на ViewModel
             Folders = new ObservableCollection<FolderItem>();
+            CalendarViewModel = new CalendarViewModel();
         }
 
 
@@ -244,10 +248,11 @@ namespace UruruNotes.Views
         }
 
         // Страница с календарём
-        private void CalendarButton_Click(object sender, RoutedEventArgs e)
-        {
-            PageFrame.Content = new CalendarPage();
-        }
+
+        //private void CalendarButton_Click(object sender, RoutedEventArgs e)
+        //{
+        //    PageFrame.Content = new CalendarPage();
+        //}
 
         // Начальная страница
         private void HomePageButton_Click(object sender, RoutedEventArgs e)
