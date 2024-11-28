@@ -347,3 +347,5 @@ D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\
 >>>>>>> Stashed changes
 D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\ViewsModels\SettingsWindow.g.cs
 D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\ViewsModels\SettingsWindow.baml
+C:\Users\dd\Documents\GitHub\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\ViewsModels\SettingsWindow.g.cs
+C:\Users\dd\Documents\GitHub\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\ViewsModels\SettingsWindow.baml
