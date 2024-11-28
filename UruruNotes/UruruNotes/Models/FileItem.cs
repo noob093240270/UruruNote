@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
+using System.Windows.Data;
 
 namespace UruruNotes.Models
 {
@@ -15,6 +11,17 @@ namespace UruruNotes.Models
         // Добавляем свойство для подэлементов
         public ObservableCollection<FileItem> SubItems { get; set; } = new ObservableCollection<FileItem>();
 
+        // Это свойство будет объединять файлы и их подэлементы
+        public CompositeCollection CompositeSubItems
+        {
+            get
+            {
+                var composite = new CompositeCollection
+                {
+                    new CollectionContainer { Collection = SubItems }
+                };
+                return composite;
+            }
+        }
     }
-
 }
