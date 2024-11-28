@@ -249,18 +249,12 @@ D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\
 D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\Views\MarkdownViewer.baml
 D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\Views\NewFileWindow.baml
 D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\Views\NewFolderWindow.baml
-D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\ViewsModels\SettingsWindow.g.cs
 D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\Views\MarkdownViewer.g.cs
 D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\Views\NewFileWindow.g.cs
 D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\Views\NewFolderWindow.g.cs
 D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\Views\SettingsWindow.g.cs
 D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\UruruNotes_MarkupCompile.lref
-D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\ViewsModels\SettingsWindow.baml
 D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\Views\SettingsWindow.baml
-D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\CalendarPage.g.cs
-D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\CalendarPage.baml
-D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\HomePage.g.cs
-D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\HomePage.baml
 C:\Users\user\Documents\GitHub\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\CalendarPage.g.cs
 C:\Users\user\Documents\GitHub\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\HomePage.g.cs
 C:\Users\user\Documents\GitHub\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\CalendarPage.baml
@@ -274,6 +268,7 @@ C:\Users\dd\Documents\GitHub\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-wi
 C:\Users\dd\Documents\GitHub\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\Views\HomePage.baml
 C:\Users\dd\Documents\GitHub\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\Views\TaskCreationWindow.baml
 C:\Users\dd\Documents\GitHub\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\GeneratedInternalTypeHelper.g.cs
+<<<<<<< Updated upstream
 C:\Users\m1kraze\Desktop\проект2курс\UruruNote\UruruNotes\UruruNotes\bin\Debug\net8.0-windows\UruruNotes.exe
 C:\Users\m1kraze\Desktop\проект2курс\UruruNote\UruruNotes\UruruNotes\bin\Debug\net8.0-windows\UruruNotes.deps.json
 C:\Users\m1kraze\Desktop\проект2курс\UruruNote\UruruNotes\UruruNotes\bin\Debug\net8.0-windows\UruruNotes.runtimeconfig.json
@@ -339,3 +334,16 @@ C:\Users\m1kraze\Desktop\проект2курс\UruruNote\UruruNotes\UruruNotes\o
 C:\Users\m1kraze\Desktop\проект2курс\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\UruruNotes.pdb
 C:\Users\m1kraze\Desktop\проект2курс\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\UruruNotes.genruntimeconfig.cache
 C:\Users\m1kraze\Desktop\проект2курс\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\ref\UruruNotes.dll
+=======
+D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\MarkdownViewerPage.baml
+D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\MarkdownViewerPage.g.cs
+D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\Views\CalendarPage.g.cs
+D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\Views\HomePage.g.cs
+D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\Views\TaskCreationWindow.g.cs
+D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\GeneratedInternalTypeHelper.g.cs
+D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\Views\CalendarPage.baml
+D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\Views\HomePage.baml
+D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\Views\TaskCreationWindow.baml
+>>>>>>> Stashed changes
+D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\ViewsModels\SettingsWindow.g.cs
+D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\ViewsModels\SettingsWindow.baml

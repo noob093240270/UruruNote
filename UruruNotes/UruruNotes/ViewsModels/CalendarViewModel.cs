@@ -56,6 +56,18 @@ namespace UruruNotes.ViewsModels
             }
         }
 
+        private string _newTaskContentRemind;
+
+        public string NewTaskContentRemind
+        {
+            get => _newTaskContentRemind;
+            set
+            {
+                _newTaskContentRemind = value;
+                OnPropertyChanged();
+            }
+        }
+
         private DateTime? _selectedDate;
         public DateTime? SelectedDate
         {
@@ -171,7 +183,10 @@ namespace UruruNotes.ViewsModels
         {
             // Логика сохранения задачи
             string taskContent = NewTaskContent;
+            string taskContentRemind = NewTaskContentRemind;
         }
+
+
 
         private void OpenTaskArea(DayViewModel selectedDay)
         {
@@ -180,6 +195,7 @@ namespace UruruNotes.ViewsModels
                 SelectedDate = selectedDay.Date;
                 IsTaskPanelVisible = true; // Показываем панель задач
                 NewTaskContent = $"Создание задачи на {selectedDay.Date.Value:dd MMMM yyyy}";
+                NewTaskContentRemind = $"Создание напоминания на {selectedDay.Date.Value:dd MMMM yyyy}";
             }
         }
 

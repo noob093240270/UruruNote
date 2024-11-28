@@ -8,7 +8,7 @@
 
       mc:Ignorable="d" 
       MinHeight="450" MaxHeight="650" MinWidth="450" MaxWidth="850"
-      Title="CalendarPage">
+      Title="CalendarPage" Icon="/Views/calendar.png">
 
     <Window.Resources>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
@@ -72,8 +72,12 @@
             Visibility="{Binding IsTaskPanelVisible, Converter={StaticResource BoolToVisibilityConverter}}" 
             Margin="10">
             <StackPanel>
-                <TextBlock Text="Создать заметку" FontSize="18" FontWeight="Bold" Margin="10"/>
-                <TextBox Text="{Binding NewTaskContent}" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Height="200" Margin="10"/>
+                <TextBlock Text="Создать заметку" FontSize="20" FontWeight="Bold" Margin="10"/>
+                <TextBox Text="{Binding NewTaskContent}" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Height="100" Margin="10" FontSize="14"/>
+                <Button Content="Сохранить" Command="{Binding SaveTaskCommand}" Width="100" Margin="10" HorizontalAlignment="Left" />
+
+                <TextBlock Text="Создать напоминание" FontSize="20" FontWeight="Bold" Margin="10"/>
+                <TextBox Text="{Binding NewTaskContentRemind}" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Height="100" Margin="10" FontSize="14"/>
                 <Button Content="Сохранить" Command="{Binding SaveTaskCommand}" Width="100" Margin="10" HorizontalAlignment="Left" />
             </StackPanel>
         </Border>

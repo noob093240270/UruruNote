@@ -14,7 +14,9 @@
     <None Remove="Resources\magnifier.png" />
     <None Remove="Resources\settingsbutton.png" />
     <None Remove="Resources\treeview.png" />
+    <None Remove="Views\calendar.png" />
     <None Remove="Views\homeButton.png" />
+    <None Remove="Views\logo2.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,7 +37,9 @@
     <Resource Include="Resources\magnifier.png" />
     <Resource Include="Resources\settingsbutton.png" />
     <Resource Include="Resources\treeview.png" />
+    <Resource Include="Views\calendar.png" />
     <Resource Include="Views\homeButton.png" />
+    <Resource Include="Views\logo2.png" />
   </ItemGroup>
 
   <ItemGroup>
