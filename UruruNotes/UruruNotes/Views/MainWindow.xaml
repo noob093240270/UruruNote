@@ -6,7 +6,7 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
         xmlns:local="clr-namespace:UruruNotes.Models" xmlns:viewsmodels="clr-namespace:UruruNote.ViewsModels" d:DataContext="{d:DesignInstance Type=viewsmodels:MainViewModel}"
         mc:Ignorable="d"
-        Title="UruruNote" Height="490" Width="800" Icon="/Views/homeButton.png" Background="Black">
+        Title="UruruNote" Height="490" Width="800" Background="Black" Icon="/Views/logo2.png">
 
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
