@@ -1,0 +1,27 @@
+﻿<Window x:Class="UruruNotes.Views.NewFileWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="New File" Height="200" Width="250" MinHeight="200" MinWidth="250">
+    <Grid Margin="10">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25" />
+            <RowDefinition Height="auto" MinHeight="80" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="Введите имя нового файла:" Margin="0,0,0,10"/>
+        <Grid Grid.Row="1">
+            <TextBox x:Name="FileNameTextBox" />
+            <TextBlock Text="Введите имя файла"
+                       FontSize="24"
+                       Foreground="Gray"
+                       Margin="5,0,0,0"
+                       VerticalAlignment="Center"
+                       IsHitTestVisible="False"
+                       Visibility="{Binding ElementName=FileNameTextBox, Path=Text.Length, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter='False'}" />
+            
+        </Grid>
+        <Button Grid.Row="2" Content="Создать" Click="CreateButton_Click" Margin="5,10,0,5" HorizontalAlignment="Left" Width="84"/>
+    </Grid>
+</Window>

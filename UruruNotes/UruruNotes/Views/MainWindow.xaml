@@ -4,77 +4,223 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
+        xmlns:local="clr-namespace:UruruNotes.Models" xmlns:viewsmodels="clr-namespace:UruruNote.ViewsModels" d:DataContext="{d:DesignInstance Type=viewsmodels:MainViewModel}"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-        
+        Title="UruruNote" Height="490" Width="800" Background="Black" Icon="/Views/logo2.png">
 
-    <Grid x:Name="MainGrid"
-          ShowGridLines="False">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="35pt" />
-            <RowDefinition Height="35pt" />
-            <RowDefinition />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="50pt" />
-            <RowDefinition Height="50pt" />
-        </Grid.RowDefinitions>
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </Window.Resources>
+    <Window.Foreground>
+        <SolidColorBrush Color="#FFF9F9F9" Opacity="0.2"/>
+    </Window.Foreground>
+
+
+    <Grid Background="#FF383838">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="{Binding SpliterPosition, Mode=TwoWay, UpdateSourceTrigger=Default}"
-                      MinWidth="150pt"
-                      MaxWidth="250pt" />
-            <ColumnDefinition Width="auto" />
-            <ColumnDefinition Width="4*"
-                      MinWidth="570" />
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <GridSplitter Grid.Column="1"
-              ShowsPreview="False"
-              Width="5"
-              HorizontalAlignment="Center"
-              VerticalAlignment="Stretch"
-              Grid.RowSpan="6" />
-
-
-        <WrapPanel Grid.Row="0"
-               Grid.Column="2"
-               HorizontalAlignment="Right"
-               Margin="40,0,0,0"
-               Orientation="Horizontal"
-               VerticalAlignment="Center"
-               Height="auto"
-               Width="auto">
-
-        </WrapPanel>
-
-
-        <materialDesign:Card Grid.Column="0"
-                     Grid.Row="1"
-                     Margin="0,0,10,0"
-                     Padding="0,7pt,0,7pt"
-                     VerticalContentAlignment="Center"
-                     VerticalAlignment="Center">
-            <StackPanel Orientation="Horizontal">
-                <Image Source="C:\Users\dd\source\repos\UruruNotes\UruruNotes\Resources\homeButton.png" Height="20" Margin="20,0,0,0"/>
-
-                
-
-                <DockPanel LastChildFill="True">
-                    <TextBlock DockPanel.Dock="Top"
-       Text="My daily tasks"
-       FontSize="14pt"
-       Margin="10pt,0,0,0" />
-                </DockPanel>
-            </StackPanel>
-
-            <materialDesign:Card.InputBindings>
-                <MouseBinding Command="{Binding ShowMyDayTasksCommand}" MouseAction="LeftClick"></MouseBinding>
-            </materialDesign:Card.InputBindings>
-
-        </materialDesign:Card>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30" />
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
 
 
+        <Border Grid.ColumnSpan="2"
+                BorderBrush="#FF636161"
+                BorderThickness="3"
+                >
+            <Grid Grid.Row="0" 
+                  Background="#FF636161"
+                  Grid.Column="1"   
+              >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="241*"/>
+                    <ColumnDefinition Width="553*"/>
+                </Grid.ColumnDefinitions>
 
+                <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal">
+                    <!-- Кнопка для сворачивания и разворачивания -->
+                    <Button Width="25" Height="25" Click="ToggleVisibilityButton_Click" Focusable="False" BorderThickness="0"
+                            HorizontalAlignment="Left"
+                            
+                            >
+                        <Button.Background>
+                            <ImageBrush ImageSource="pack://application:,,,/UruruNotes;component/Resources/treeview.png" />
+                        </Button.Background>
+                    </Button>
+
+                    <!-- Кнопка календаря -->
+                    <Button x:Name="Сalendar" Width="25" Height="25" Margin="5,0"  Command="{Binding OpenCalendarCommand}">
+                        <Button.BorderBrush>
+                            <ImageBrush />
+                        </Button.BorderBrush>
+                        <Button.Background>
+                            <ImageBrush ImageSource="pack://application:,,,/UruruNotes;component/Resources/calendar.png" />
+                        </Button.Background>
+                    </Button>
+
+                    <!-- Кнопка для возвращения на начальную страницу -->
+                    <!--
+                    <Button x:Name="HomePage" Width="25" Height="25" Margin="5,0" Click="HomePageButton_Click">
+                        <Button.BorderBrush>
+                            <ImageBrush />
+                        </Button.BorderBrush>
+                        <Button.Background>
+                            <ImageBrush ImageSource="pack://application:,,,/UruruNotes;component/Resources/homeButton.png" />
+                        </Button.Background>
+                    </Button>-->
+
+                    <!--кнопка (за)лупы-->
+                    <Button Width="25" Height="25" Click="SearchButton_Click" BorderThickness="0" Margin="5,0" Focusable="False">
+                        <Button.Background>
+                            <ImageBrush ImageSource="pack://application:,,,/UruruNotes;component/Resources/magnifier.png" />
+                        </Button.Background>
+                    </Button>
+
+
+                    <!-- Поле поиска -->
+                    <TextBox x:Name="SearchTextBox"
+                             Width="200"
+                             Height="30"
+                             Margin="5,0,0,0"
+                             Visibility="Collapsed"
+                             KeyDown="SearchTextBox_KeyDown"/>
+
+                    <TextBox x:Name="FileContentTextBox" 
+                             IsReadOnly="True" 
+                             VerticalScrollBarVisibility="Auto" 
+                             HorizontalScrollBarVisibility="Auto" 
+                             Margin="5,0" />
+
+                </StackPanel>
+
+
+                <Image Source="pack://application:,,,/UruruNotes;component/Resources/settingsbutton.png"
+                   Margin="517,0,0,-1"
+                   Cursor="Hand"
+                   HorizontalAlignment="Right"
+                   ToolTip="Настройки"
+                   MouseUp="SettingsIcon_MouseUp" Grid.Column="1" VerticalAlignment="Top"
+                   />
+
+            </Grid>
+        </Border>
+
+
+        <Grid Grid.Row="1" x:Name="MainGrid" ShowGridLines="False" Grid.RowSpan="2" Grid.ColumnSpan="2" >
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200" MaxWidth="300" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+
+            <Grid Grid.Column="0" Background="#FF636161" x:Name="TreeViewGrid">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+
+                </Grid.RowDefinitions>
+
+
+
+                <!-- Дерево файлов -->
+                <materialDesign:Card Grid.Column="0" Grid.Row="1" VerticalAlignment="Stretch" Background="#FF636161">
+
+                    <Grid >
+                        <!-- Верхняя строка для TreeView -->
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" MinHeight="100"/>
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
+
+                        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Margin="5,5,5,5">
+                            <StackPanel Grid.Row="0">
+
+                                <!-- Первый TreeView для папок -->
+                                <TreeView ItemsSource="{Binding Folders}" Margin="10,10,10,10" SelectedItemChanged="TreeView_SelectedItemChanged"
+          PreviewMouseLeftButtonDown="TreeView_PreviewMouseLeftButtonDown">
+                                    <TreeView.ItemTemplate>
+                                        <HierarchicalDataTemplate ItemsSource="{Binding CompositeSubItems}">
+                                            <!-- Используем CompositeSubItems -->
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="{Binding FileName}" />
+                                                <StackPanel.ContextMenu>
+                                                    <ContextMenu>
+                                                        <MenuItem Header="Добавить файл" Click="AddFileMenuItem_Click" />
+                                                    </ContextMenu>
+                                                </StackPanel.ContextMenu>
+                                            </StackPanel>
+                                        </HierarchicalDataTemplate>
+                                    </TreeView.ItemTemplate>
+                                </TreeView>
+
+
+                                <!-- Второй TreeView для файлов -->
+                                <TreeView ItemsSource="{Binding Files}" SelectedItemChanged="TreeView_SelectedItemChanged"
+          Margin="10,10,10,10" PreviewMouseLeftButtonDown="TreeView_PreviewMouseLeftButtonDown">
+                                    <TreeView.ItemTemplate>
+                                        <HierarchicalDataTemplate ItemsSource="{Binding CompositeSubItems}">
+                                            <TextBlock Text="{Binding FileName}" />
+                                        </HierarchicalDataTemplate>
+                                    </TreeView.ItemTemplate>
+                                </TreeView>
+
+
+                            </StackPanel>
+
+                        </ScrollViewer>
+
+
+
+
+                        <!-- Стек кнопок создания файла и папки -->
+                        <Grid Grid.Row="1" Margin="0,0,0,10">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0" HorizontalAlignment="Center">
+                                <Button Content="Создать новый файл" 
+                                Click="CreateNewFileButton_Click" 
+                                FontSize="8"
+                                Padding="3" Background="#FFD6D6D6" BorderBrush="#FF636161"
+                                />
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="1" HorizontalAlignment="Center">
+                                <Button Content="Создать новую папку" 
+                                Click="CreateNewFolderButton_Click"
+                                FontSize="8"
+                                Padding="3"
+                                Background="#FFD6D6D6"
+                                BorderBrush="#FF636161"
+                                />
+                            </StackPanel>
+
+                        </Grid>
+
+
+                    </Grid>
+                </materialDesign:Card>
+
+
+            </Grid>
+            <!--"Фрэйм для отображения страниц в правой части экрана"-->
+            <Frame x:Name="PageFrame" NavigationUIVisibility="Hidden" Grid.Column="1"/>
+
+
+        </Grid>
 
     </Grid>
+
+
+
 </Window>
+
