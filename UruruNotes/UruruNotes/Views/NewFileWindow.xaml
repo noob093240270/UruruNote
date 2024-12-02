@@ -12,7 +12,7 @@
 
         <TextBlock Grid.Row="0" Text="Введите имя нового файла:" Margin="0,0,0,10"/>
         <Grid Grid.Row="1">
-            <TextBox x:Name="FileNameTextBox" />
+            <TextBox x:Name="FileNameTextBox" SelectionBrush="#FF235C9A" CaretBrush="#FF235C9A" SelectionTextBrush="#FF235C9A" />
             <TextBlock Text="Введите имя файла"
                        FontSize="24"
                        Foreground="Gray"
@@ -22,6 +22,6 @@
                        Visibility="{Binding ElementName=FileNameTextBox, Path=Text.Length, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter='False'}" />
             
         </Grid>
-        <Button Grid.Row="2" Content="Создать" Click="CreateButton_Click" Margin="5,10,0,5" HorizontalAlignment="Left" Width="84"/>
+        <Button Grid.Row="2" Content="Создать" Click="CreateButton_Click" Margin="5,10,0,5" HorizontalAlignment="Left" Width="84" Background="#FFD5D5D5" BorderBrush="#FF235C9A"/>
     </Grid>
 </Window>

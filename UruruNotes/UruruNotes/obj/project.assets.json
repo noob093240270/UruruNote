@@ -7588,23 +7588,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\sa\\.nuget\\packages\\": {},
-    "D:\\Visual Studio\\NuGetPackages": {}
+    "C:\\Users\\xxxra\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Users\\sa\\Documents\\1 тима\\ЮФУ\\UruruNotes\\Project\\UruruNote\\UruruNotes\\UruruNotes\\UruruNotes.csproj",
+      "projectUniqueName": "C:\\Users\\xxxra\\OneDrive\\Документы\\GitHub\\UruruNotes\\UruruNotes\\UruruNotes.csproj",
       "projectName": "UruruNotes",
-      "projectPath": "D:\\Users\\sa\\Documents\\1 тима\\ЮФУ\\UruruNotes\\Project\\UruruNote\\UruruNotes\\UruruNotes\\UruruNotes.csproj",
-      "packagesPath": "C:\\Users\\sa\\.nuget\\packages\\",
-      "outputPath": "D:\\Users\\sa\\Documents\\1 тима\\ЮФУ\\UruruNotes\\Project\\UruruNote\\UruruNotes\\UruruNotes\\obj\\",
+      "projectPath": "C:\\Users\\xxxra\\OneDrive\\Документы\\GitHub\\UruruNotes\\UruruNotes\\UruruNotes.csproj",
+      "packagesPath": "C:\\Users\\xxxra\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\xxxra\\OneDrive\\Документы\\GitHub\\UruruNotes\\UruruNotes\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "D:\\Visual Studio\\NuGetPackages"
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\sa\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\xxxra\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -7630,9 +7630,8 @@
       "restoreAuditProperties": {
         "enableAudit": "true",
         "auditLevel": "low",
-        "auditMode": "all"
-      },
-      "SdkAnalysisLevel": "9.0.100"
+        "auditMode": "direct"
+      }
     },
     "frameworks": {
       "net8.0-windows7.0": {
@@ -7670,61 +7669,11 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.100/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
       }
     }
   },
   "logs": [
-    {
-      "code": "NU1903",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "У пакета \"Microsoft.NETCore.App\" 1.0.5 есть известная уязвимость https://github.com/advisories/GHSA-7mfr-774f-w5r9 (уровень серьезности: высокий)",
-      "libraryId": "Microsoft.NETCore.App",
-      "targetGraphs": [
-        "net8.0-windows7.0"
-      ]
-    },
-    {
-      "code": "NU1903",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "У пакета \"Microsoft.NETCore.App\" 1.0.5 есть известная уязвимость https://github.com/advisories/GHSA-8884-xcr4-r68p (уровень серьезности: высокий)",
-      "libraryId": "Microsoft.NETCore.App",
-      "targetGraphs": [
-        "net8.0-windows7.0"
-      ]
-    },
-    {
-      "code": "NU1903",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "У пакета \"Microsoft.NETCore.Jit\" 1.0.7 есть известная уязвимость https://github.com/advisories/GHSA-xcvr-qv8h-m7xw (уровень серьезности: высокий)",
-      "libraryId": "Microsoft.NETCore.Jit",
-      "targetGraphs": [
-        "net8.0-windows7.0"
-      ]
-    },
-    {
-      "code": "NU1903",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "У пакета \"System.Net.Http\" 4.1.2 есть известная уязвимость https://github.com/advisories/GHSA-7jgj-8wvc-jh57 (уровень серьезности: высокий)",
-      "libraryId": "System.Net.Http",
-      "targetGraphs": [
-        "net8.0-windows7.0"
-      ]
-    },
-    {
-      "code": "NU1903",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "У пакета \"System.Security.Cryptography.X509Certificates\" 4.1.0 есть известная уязвимость https://github.com/advisories/GHSA-7mfr-774f-w5r9 (уровень серьезности: высокий)",
-      "libraryId": "System.Security.Cryptography.X509Certificates",
-      "targetGraphs": [
-        "net8.0-windows7.0"
-      ]
-    },
     {
       "code": "NU1701",
       "level": "Warning",

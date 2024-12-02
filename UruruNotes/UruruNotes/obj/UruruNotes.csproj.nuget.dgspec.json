@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Users\\sa\\Documents\\1 тима\\ЮФУ\\UruruNotes\\Project\\UruruNote\\UruruNotes\\UruruNotes\\UruruNotes.csproj": {}
+    "C:\\Users\\xxxra\\OneDrive\\Документы\\GitHub\\UruruNotes\\UruruNotes\\UruruNotes.csproj": {}
   },
   "projects": {
-    "D:\\Users\\sa\\Documents\\1 тима\\ЮФУ\\UruruNotes\\Project\\UruruNote\\UruruNotes\\UruruNotes\\UruruNotes.csproj": {
+    "C:\\Users\\xxxra\\OneDrive\\Документы\\GitHub\\UruruNotes\\UruruNotes\\UruruNotes.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Users\\sa\\Documents\\1 тима\\ЮФУ\\UruruNotes\\Project\\UruruNote\\UruruNotes\\UruruNotes\\UruruNotes.csproj",
+        "projectUniqueName": "C:\\Users\\xxxra\\OneDrive\\Документы\\GitHub\\UruruNotes\\UruruNotes\\UruruNotes.csproj",
         "projectName": "UruruNotes",
-        "projectPath": "D:\\Users\\sa\\Documents\\1 тима\\ЮФУ\\UruruNotes\\Project\\UruruNote\\UruruNotes\\UruruNotes\\UruruNotes.csproj",
-        "packagesPath": "C:\\Users\\sa\\.nuget\\packages\\",
-        "outputPath": "D:\\Users\\sa\\Documents\\1 тима\\ЮФУ\\UruruNotes\\Project\\UruruNote\\UruruNotes\\UruruNotes\\obj\\",
+        "projectPath": "C:\\Users\\xxxra\\OneDrive\\Документы\\GitHub\\UruruNotes\\UruruNotes\\UruruNotes.csproj",
+        "packagesPath": "C:\\Users\\xxxra\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\xxxra\\OneDrive\\Документы\\GitHub\\UruruNotes\\UruruNotes\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "D:\\Visual Studio\\NuGetPackages"
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\sa\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\xxxra\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -43,9 +43,8 @@
         "restoreAuditProperties": {
           "enableAudit": "true",
           "auditLevel": "low",
-          "auditMode": "all"
-        },
-        "SdkAnalysisLevel": "9.0.100"
+          "auditMode": "direct"
+        }
       },
       "frameworks": {
         "net8.0-windows7.0": {
@@ -83,7 +82,7 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.100/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
