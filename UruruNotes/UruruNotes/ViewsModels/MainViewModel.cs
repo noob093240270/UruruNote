@@ -13,6 +13,7 @@ using UruruNote.Views;
 using UruruNotes;
 using UruruNotes.Models;
 using UruruNotes.Views;
+using UruruNotes.ViewsModels;
 
 namespace UruruNote.ViewsModels
 {
@@ -46,9 +47,8 @@ namespace UruruNote.ViewsModels
         // Метод для открытия окна настроек
         private void OpenSettings()
         {
-            // Создаем новое окно настроек и показываем его
             var settingsWindow = new SettingsWindow();
-            settingsWindow.Show();
+            settingsWindow.ShowDialog();
         }
 
         /*private bool _isDarkModeEanbled;
