@@ -5,7 +5,7 @@
     <Grid>
         <!-- RichTextBox для редактирования содержимого -->
         <RichTextBox Name="MarkdownRichTextBox" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Margin="10" 
-                     PreviewKeyDown="MarkdownRichTextBox_PreviewKeyDown">
+                     PreviewKeyDown="MarkdownRichTextBox_PreviewKeyDown" CaretBrush="#FF235C9A" SelectionBrush="#FF235C9A" SelectionTextBrush="#FF235C9A">
             <RichTextBox.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Жирный" Click="BoldMenuItem_Click"/>
@@ -22,6 +22,6 @@
                 HorizontalAlignment="Right" 
                 Margin="10" 
                 Width="100" 
-                Click="SaveButton_Click"/>
+                Click="SaveButton_Click" Background="White" BorderBrush="#FF235C9A"/>
     </Grid>
 </UserControl>

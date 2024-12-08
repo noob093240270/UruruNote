@@ -6,17 +6,19 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
         xmlns:local="clr-namespace:UruruNotes.Models" xmlns:viewsmodels="clr-namespace:UruruNote.ViewsModels" d:DataContext="{d:DesignInstance Type=viewsmodels:MainViewModel}"
         mc:Ignorable="d"
-        Title="UruruNote" Height="490" Width="800" Background="Black" Icon="/Views/logo2.png">
+        Title="UruruNote" Height="490" Width="800" Background="#FFEBEBEB" Icon="/Views/logo2.png">
 
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+
     </Window.Resources>
     <Window.Foreground>
         <SolidColorBrush Color="#FFF9F9F9" Opacity="0.2"/>
+        
     </Window.Foreground>
 
 
-    <Grid Background="#FF383838">
+    <Grid Background="#FFCCCCCC">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200"/>
             <ColumnDefinition Width="*"/>
@@ -30,11 +32,11 @@
 
 
         <Border Grid.ColumnSpan="2"
-                BorderBrush="#FF636161"
-                BorderThickness="3"
+                BorderBrush="#FFCCCCCC"
+                BorderThickness="3" Background="#FFCCCCCC"
                 >
             <Grid Grid.Row="0" 
-                  Background="#FF636161"
+                  Background="#FFF6F6F6"
                   Grid.Column="1"   
               >
                 <Grid.ColumnDefinitions>
@@ -94,7 +96,7 @@
                              IsReadOnly="True" 
                              VerticalScrollBarVisibility="Auto" 
                              HorizontalScrollBarVisibility="Auto" 
-                             Margin="5,0" />
+                             Margin="5,0" Width="141" CaretBrush="#FF235C9A" SelectionBrush="#FF235C9A" SelectionTextBrush="#FF235C9A" />
 
                 </StackPanel>
 
@@ -115,7 +117,8 @@
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="200" MaxWidth="300" />
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="57*" />
+                <ColumnDefinition Width="544*"/>
             </Grid.ColumnDefinitions>
 
 
@@ -131,14 +134,14 @@
                 <!-- Дерево файлов -->
                 <materialDesign:Card Grid.Column="0" Grid.Row="1" VerticalAlignment="Stretch" Background="#FF636161">
 
-                    <Grid >
+                    <Grid Background="#FFCCCCCC" >
                         <!-- Верхняя строка для TreeView -->
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" MinHeight="100"/>
                             <RowDefinition Height="auto" />
                         </Grid.RowDefinitions>
 
-                        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Margin="5,5,5,5">
+                        <ScrollViewer Grid.Row="0" Background="#FFF6F6F6" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Margin="5,5,5,5" >
                             <StackPanel Grid.Row="0">
 
                                 <!-- Первый TreeView для папок -->
@@ -187,20 +190,21 @@
                             </Grid.ColumnDefinitions>
 
                             <StackPanel Grid.Column="0" HorizontalAlignment="Center">
-                                <Button Content="Создать новый файл" 
+                                <Button Content="Новый файл" 
                                 Click="CreateNewFileButton_Click" 
                                 FontSize="8"
-                                Padding="3" Background="#FFD6D6D6" BorderBrush="#FF636161"
+                                Padding="3" Background="#FFF6F6F6" FontFamily="Agency FB" FontWeight="Normal"  Width="90" BorderBrush="#FF235C9A"
                                 />
                             </StackPanel>
 
                             <StackPanel Grid.Column="1" HorizontalAlignment="Center">
-                                <Button Content="Создать новую папку" 
+                                <Button  
                                 Click="CreateNewFolderButton_Click"
                                 FontSize="8"
                                 Padding="3"
-                                Background="#FFD6D6D6"
-                                BorderBrush="#FF636161"
+                                Content="Новая папка"
+                                Background="#FFF6F6F6"
+                                FontWeight="Normal" Width="92" BorderBrush="#FF235C9A"
                                 />
                             </StackPanel>
 
@@ -213,7 +217,7 @@
 
             </Grid>
             <!--"Фрэйм для отображения страниц в правой части экрана"-->
-            <Frame x:Name="PageFrame" NavigationUIVisibility="Hidden" Grid.Column="1"/>
+            <Frame x:Name="PageFrame" NavigationUIVisibility="Hidden" Grid.Column="1" Background="#FFEBEBEB" Grid.ColumnSpan="2"/>
 
 
         </Grid>

@@ -7588,23 +7588,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\dd\\.nuget\\packages\\": {},
+    "C:\\Users\\xxxra\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\dd\\Documents\\GitHub\\UruruNote\\UruruNotes\\UruruNotes\\UruruNotes.csproj",
+      "projectUniqueName": "C:\\Users\\xxxra\\OneDrive\\Документы\\GitHub\\UruruNotes\\UruruNotes\\UruruNotes.csproj",
       "projectName": "UruruNotes",
-      "projectPath": "C:\\Users\\dd\\Documents\\GitHub\\UruruNote\\UruruNotes\\UruruNotes\\UruruNotes.csproj",
-      "packagesPath": "C:\\Users\\dd\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\dd\\Documents\\GitHub\\UruruNote\\UruruNotes\\UruruNotes\\obj\\",
+      "projectPath": "C:\\Users\\xxxra\\OneDrive\\Документы\\GitHub\\UruruNotes\\UruruNotes\\UruruNotes.csproj",
+      "packagesPath": "C:\\Users\\xxxra\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\xxxra\\OneDrive\\Документы\\GitHub\\UruruNotes\\UruruNotes\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\dd\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\xxxra\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -7626,6 +7626,11 @@
         "warnAsError": [
           "NU1605"
         ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -7664,7 +7669,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
       }
     }
   },

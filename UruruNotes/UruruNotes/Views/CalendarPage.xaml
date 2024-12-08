@@ -29,9 +29,9 @@
 
         <StackPanel Grid.Column="0" Orientation="Vertical">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
-                <Button Content="⟨" Width="50" Height="30" Command="{Binding PreviousMonthCommand}" />
+                <Button Content="⟨" Width="50" Height="30" Command="{Binding PreviousMonthCommand}" Background="White" BorderBrush="#FF235C9A" />
                 <TextBlock Text="{Binding CurrentMonthYear}" FontSize="20" FontWeight="Bold" Margin="20,0" />
-                <Button Content="⟩" Width="50" Height="30" Command="{Binding NextMonthCommand}" />
+                <Button Content="⟩" Width="50" Height="30" Command="{Binding NextMonthCommand}" Background="White" BorderBrush="#FF235C9A" />
             </StackPanel>
 
             <!-- Сетка для дней недели -->
@@ -73,12 +73,12 @@
             Margin="10">
             <StackPanel>
                 <TextBlock Text="Создать заметку" FontSize="20" FontWeight="Bold" Margin="10"/>
-                <TextBox Text="{Binding NewTaskContent}" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Height="100" Margin="10" FontSize="14"/>
-                <Button Content="Сохранить" Command="{Binding SaveTaskCommand}" Width="100" Margin="10" HorizontalAlignment="Left" />
+                <TextBox Text="{Binding NewTaskContent}" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Height="100" Margin="10" FontSize="14" CaretBrush="#FF235C9A" SelectionBrush="#FF235C9A"/>
+                <Button Content="Сохранить" Command="{Binding SaveTaskCommand}" Width="100" Margin="10" HorizontalAlignment="Left" Background="White" BorderBrush="#FF235C9A" />
 
                 <TextBlock Text="Создать напоминание" FontSize="20" FontWeight="Bold" Margin="10"/>
-                <TextBox Text="{Binding NewTaskContentRemind}" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Height="100" Margin="10" FontSize="14"/>
-                <Button Content="Сохранить" Command="{Binding SaveTaskCommand}" Width="100" Margin="10" HorizontalAlignment="Left" />
+                <TextBox Text="{Binding NewTaskContentRemind}" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Height="100" Margin="10" FontSize="14" CaretBrush="#FF235C9A" SelectionBrush="#FF235C9A"/>
+                <Button Content="Сохранить" Command="{Binding SaveTaskCommand}" Width="100" Margin="10" HorizontalAlignment="Left" Background="White" BorderBrush="#FF235C9A" />
             </StackPanel>
         </Border>
 
