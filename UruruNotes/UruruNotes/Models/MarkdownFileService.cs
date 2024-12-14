@@ -1,69 +1,103 @@
 ﻿using System;
 using System.IO;
+using System.Windows;
 
 namespace UruruNote.Models
 {
     public class MarkdownFileService
     {
-        private readonly string _directoryPath;
+        // Путь к папке MyFolders для хранения файлов
+        public string RootDirectory { get; }
 
-        public MarkdownFileService(/*string dirPath*/)
+        public MarkdownFileService()
         {
-            //_directoryPath = dirPath;
-            //Путь к папке внутри директории приложения
-            _directoryPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "MarkdownFiles");
+            // Указываем путь к папке MyFolders внутри приложения
+            RootDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "MyFolders");
 
-            //Создание папки, если она не существует
-            if (!Directory.Exists(_directoryPath))
+            // Создание папки MyFolders, если она не существует
+            if (!Directory.Exists(RootDirectory))
             {
-                Directory.CreateDirectory(_directoryPath);
+                Directory.CreateDirectory(RootDirectory);
             }
         }
 
         public string CreateMarkdownFile(string filePath)
         {
-            try
+            // Получаем имя файла без пути
+            string fileName = Path.GetFileName(filePath);
+
+            // Создаем файл в указанной папке
+            using (StreamWriter writer = new StreamWriter(filePath))
             {
-                // Проверяем, существует ли файл с таким путем
-                if (File.Exists(filePath))
-                {
-                    throw new Exception("Файл уже существует.");
-                }
+                // Заголовок первого уровня
+                writer.WriteLine("# Мой начальный файл");
+                writer.WriteLine("Создано: " + DateTime.Now.ToString("G"));
+                writer.WriteLine();
 
-                using (StreamWriter writer = new StreamWriter(filePath))
-                {
-                    // Заголовок первого уровня
-                    writer.WriteLine("# Мой начальный файл");
-                    writer.WriteLine("Создано: " + DateTime.Now.ToString("G"));
-                    writer.WriteLine();
+                // Заголовок второго уровня
+                writer.WriteLine("## Задачи на сегодня");
+                writer.WriteLine("1. Поспать");
+                writer.WriteLine("2. Поспать");
+                writer.WriteLine("3. Поспать");
+                writer.WriteLine();
 
-                    // Заголовок второго уровня
-                    writer.WriteLine("## Задачи на сегодня");
-                    writer.WriteLine("1. Поспать");
-                    writer.WriteLine("2. Поспать");
-                    writer.WriteLine("3. Поспать");
-                    writer.WriteLine();
-
-                    // Заключение
-                    writer.WriteLine("### Дополнительная информация");
-                    writer.WriteLine("Этот файл создан автоматически для организации задач на день.");
-                }
-
-                return filePath; // Возвращаем путь к созданному файлу
+                // Заключение
+                writer.WriteLine("### Дополнительная информация");
+                writer.WriteLine("Этот файл создан автоматически для организации задач на день.");
             }
-            catch (Exception ex)
-            {
-                throw new Exception("Ошибка при создании файла: " + ex.Message);
-            }
+
+            return fileName; // Возвращаем только имя файла
         }
 
-
-
-        public bool IsMarkdownFileExists(string fileName)
+        public string CreateMarkdownFileInSubfolder(string folderPath, string fileName)
         {
-            string filePath = Path.Combine(_directoryPath, fileName);
-            return File.Exists(filePath); // Проверяем, существует ли файл по полному пути
+            // Формируем полный путь для создания файла в подкаталоге
+            string filePath = Path.Combine(folderPath, fileName + ".md");
+
+            string mainFolderFilePath = Path.Combine(RootDirectory, fileName + ".md");
+
+            // Проверяем, существует ли файл
+            if (File.Exists(filePath))
+            {
+                MessageBox.Show($"Файл {fileName}.md уже существует в выбранной папке.");
+                return null; // Если файл существует, ничего не делаем
+            }
+
+            // Создаем файл в подкаталоге
+            using (StreamWriter writer = new StreamWriter(filePath))
+            {
+                // Добавляем начальный контент
+                writer.WriteLine("# Мой начальный файл");
+                writer.WriteLine("Создано: " + DateTime.Now.ToString("G"));
+                writer.WriteLine();
+
+                writer.WriteLine("## Задачи на сегодня");
+                writer.WriteLine("1. Поспать");
+                writer.WriteLine("2. Поспать");
+                writer.WriteLine("3. Поспать");
+
+                writer.WriteLine("### Дополнительная информация");
+                writer.WriteLine("Этот файл создан автоматически.");
+            }
+
+            // После создания файла в подкаталоге удаляем его из основной папки
+            if (File.Exists(mainFolderFilePath))
+            {
+                File.Delete(mainFolderFilePath);
+            }
+
+            return fileName; // Возвращаем имя файла
         }
 
+
+
+
+
+
+        public bool IsMarkdownFileExists(string filePath)
+        {
+            return File.Exists(filePath);
+        }
     }
+
 }
