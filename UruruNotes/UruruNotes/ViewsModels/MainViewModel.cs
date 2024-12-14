@@ -171,7 +171,7 @@ namespace UruruNote.ViewsModels
 
             IsFileCreated = markdownService.IsMarkdownFileExists(fileName);*/
 
-            
+
 
             /*
             string folderPath = Path.Combine(Directory.GetCurrentDirectory(), "MyFolder");
@@ -197,51 +197,6 @@ namespace UruruNote.ViewsModels
         }
 
         #region CreateFileInFolder
-
-
-        private void AddFile(FolderItem selectedFolder)
-        {
-            if (selectedFolder == null)
-            {
-                MessageBox.Show("Не выбрана папка для добавления файла.");
-                return;
-            }
-
-            var newFileWindow = new NewFileWindow();
-            if (newFileWindow.ShowDialog() != true)
-            {
-                return;
-            }
-
-            string fileName = newFileWindow.FileName + ".md";
-            string filePath = Path.Combine(selectedFolder.FilePath, fileName);
-
-            // Проверяем уникальность
-            if (!IsFileNameUnique(fileName, selectedFolder))
-            {
-                MessageBox.Show("Файл с таким именем уже существует в этом или другом каталоге.");
-                return;
-            }
-
-            try
-            {
-                var markdownService = new MarkdownFileService();
-                markdownService.CreateMarkdownFile(filePath);
-
-                selectedFolder.Files.Add(new FileItem
-                {
-                    FileName = fileName,
-                    FilePath = filePath
-                });
-
-                MessageBox.Show("Файл успешно создан: " + filePath);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Ошибка при создании файла: {ex.Message}");
-            }
-        }
-
 
 
 
@@ -329,7 +284,168 @@ namespace UruruNote.ViewsModels
 
 
 
-        #region CreateMdFile
+        #region CreateFileInFolder
+
+        private void CreateNewMarkdownFile()
+        {
+            var newFileWindow = new NewFileWindow();
+
+            newFileWindow.FileCreated += (fileName) =>
+            {
+                // Убираем расширение .md, если оно уже есть
+                if (fileName.EndsWith(".md", StringComparison.OrdinalIgnoreCase))
+                {
+                    fileName = fileName.Substring(0, fileName.Length - 3); // Убираем расширение .md
+                }
+
+                string filePath = Path.Combine(RootDirectory, fileName + ".md");
+
+                // Отладка: Показываем путь перед проверкой
+                MessageBox.Show($"Путь файла: {filePath}", "Отладка");
+
+
+                var markdownService = new MarkdownFileService();
+
+                // Создание файла
+                string createdFileName = markdownService.CreateMarkdownFile(filePath);
+
+                // Добавляем файл в список (ObservableCollection автоматически уведомит UI)
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    Files.Add(new FileItem
+                    {
+                        FileName = createdFileName, // Используем имя файла, а не полный путь
+                        FilePath = filePath
+                    });
+                });
+
+                // Уведомление пользователя
+                MessageBox.Show($"Файл успешно создан: {filePath}");
+            };
+
+            newFileWindow.ShowDialog();
+        }
+
+
+
+
+
+
+
+        private void CreateInitialMarkdownFile()
+        {
+            var markdownService = new MarkdownFileService();
+            string fileName = "initial_file.md";
+            string filePath = Path.Combine(RootDirectory, fileName); // Путь для создания файла в нужной папке
+
+            // Проверка существования файла
+            if (File.Exists(filePath))
+            {
+                MessageBox.Show("Файл уже был создан ранее.");
+                return;
+            }
+
+            // Создание файла
+            markdownService.CreateMarkdownFile(filePath);
+
+            IsFileCreated = true; // Устанавливаем флаг, что файл создан
+
+            // Добавляем файл в список
+            Files.Add(new FileItem
+            {
+                FileName = fileName,
+                FilePath = filePath
+            });
+
+            MessageBox.Show($"Файл успешно создан: {filePath}");
+        }
+
+
+        private void AddFile(FolderItem selectedFolder)
+        {
+            // Проверяем, что папка выбрана
+            if (selectedFolder == null || string.IsNullOrEmpty(selectedFolder.FilePath))
+            {
+                MessageBox.Show("Папка не выбрана.");
+                return;
+            }
+
+            // Убедимся, что папка существует
+            if (!Directory.Exists(selectedFolder.FilePath))
+            {
+                Directory.CreateDirectory(selectedFolder.FilePath); // Если папка не существует, создаем её
+            }
+
+            // Открываем окно для ввода имени файла
+            var newFileWindow = new NewFileWindow();
+            if (newFileWindow.ShowDialog() != true)
+            {
+                return;
+            }
+
+            // Получаем имя файла
+            string fileName = newFileWindow.FileName;
+
+            // Используем функцию для создания файла только в подкаталоге
+            var markdownService = new MarkdownFileService();
+            string createdFileName = markdownService.CreateMarkdownFileInSubfolder(selectedFolder.FilePath, fileName);
+
+            if (createdFileName == null)
+            {
+                // Файл не был создан, если он уже существует
+                return;
+            }
+
+            // Добавляем файл в коллекцию папки (не в основную папку)
+            selectedFolder.Files.Add(new FileItem
+            {
+                FileName = createdFileName,
+                FilePath = Path.Combine(selectedFolder.FilePath, createdFileName + ".md")
+            });
+
+            // Уведомление пользователя
+            MessageBox.Show($"Файл успешно создан в папке: {selectedFolder.FilePath}");
+        }
+
+        private bool IsFileNameUnique(string fileName, FolderItem targetFolder = null)
+        {
+            // Проверяем файлы в общем каталоге (если targetFolder == null)
+            if (targetFolder == null)
+            {
+                if (Files.Any(file => file.FileName.Equals(fileName, StringComparison.OrdinalIgnoreCase)))
+                {
+                    return false;
+                }
+
+                // Проверяем файлы во всех папках
+                foreach (var folder in Folders)
+                {
+                    if (!IsFileNameUnique(fileName, folder))
+                    {
+                        return false;
+                    }
+                }
+            }
+            else
+            {
+                // Проверяем файлы в указанной папке
+                if (targetFolder.Files.Any(file => file.FileName.Equals(fileName, StringComparison.OrdinalIgnoreCase)))
+                {
+                    return false;
+                }
+
+                // Рекурсивная проверка в подкаталогах
+                foreach (var subFolder in targetFolder.SubFolders)
+                {
+                    if (!IsFileNameUnique(fileName, subFolder))
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true; // Имя уникально
+        }
 
 
         private bool _isFileCreated;
@@ -356,63 +472,6 @@ namespace UruruNote.ViewsModels
             }
         }
 
-        private void CreateInitialMarkdownFile()
-        {
-            var markdownService = new MarkdownFileService();
-            string fileName = "initial_file.md";
-
-            if (markdownService.IsMarkdownFileExists(fileName))
-            {
-                MessageBox.Show("Файл уже был создан ранее.");
-                return;
-            }
-
-            try
-            {
-                string filePath = markdownService.CreateMarkdownFile(fileName);
-                IsFileCreated = true; // Устанавливаем флаг, что файл создан
-                LoadFiles(); // Загрузите файлы после создания
-                MessageBox.Show("Файл успешно создан: " + filePath);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
-
-        private void CreateNewMarkdownFile()
-        {
-            var newFileWindow = new NewFileWindow();
-
-            newFileWindow.FileCreated += (fileName) =>
-            {
-                // Убираем расширение .md, если оно уже есть
-                if (fileName.EndsWith(".md", StringComparison.OrdinalIgnoreCase))
-                {
-                    fileName = fileName.Substring(0, fileName.Length - 3); // Убираем расширение .md
-                }
-
-                string filePath = Path.Combine(RootDirectory, fileName + ".md");
-
-                // Проверяем уникальность
-                if (!IsFileNameUnique(fileName))
-                {
-                    MessageBox.Show("Файл с таким именем уже существует.");
-                    return;
-                }
-
-                var markdownService = new MarkdownFileService();
-                markdownService.CreateMarkdownFile(filePath);
-                Files.Add(new FileItem
-                {
-                    FileName = fileName + ".md",
-                    FilePath = filePath
-                });
-            };
-
-            newFileWindow.ShowDialog();
-        }
 
 
 
@@ -495,45 +554,7 @@ namespace UruruNote.ViewsModels
         }
 
 
-        private bool IsFileNameUnique(string fileName, FolderItem targetFolder = null)
-        {
-            // Проверяем файлы в общем каталоге (если targetFolder == null)
-            if (targetFolder == null)
-            {
-                if (Files.Any(file => file.FileName.Equals(fileName, StringComparison.OrdinalIgnoreCase)))
-                {
-                    return false;
-                }
 
-                // Проверяем файлы во всех папках
-                foreach (var folder in Folders)
-                {
-                    if (!IsFileNameUnique(fileName, folder))
-                    {
-                        return false;
-                    }
-                }
-            }
-            else
-            {
-                // Проверяем файлы в указанной папке
-                if (targetFolder.Files.Any(file => file.FileName.Equals(fileName, StringComparison.OrdinalIgnoreCase)))
-                {
-                    return false;
-                }
-
-                // Рекурсивная проверка в подкаталогах
-                foreach (var subFolder in targetFolder.SubFolders)
-                {
-                    if (!IsFileNameUnique(fileName, subFolder))
-                    {
-                        return false;
-                    }
-                }
-            }
-
-            return true; // Имя уникально
-        }
 
 
 
