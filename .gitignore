@@ -1,6 +1,17 @@
-# Visual Studio cache
+# Visual Studio файлы
 .vs/
+*.suo
+*.user
+*.cache
+*.db
 
-# Build output
+# Скомпилированные файлы
 bin/
 obj/
+*.dll
+*.exe
+*.pdb
+*.nuget.cache
+*.nuget.g.props
+*.dgspec.json
+project.assets.json
