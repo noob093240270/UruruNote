@@ -1,12 +1,23 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "D:\\Users\\sa\\Documents\\1 \u0442\u0438\u043C\u0430\\\u042E\u0424\u0423\\UruruNotes\\Project\\UruruNote\\",
+  "WorkspaceRootPath": "C:\\Users\\sa\\source\\repos\\noob093240270\\UruruNote\\",
   "Documents": [],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
-      "DocumentGroups": []
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
