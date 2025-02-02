@@ -11,6 +11,10 @@
       "RelativeMoniker": "D:0:0:{E86752DC-FC7A-4203-AAED-B3165F7C114A}|UruruNotes\\UruruNotes.csproj|solutionrelative:ururunotes\\views\\calendarpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{E86752DC-FC7A-4203-AAED-B3165F7C114A}|UruruNotes\\UruruNotes.csproj|c:\\users\\sa\\source\\repos\\noob093240270\\ururunote\\ururunotes\\ururunotes\\views\\markdownviewer.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{E86752DC-FC7A-4203-AAED-B3165F7C114A}|UruruNotes\\UruruNotes.csproj|solutionrelative:ururunotes\\views\\markdownviewer.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{E86752DC-FC7A-4203-AAED-B3165F7C114A}|UruruNotes\\UruruNotes.csproj|c:\\users\\sa\\source\\repos\\noob093240270\\ururunote\\ururunotes\\ururunotes\\viewsmodels\\calendarviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{E86752DC-FC7A-4203-AAED-B3165F7C114A}|UruruNotes\\UruruNotes.csproj|solutionrelative:ururunotes\\viewsmodels\\calendarviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -21,10 +25,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{E86752DC-FC7A-4203-AAED-B3165F7C114A}|UruruNotes\\UruruNotes.csproj|c:\\users\\sa\\source\\repos\\noob093240270\\ururunote\\ururunotes\\ururunotes\\models\\markdownfileservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{E86752DC-FC7A-4203-AAED-B3165F7C114A}|UruruNotes\\UruruNotes.csproj|solutionrelative:ururunotes\\models\\markdownfileservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E86752DC-FC7A-4203-AAED-B3165F7C114A}|UruruNotes\\UruruNotes.csproj|c:\\users\\sa\\source\\repos\\noob093240270\\ururunote\\ururunotes\\ururunotes\\views\\markdownviewer.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{E86752DC-FC7A-4203-AAED-B3165F7C114A}|UruruNotes\\UruruNotes.csproj|solutionrelative:ururunotes\\views\\markdownviewer.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{E86752DC-FC7A-4203-AAED-B3165F7C114A}|UruruNotes\\UruruNotes.csproj|c:\\users\\sa\\source\\repos\\noob093240270\\ururunote\\ururunotes\\ururunotes\\models\\folderitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -71,15 +71,40 @@
       "DocumentGroups": [
         {
           "DockedHeight": 315,
-          "SelectedChildIndex": 5,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Bookmark",
-              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
+              "Title": "CalendarPage.xaml",
+              "DocumentMoniker": "C:\\Users\\sa\\source\\repos\\noob093240270\\UruruNote\\UruruNotes\\UruruNotes\\Views\\CalendarPage.xaml",
+              "RelativeDocumentMoniker": "UruruNotes\\Views\\CalendarPage.xaml",
+              "ToolTip": "C:\\Users\\sa\\source\\repos\\noob093240270\\UruruNote\\UruruNotes\\UruruNotes\\Views\\CalendarPage.xaml*",
+              "RelativeToolTip": "UruruNotes\\Views\\CalendarPage.xaml*",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-02-01T18:46:56.635Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "CalendarPage.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\sa\\source\\repos\\noob093240270\\UruruNote\\UruruNotes\\UruruNotes\\Views\\CalendarPage.xaml.cs",
+              "RelativeDocumentMoniker": "UruruNotes\\Views\\CalendarPage.xaml.cs",
+              "ToolTip": "C:\\Users\\sa\\source\\repos\\noob093240270\\UruruNote\\UruruNotes\\UruruNotes\\Views\\CalendarPage.xaml.cs",
+              "RelativeToolTip": "UruruNotes\\Views\\CalendarPage.xaml.cs",
+              "ViewState": "AgIAAEQAAAAAAAAAAAAgwEoAAABFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-31T13:55:13.311Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "CalendarViewModel.cs",
               "DocumentMoniker": "C:\\Users\\sa\\source\\repos\\noob093240270\\UruruNote\\UruruNotes\\UruruNotes\\ViewsModels\\CalendarViewModel.cs",
               "RelativeDocumentMoniker": "UruruNotes\\ViewsModels\\CalendarViewModel.cs",
@@ -87,8 +112,7 @@
               "RelativeToolTip": "UruruNotes\\ViewsModels\\CalendarViewModel.cs",
               "ViewState": "AgIAALUAAAAAAAAAAAAQwMwAAAAeAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-31T13:24:02.275Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-01-31T13:24:02.275Z"
             },
             {
               "$type": "Document",
@@ -103,44 +127,19 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "MainViewModel.cs",
               "DocumentMoniker": "C:\\Users\\sa\\source\\repos\\noob093240270\\UruruNote\\UruruNotes\\UruruNotes\\ViewsModels\\MainViewModel.cs",
               "RelativeDocumentMoniker": "UruruNotes\\ViewsModels\\MainViewModel.cs",
               "ToolTip": "C:\\Users\\sa\\source\\repos\\noob093240270\\UruruNote\\UruruNotes\\UruruNotes\\ViewsModels\\MainViewModel.cs",
               "RelativeToolTip": "UruruNotes\\ViewsModels\\MainViewModel.cs",
-              "ViewState": "AgIAAAkCAAAAAAAAAAAmwOQAAAAsAAAAAAAAAA==",
+              "ViewState": "AgIAAKwAAAAAAAAAAADwv+QAAAAsAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-11-28T18:33:00.05Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "CalendarPage.xaml.cs",
-              "DocumentMoniker": "C:\\Users\\sa\\source\\repos\\noob093240270\\UruruNote\\UruruNotes\\UruruNotes\\Views\\CalendarPage.xaml.cs",
-              "RelativeDocumentMoniker": "UruruNotes\\Views\\CalendarPage.xaml.cs",
-              "ToolTip": "C:\\Users\\sa\\source\\repos\\noob093240270\\UruruNote\\UruruNotes\\UruruNotes\\Views\\CalendarPage.xaml.cs",
-              "RelativeToolTip": "UruruNotes\\Views\\CalendarPage.xaml.cs",
-              "ViewState": "AgIAABQAAAAAAAAAAADwvxkAAAA8AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-31T13:55:13.311Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "CalendarPage.xaml",
-              "DocumentMoniker": "C:\\Users\\sa\\source\\repos\\noob093240270\\UruruNote\\UruruNotes\\UruruNotes\\Views\\CalendarPage.xaml",
-              "RelativeDocumentMoniker": "UruruNotes\\Views\\CalendarPage.xaml",
-              "ToolTip": "C:\\Users\\sa\\source\\repos\\noob093240270\\UruruNote\\UruruNotes\\UruruNotes\\Views\\CalendarPage.xaml*",
-              "RelativeToolTip": "UruruNotes\\Views\\CalendarPage.xaml*",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2024-11-28T18:33:00.054Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 2,
               "Title": "MarkdownViewer.xaml",
               "DocumentMoniker": "C:\\Users\\sa\\source\\repos\\noob093240270\\UruruNote\\UruruNotes\\UruruNotes\\Views\\MarkdownViewer.xaml",
               "RelativeDocumentMoniker": "UruruNotes\\Views\\MarkdownViewer.xaml",
@@ -243,7 +242,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "MarkdownFileService.cs",
               "DocumentMoniker": "C:\\Users\\sa\\source\\repos\\noob093240270\\UruruNote\\UruruNotes\\UruruNotes\\Models\\MarkdownFileService.cs",
               "RelativeDocumentMoniker": "UruruNotes\\Models\\MarkdownFileService.cs",
