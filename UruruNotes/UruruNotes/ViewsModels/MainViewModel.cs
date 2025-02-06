@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using GalaSoft.MvvmLight.Command;
 using UruruNote.Models;
 using UruruNote.Views;
@@ -26,6 +27,13 @@ namespace UruruNote.ViewsModels
             PropertyChangedEventHandler handler = PropertyChanged;
             if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
         }*/
+        private MarkdownViewer _markdownViewer;
+
+        public void SetMarkdownViewer(MarkdownViewer markdownViewer)
+        {
+            _markdownViewer = markdownViewer;
+        }
+
 
         public UserSettings userSettings { get; set; }
 
@@ -33,13 +41,12 @@ namespace UruruNote.ViewsModels
 
         #region Settings
 
-        // Добавленное свойство команды для открытия настроек
+        // Команда для открытия настроек
         private ICommand _openSettingsCommand;
         public ICommand OpenSettingsCommand
         {
             get
             {
-                // Инициализируем команду
                 return _openSettingsCommand ??= new RelayCommand(OpenSettings);
             }
         }
@@ -47,10 +54,98 @@ namespace UruruNote.ViewsModels
         // Метод для открытия окна настроек
         private void OpenSettings()
         {
-            var settingsWindow = new SettingsWindow();
+            var settingsWindow = new SettingsWindow(this);
             settingsWindow.ShowDialog();
         }
+        // Реализация выбора размера шрифта
+        private ObservableCollection<int> _fontSizeOptions;
+        public ObservableCollection<int> FontSizeOptions
+        {
+            get => _fontSizeOptions;
+            set
+            {
+                _fontSizeOptions = value;
+                OnPropertyChanged(nameof(FontSizeOptions));
+            }
+        }
+        private int _selectedFontSize = 15;
+        private int? _previousFontSize;
+        private bool _isUpdatingFontSize = false;
+        public int SelectedFontSize
+        {
+            get => _selectedFontSize;
+            set
+            {
+                if (value >= 10 && value <= 35)
+                {
+                    if (_previousFontSize != value)
+                    {
+                        if (_isUpdatingFontSize) return;
 
+                        try
+                        {
+                            _isUpdatingFontSize = true;
+
+                            _selectedFontSize = value;
+                            OnPropertyChanged(nameof(SelectedFontSize));
+
+                            // Обновляем глобальный ресурс
+                            App.UpdateGlobalFontSize(value);
+
+                            // Сохраняем новое значение
+                            SettingsManager.SaveSettings(value);
+
+                            _previousFontSize = value;
+                        }
+                        finally
+                        {
+                            _isUpdatingFontSize = false;
+                        }
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Размер шрифта должен быть от 10 до 35.");
+                }
+            }
+        }
+
+        // Выбранный шрифт
+        private string _selectedFont;
+        public string SelectedFont
+        {
+            get => _selectedFont;
+            set
+            {
+                if (_selectedFont != value)
+                {
+                    _selectedFont = value;
+                    OnPropertyChanged(nameof(SelectedFont));
+                    ApplyFont(); // Применение нового шрифта
+                }
+            }
+        }
+
+        // Применение нового шрифта к приложению
+        private void ApplyFont()
+        {
+            if (!string.IsNullOrEmpty(_selectedFont))
+            {
+                var app = Application.Current;
+                if (app.Resources.Contains("GlobalFont"))
+                {
+                    app.Resources["GlobalFont"] = new FontFamily(_selectedFont);
+                }
+                else
+                {
+                    app.Resources.Add("GlobalFont", new FontFamily(_selectedFont));
+                }
+                foreach (Window window in Application.Current.Windows)
+                {
+                    window.FontFamily = new FontFamily(_selectedFont);
+                }
+            }
+        }
         /*private bool _isDarkModeEanbled;
         public bool IsDarkModeEnabled
         {
@@ -165,6 +260,10 @@ namespace UruruNote.ViewsModels
 
         public MainViewModel()
         {
+            // Инициализация списка размеров шрифта
+
+            FontSizeOptions = new ObservableCollection<int>(Enumerable.Range(10, 26));
+            SelectedFontSize = SettingsManager.LoadSettings();
             /*
             var markdownService = new MarkdownFileService();
             string fileName = "initial_file.md";
@@ -536,7 +635,10 @@ namespace UruruNote.ViewsModels
             }
 
             // Создаем новый объект MarkdownViewer
-            var markdownViewer = new MarkdownViewer(fileItem);
+            var markdownViewer = new MarkdownViewer(fileItem)
+            {
+                FontSize = SelectedFontSize
+            };
 
             // Если есть подписчики на событие, вызываем его
             OpenFileRequest?.Invoke(markdownViewer);  // Передаем UserControl (MarkdownViewer)

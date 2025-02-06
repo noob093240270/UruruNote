@@ -190,17 +190,12 @@
                             </Grid.ColumnDefinitions>
 
                             <StackPanel Grid.Column="0" HorizontalAlignment="Center">
-                                <Button Content="Новый файл" 
-                                Click="CreateNewFileButton_Click" 
-                                FontSize="8"
-                                Padding="3" Background="#FFF6F6F6" FontFamily="Agency FB" FontWeight="Normal"  Width="90" BorderBrush="#FF235C9A"
-                                />
+                                <Button Content="Новый файл" Click="CreateNewFileButton_Click" Padding="3" Width="90" BorderBrush="#FF235C9A"  Background="#FFF6F6F6"/>
                             </StackPanel>
 
                             <StackPanel Grid.Column="1" HorizontalAlignment="Center">
                                 <Button  
                                 Click="CreateNewFolderButton_Click"
-                                FontSize="8"
                                 Padding="3"
                                 Content="Новая папка"
                                 Background="#FFF6F6F6"

@@ -14,26 +14,36 @@
         </Grid.RowDefinitions>
 
         <!-- Заголовок -->
-        <TextBlock Text="Настройки" FontSize="20" FontWeight="Bold" Margin="0,0,0,20" />
+        <TextBlock Text="Настройки" FontWeight="Bold" Margin="0,0,0,20" />
 
         <!-- Настройки -->
         <StackPanel Grid.Row="1" VerticalAlignment="Top">
             <!-- Масштаб -->
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                <TextBlock Text="Масштаб:" FontSize="16" Width="120" VerticalAlignment="Center" />
+                <TextBlock Text="Масштаб:"  Width="120" VerticalAlignment="Center" />
                 <ComboBox Width="200" ItemsSource="{Binding ScaleOptions}" SelectedItem="{Binding SelectedScale}" />
             </StackPanel>
 
             <!-- Тема приложения -->
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                <TextBlock Text="Тема приложения:" FontSize="16" Width="120" VerticalAlignment="Center" />
+                <TextBlock Text="Тема приложения:" Width="120" VerticalAlignment="Center" />
                 <ComboBox Width="200" ItemsSource="{Binding ThemeOptions}" SelectedItem="{Binding SelectedTheme}" />
             </StackPanel>
 
             <!-- Размер шрифта -->
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                <TextBlock Text="Размер шрифта:" FontSize="16" Width="120" VerticalAlignment="Center" />
-                <ComboBox Width="200" ItemsSource="{Binding FontSizeOptions}" SelectedItem="{Binding SelectedFontSize}" />
+                <TextBlock Text="Размер шрифта:"  Width="120" VerticalAlignment="Center" />
+                <ComboBox x:Name="FontSizeComboBox" 
+                          Width="200"
+                          IsEditable="True"
+                          ItemsSource="{Binding FontSizeOptions}"
+                          SelectedItem="{Binding SelectedFontSize, UpdateSourceTrigger=PropertyChanged}"
+                          ToolTip="Выберите или введите размер шрифта"
+                          StaysOpenOnEdit="True"
+                          IsTextSearchEnabled="False"
+                          PreviewTextInput="FontSizeComboBox_PreviewTextInput" 
+                          KeyDown="FontSizeComboBox_KeyDown" 
+                           SelectionChanged="FontSizeComboBox_SelectionChanged"/>
             </StackPanel>
         </StackPanel>
     </Grid>

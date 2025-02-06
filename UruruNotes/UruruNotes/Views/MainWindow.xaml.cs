@@ -209,7 +209,7 @@ namespace UruruNotes.Views
             try
             {
                 // Создаём экземпляр страницы для просмотра Markdown
-                var markdownViewerPage = new MarkdownViewerPage(file);
+                var markdownViewerPage = new MarkdownViewer(file);
 
                 // Устанавливаем страницу в PageFrame
                 PageFrame.Content = markdownViewerPage;
@@ -260,12 +260,17 @@ namespace UruruNotes.Views
                 }
             }
         }
-        // Обработчик для значка настроек (шестеренка)
+        // Обработчик для значка настроек
         private void SettingsIcon_MouseUp(object sender, MouseButtonEventArgs e)
         {
+
             // Открываем окно настроек
-            var settingsWindow = new SettingsWindow();
-            settingsWindow.ShowDialog();
+            if (DataContext is MainViewModel mainViewModel)
+            {
+                // Передаем MainViewModel в конструктор SettingsWindow
+                var settingsWindow = new SettingsWindow(mainViewModel, _currentMarkdownViewer);
+                settingsWindow.ShowDialog();
+            }
         }
 
         // Обработчик для сворачивания и разворачивания treeview
@@ -339,7 +344,8 @@ namespace UruruNotes.Views
             try
             {
                 // Создаем новый экземпляр MarkdownViewer и передаем ему файл для отображения
-                var markdownViewer = new MarkdownViewer(file); // MarkdownViewer — это UserControl, который отображает содержимое
+                var markdownViewer = new MarkdownViewer(file);// MarkdownViewer — это UserControl, который отображает содержимое
+                _currentMarkdownViewer = markdownViewer;
                 PageFrame.Content = markdownViewer; // Загружаем этот UserControl в PageFrame
             }
             catch (Exception ex)
