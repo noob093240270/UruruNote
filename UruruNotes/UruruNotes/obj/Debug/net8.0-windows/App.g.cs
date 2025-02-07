@@ -51,7 +51,11 @@ namespace UruruNotes {
         /// InitializeComponent
         /// </summary>
         [System.Diagnostics.DebuggerNonUserCodeAttribute()]
+<<<<<<< HEAD
         [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "9.0.0.0")]
+=======
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "9.0.1.0")]
+>>>>>>> 0a1718a (The field for creating notes and reminders has been improved.)
         public void InitializeComponent() {
             if (_contentLoaded) {
                 return;
@@ -77,7 +81,11 @@ namespace UruruNotes {
         /// </summary>
         [System.STAThreadAttribute()]
         [System.Diagnostics.DebuggerNonUserCodeAttribute()]
+<<<<<<< HEAD
         [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "9.0.0.0")]
+=======
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "9.0.1.0")]
+>>>>>>> 0a1718a (The field for creating notes and reminders has been improved.)
         public static void Main() {
             UruruNotes.App app = new UruruNotes.App();
             app.InitializeComponent();

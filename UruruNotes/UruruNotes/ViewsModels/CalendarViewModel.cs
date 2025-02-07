@@ -10,6 +10,7 @@ using UruruNotes.Views;
 using GalaSoft.MvvmLight.Command;
 using System.Collections.ObjectModel;
 using System.Runtime.CompilerServices;
+using System.Xml;
 
 
 namespace UruruNotes.ViewsModels
@@ -51,8 +52,12 @@ namespace UruruNotes.ViewsModels
             get => _newTaskContent;
             set
             {
-                _newTaskContent = value;
-                OnPropertyChanged();
+                if (_newTaskContent != value)
+                {
+                    _newTaskContent = value;
+                    OnPropertyChanged(nameof(NewTaskContent));
+                }
+                
             }
         }
 
@@ -63,8 +68,11 @@ namespace UruruNotes.ViewsModels
             get => _newTaskContentRemind;
             set
             {
-                _newTaskContentRemind = value;
-                OnPropertyChanged();
+                if (_newTaskContentRemind != value)
+                {
+                    _newTaskContentRemind = value;
+                    OnPropertyChanged(nameof(NewTaskContentRemind));
+                }
             }
         }
 
@@ -194,8 +202,8 @@ namespace UruruNotes.ViewsModels
             {
                 SelectedDate = selectedDay.Date;
                 IsTaskPanelVisible = true; // Показываем панель задач
-                NewTaskContent = $"Создание задачи на {selectedDay.Date.Value:dd MMMM yyyy}";
-                NewTaskContentRemind = $"Создание напоминания на {selectedDay.Date.Value:dd MMMM yyyy}";
+                NewTaskContent = $"Создание задачи на {selectedDay.Date.Value:dd MMMM yyyy}\n";
+                NewTaskContentRemind = $"Создание напоминания на {selectedDay.Date.Value:dd MMMM yyyy}\n";
             }
         }
 

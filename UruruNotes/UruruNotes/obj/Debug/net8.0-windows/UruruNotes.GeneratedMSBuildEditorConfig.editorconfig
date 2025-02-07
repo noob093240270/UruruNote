@@ -8,7 +8,11 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = UruruNotes
+<<<<<<< HEAD
 build_property.ProjectDir = C:\Users\user\Documents\GitHub\UruruNote\UruruNotes\UruruNotes\
+=======
+build_property.ProjectDir = C:\Users\sa\source\repos\noob093240270\UruruNote\UruruNotes\UruruNotes\
+>>>>>>> 0a1718a (The field for creating notes and reminders has been improved.)
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.CsWinRTUseWindowsUIXamlProjections = false

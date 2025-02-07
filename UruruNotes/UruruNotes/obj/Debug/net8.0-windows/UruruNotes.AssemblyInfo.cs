@@ -14,7 +14,11 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("UruruNotes")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
+<<<<<<< HEAD
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6aac734942fe6169dc7e6249975cd4eab0197909")]
+=======
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1346985b0b63b1ee89b838d0d1efa07030447d45")]
+>>>>>>> 0a1718a (The field for creating notes and reminders has been improved.)
 [assembly: System.Reflection.AssemblyProductAttribute("UruruNotes")]
 [assembly: System.Reflection.AssemblyTitleAttribute("UruruNotes")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
