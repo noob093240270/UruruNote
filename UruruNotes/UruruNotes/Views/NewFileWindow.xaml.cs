@@ -1,15 +1,19 @@
 ﻿using System;
+using System.IO;
 using System.Windows;
 using UruruNote.Models;
 
 namespace UruruNotes.Views
 {
+
+
     public partial class NewFileWindow : Window
     {
         public string FileName => FileNameTextBox.Text;
 
         // Событие для уведомления об успешном создании файла
         public event Action<string> FileCreated;
+
 
         public NewFileWindow()
         {
@@ -27,7 +31,10 @@ namespace UruruNotes.Views
             var markdownService = new MarkdownFileService();
             string newFileName = FileName.Trim() + ".md";
 
-            if (markdownService.IsMarkdownFileExists(newFileName))
+            // Формируем полный путь с учетом папки MyFolders
+            string filePath = Path.Combine(markdownService.RootDirectory, newFileName);
+
+            if (markdownService.IsMarkdownFileExists(filePath))
             {
                 MessageBox.Show("Файл с таким именем уже существует.");
                 return;
@@ -35,12 +42,12 @@ namespace UruruNotes.Views
 
             try
             {
-                string filePath = markdownService.CreateMarkdownFile(newFileName);
+                // Создаем файл в папке MyFolders
+                markdownService.CreateMarkdownFile(filePath);
 
                 // Вызываем событие для уведомления о создании файла
                 FileCreated?.Invoke(filePath);
 
-                MessageBox.Show("Файл успешно создан: " + filePath);
                 DialogResult = true;
                 Close();
             }
@@ -49,5 +56,7 @@ namespace UruruNotes.Views
                 MessageBox.Show(ex.Message);
             }
         }
+
     }
 }
+

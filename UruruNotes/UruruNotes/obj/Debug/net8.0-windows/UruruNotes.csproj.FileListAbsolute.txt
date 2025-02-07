@@ -237,9 +237,7 @@ C:\Users\user\Documents\GitHub\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-
 C:\Users\user\Documents\GitHub\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\UruruNotes.pdb
 C:\Users\user\Documents\GitHub\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\UruruNotes.genruntimeconfig.cache
 C:\Users\user\Documents\GitHub\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\ref\UruruNotes.dll
-C:\Users\user\Documents\GitHub\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\ViewsModels\SettingsWindow.g.cs
 C:\Users\user\Documents\GitHub\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\Views\SettingsWindow.g.cs
-C:\Users\user\Documents\GitHub\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\ViewsModels\SettingsWindow.baml
 C:\Users\user\Documents\GitHub\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\Views\SettingsWindow.baml
 C:\Users\dd\Documents\GitHub\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\Views\SettingsWindow.g.cs
 C:\Users\dd\Documents\GitHub\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\Views\SettingsWindow.baml
@@ -255,10 +253,6 @@ D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\
 D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\Views\SettingsWindow.g.cs
 D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\UruruNotes_MarkupCompile.lref
 D:\Users\sa\Documents\1 тима\ЮФУ\UruruNotes\Project\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\Views\SettingsWindow.baml
-C:\Users\user\Documents\GitHub\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\CalendarPage.g.cs
-C:\Users\user\Documents\GitHub\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\HomePage.g.cs
-C:\Users\user\Documents\GitHub\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\CalendarPage.baml
-C:\Users\user\Documents\GitHub\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\HomePage.baml
 C:\Users\dd\Documents\GitHub\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\MarkdownViewerPage.baml
 C:\Users\dd\Documents\GitHub\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\MarkdownViewerPage.g.cs
 C:\Users\dd\Documents\GitHub\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\Views\CalendarPage.g.cs
@@ -409,6 +403,24 @@ C:\Users\xxxra\OneDrive\Документы\GitHub\UruruNotes\UruruNotes\obj\Debu
 C:\Users\xxxra\OneDrive\Документы\GitHub\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\UruruNotes.pdb
 C:\Users\xxxra\OneDrive\Документы\GitHub\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\UruruNotes.genruntimeconfig.cache
 C:\Users\xxxra\OneDrive\Документы\GitHub\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\ref\UruruNotes.dll
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+C:\Users\user\Documents\GitHub\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\MarkdownViewerPage.baml
+C:\Users\user\Documents\GitHub\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\MarkdownViewerPage.g.cs
+C:\Users\user\Documents\GitHub\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\Views\CalendarPage.g.cs
+C:\Users\user\Documents\GitHub\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\Views\HomePage.g.cs
+C:\Users\user\Documents\GitHub\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\Views\TaskCreationWindow.g.cs
+C:\Users\user\Documents\GitHub\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\GeneratedInternalTypeHelper.g.cs
+C:\Users\user\Documents\GitHub\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\Views\CalendarPage.baml
+C:\Users\user\Documents\GitHub\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\Views\HomePage.baml
+C:\Users\user\Documents\GitHub\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\Views\TaskCreationWindow.baml
+C:\Users\user\Documents\GitHub\UruruNote\UruruNotes\UruruNotes\bin\Debug\net8.0-windows\settings.json
+C:\Users\user\Documents\GitHub\UruruNote\UruruNotes\UruruNotes\bin\Debug\net8.0-windows\UruruNotes.dll.config
+C:\Users\user\Documents\GitHub\UruruNote\UruruNotes\UruruNotes\bin\Debug\net8.0-windows\Newtonsoft.Json.dll
+C:\Users\user\Documents\GitHub\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\UruruNotes_Content.g.cs
+=======
+>>>>>>> develop
 C:\Users\sa\source\repos\noob093240270\UruruNote\UruruNotes\UruruNotes\bin\Debug\net8.0-windows\UruruNotes.exe
 C:\Users\sa\source\repos\noob093240270\UruruNote\UruruNotes\UruruNotes\bin\Debug\net8.0-windows\UruruNotes.deps.json
 C:\Users\sa\source\repos\noob093240270\UruruNote\UruruNotes\UruruNotes\bin\Debug\net8.0-windows\UruruNotes.runtimeconfig.json
@@ -472,3 +484,7 @@ C:\Users\sa\source\repos\noob093240270\UruruNote\UruruNotes\UruruNotes\obj\Debug
 C:\Users\sa\source\repos\noob093240270\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\UruruNotes.pdb
 C:\Users\sa\source\repos\noob093240270\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\UruruNotes.genruntimeconfig.cache
 C:\Users\sa\source\repos\noob093240270\UruruNote\UruruNotes\UruruNotes\obj\Debug\net8.0-windows\ref\UruruNotes.dll
+<<<<<<< HEAD
+=======
+>>>>>>> 0a1718a (The field for creating notes and reminders has been improved.)
+>>>>>>> develop

@@ -12,8 +12,18 @@
       }
     ],
     "additionalProbingPaths": [
+<<<<<<< HEAD
       "C:\\Users\\sa\\.dotnet\\store\\|arch|\\|tfm|",
       "C:\\Users\\sa\\.nuget\\packages",
+=======
+<<<<<<< HEAD
+      "C:\\Users\\user\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\user\\.nuget\\packages",
+=======
+      "C:\\Users\\sa\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\sa\\.nuget\\packages",
+>>>>>>> 0a1718a (The field for creating notes and reminders has been improved.)
+>>>>>>> develop
       "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
     ],
     "configProperties": {

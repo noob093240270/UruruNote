@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.IO;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -11,20 +10,51 @@ namespace UruruNote.Views
 {
     public partial class MarkdownViewer : UserControl
     {
-        private FileItem _file;
 
-        public MarkdownViewer(FileItem file)
+        private FileItem _file;
+        // Зависимое свойство для FontSize
+        public static readonly DependencyProperty FontSizeProperty =
+            DependencyProperty.Register(
+                nameof(FontSize),
+                typeof(double),
+                typeof(MarkdownViewer),
+                new PropertyMetadata(15.0, OnFontSizeChanged));
+
+        // Обычное свойство для доступа к зависимому свойству
+        public double FontSize
+        {
+            get => (double)GetValue(FontSizeProperty);
+            set => SetValue(FontSizeProperty, value);
+        }
+
+        private static void OnFontSizeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is MarkdownViewer markdownViewer && e.NewValue is double fontSize)
+            {
+                markdownViewer.UpdateFontSize(fontSize);
+            }
+        }
+
+
+        public MarkdownViewer(FileItem file = null)
         {
             InitializeComponent();
-
-            if (file == null)
+            if (file != null)
             {
-                MessageBox.Show("Ошибка: файл не выбран.");
-                return;
+                _file = file;
+                LoadFileContent(file.FilePath);
+            }
+            if (Application.Current.Resources.Contains("GlobalFontSize"))
+            {
+                double globalFontSize = (double)Application.Current.Resources["GlobalFontSize"];
+                UpdateFontSize(globalFontSize);
             }
 
-            _file = file;
-            LoadFileContent(_file.FilePath);
+            // Загружаем файл, если он передан
+            if (file != null)
+            {
+                LoadFileContent(file.FilePath);
+            }
 
             // Подписываемся на событие KeyDown
             this.KeyDown += MarkdownViewer_KeyDown;
@@ -77,11 +107,50 @@ namespace UruruNote.Views
                 // Загружаем текст в RichTextBox
                 TextRange range = new TextRange(MarkdownRichTextBox.Document.ContentStart, MarkdownRichTextBox.Document.ContentEnd);
                 range.Text = fileContent;
+
+                // Применяем размер шрифта к содержимому
+                if (MarkdownRichTextBox.Document is FlowDocument flowDocument)
+                {
+                    foreach (Block block in flowDocument.Blocks)
+                    {
+                        if (block is Paragraph paragraph)
+                        { 
+                            paragraph.FontSize = MarkdownRichTextBox.FontSize;
+                        }
+                    }
+                }
             }
         }
 
-        // Обработчик для "Жирного" текста
-        private void BoldMenuItem_Click(object sender, RoutedEventArgs e)
+        public void UpdateFontSize(double fontSize)
+        {
+            // Обновляем локальный ресурс
+            if (this.Resources.Contains("NoteFontSize"))
+            {
+                this.Resources["NoteFontSize"] = fontSize;
+            }
+            else
+            {
+                this.Resources.Add("NoteFontSize", fontSize); // Добавляем новый ресурс
+            }
+
+            // Обновляем размер шрифта для RichTextBox
+            MarkdownRichTextBox.FontSize = fontSize;
+
+            // Обновляем размер шрифта для всего содержимого FlowDocument
+            if (MarkdownRichTextBox.Document is FlowDocument flowDocument)
+            {
+                foreach (Block block in flowDocument.Blocks)
+                {
+                    if (block is Paragraph paragraph)
+                    {
+                        paragraph.FontSize = fontSize;
+                    }
+                }
+            }
+        }
+// Обработчик для "Жирного" текста
+private void BoldMenuItem_Click(object sender, RoutedEventArgs e)
         {
             ApplyTextStyleToSelection("**");
         }
@@ -148,6 +217,7 @@ namespace UruruNote.Views
                 e.Handled = true;
             }
         }
+        private double _fontSize;
 
     }
 }
