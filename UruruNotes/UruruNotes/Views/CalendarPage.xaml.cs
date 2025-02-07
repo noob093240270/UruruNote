@@ -29,5 +29,25 @@ namespace UruruNotes
             DataContext = new CalendarViewModel();
         }
 
+        private bool _isPanelVisible = true;
+
+        private void TogglePanel_Click(object sender, RoutedEventArgs e)
+        {
+            if (_isPanelVisible)
+            {
+                TaskPanelColumn.Width = new GridLength(0); // Полностью схлопываем колонку
+                TrianglePath.RenderTransform = new RotateTransform(90, 15, 15);
+            }
+            else
+            {
+                TaskPanelColumn.Width = GridLength.Auto; // Возвращаем колонку
+                TrianglePath.RenderTransform = new RotateTransform(0, 15, 15);
+            }
+
+            _isPanelVisible = !_isPanelVisible;
+        }
+
+
+
     }
 }
