@@ -1,16 +1,9 @@
 ﻿using System.Collections.ObjectModel;
 using System.IO;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using UruruNote.Models;
 using UruruNote.Views;
 using UruruNote.ViewsModels;
 using UruruNotes.Models;
@@ -288,25 +281,6 @@ namespace UruruNotes.Views
             }
         }
 
-
-
-
-        private void SearchButton_Click(object sender, RoutedEventArgs e)
-        {
-            // Если поле поиска скрыто, показать его, если оно показано, скрыть его
-            SearchTextBox.Visibility = SearchTextBox.Visibility == Visibility.Collapsed
-                ? Visibility.Visible
-                : Visibility.Collapsed;
-
-            // Автоматически устанавливаем фокус на поле поиска при его открытии
-            if (SearchTextBox.Visibility == Visibility.Visible)
-            {
-                SearchTextBox.Focus();
-            }
-        }
-
-        
-
         private void SearchTextBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
@@ -319,22 +293,42 @@ namespace UruruNotes.Views
         private void PerformSearch(string query)
         {
             var viewModel = DataContext as MainViewModel;
-            /*
-            foreach (var file in viewModel.Files)
-            {
-                Console.WriteLine($"File in collection: {file.FileName}");
-            }*/
-
+            
             var foundFile = viewModel.Files.FirstOrDefault(file => file.FileName.Contains(query, StringComparison.OrdinalIgnoreCase));
 
             if (foundFile != null)
             {
-                OpenFile(foundFile); // Открываем найденный файл
+                OpenFile(foundFile); return;
+            }
+
+            string rootDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "MyFolders");
+            if (!Directory.Exists(rootDirectory))
+            {
+                MessageBox.Show("Файл не найден.");
+                return;
+            }
+
+            var allFiles = Directory.GetFiles(rootDirectory, "*", SearchOption.AllDirectories)
+                            .Where(path => Path.GetFileName(path).Contains(query, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+
+            if (allFiles.Any())
+            {
+                string foundFilePath = allFiles.First(); 
+
+                var newFileItem = new FileItem
+                {
+                    FileName = Path.GetFileName(foundFilePath), 
+                    FilePath = foundFilePath
+                };
+
+                OpenFile(newFileItem);
             }
             else
             {
-                MessageBox.Show("Файл не найден.");
+                MessageBox.Show("Файл не найден во всём каталоге.");
             }
+
         }
 
 
@@ -367,5 +361,6 @@ namespace UruruNotes.Views
         {
             PageFrame.Content = new HomePage();
         }
+
     }
 }

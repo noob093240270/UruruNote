@@ -233,9 +233,6 @@ namespace UruruNote.ViewsModels
         #endregion
 
 
-
-
-
         public ObservableCollection<FileItem> Files { get; set; }
 
         public ICommand CreateNewMarkdownFileCommand { get; }

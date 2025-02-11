@@ -14,11 +14,11 @@
     </Window.Resources>
     <Window.Foreground>
         <SolidColorBrush Color="#FFF9F9F9" Opacity="0.2"/>
-        
+
     </Window.Foreground>
 
 
-    <Grid Background="#FFCCCCCC">
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200"/>
             <ColumnDefinition Width="*"/>
@@ -40,7 +40,7 @@
                   Grid.Column="1"   
               >
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="241*"/>
+                    <ColumnDefinition Width="197"/>
                     <ColumnDefinition Width="553*"/>
                 </Grid.ColumnDefinitions>
 
@@ -65,39 +65,19 @@
                         </Button.Background>
                     </Button>
 
-                    <!-- Кнопка для возвращения на начальную страницу -->
-                    <!--
-                    <Button x:Name="HomePage" Width="25" Height="25" Margin="5,0" Click="HomePageButton_Click">
-                        <Button.BorderBrush>
-                            <ImageBrush />
-                        </Button.BorderBrush>
-                        <Button.Background>
-                            <ImageBrush ImageSource="pack://application:,,,/UruruNotes;component/Resources/homeButton.png" />
-                        </Button.Background>
-                    </Button>-->
 
-                    <!--кнопка (за)лупы-->
-                    <Button Width="25" Height="25" Click="SearchButton_Click" BorderThickness="0" Margin="5,0" Focusable="False">
-                        <Button.Background>
-                            <ImageBrush ImageSource="pack://application:,,,/UruruNotes;component/Resources/magnifier.png" />
-                        </Button.Background>
-                    </Button>
-
-
+                    <!--кнопка лупы-->
+                    <Image Width="25" Height="25" Margin="5,0" Focusable="False" Source="pack://application:,,,/UruruNotes;component/Resources/magnifier.png">
+                       
+                    </Image>
+                    
                     <!-- Поле поиска -->
                     <TextBox x:Name="SearchTextBox"
-                             Width="200"
-                             Height="30"
-                             Margin="5,0,0,0"
-                             Visibility="Collapsed"
-                             KeyDown="SearchTextBox_KeyDown"/>
-
-                    <TextBox x:Name="FileContentTextBox" 
-                             IsReadOnly="True" 
-                             VerticalScrollBarVisibility="Auto" 
-                             HorizontalScrollBarVisibility="Auto" 
-                             Margin="5,0" Width="141" CaretBrush="#FF235C9A" SelectionBrush="#FF235C9A" SelectionTextBrush="#FF235C9A" />
-
+                         Width="100"
+                         Height="20"
+                         Margin="2,0"  
+                         KeyDown="SearchTextBox_KeyDown"/>
+                     
                 </StackPanel>
 
 
@@ -134,14 +114,14 @@
                 <!-- Дерево файлов -->
                 <materialDesign:Card Grid.Column="0" Grid.Row="1" VerticalAlignment="Stretch" Background="#FF636161">
 
-                    <Grid Background="#FFCCCCCC" >
+                    <Grid>
                         <!-- Верхняя строка для TreeView -->
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" MinHeight="100"/>
                             <RowDefinition Height="auto" />
                         </Grid.RowDefinitions>
 
-                        <ScrollViewer Grid.Row="0" Background="#FFF6F6F6" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Margin="5,5,5,5" >
+                        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Margin="5,5,5,5" >
                             <StackPanel Grid.Row="0">
 
                                 <!-- Первый TreeView для папок -->
