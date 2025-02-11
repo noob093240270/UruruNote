@@ -92,7 +92,6 @@
                         </Canvas>
                     </Button.Content>
                 </Button>
-
                 <StackPanel x:Name="TaskPanel" Grid.Column="1" Background="LightGray" Width="Auto">
                     <TextBlock Text="Создать заметку" FontSize="20" FontWeight="Bold" Margin="10"/>
                     <TextBox TextWrapping="Wrap" Text="{Binding NewTaskContent}" AcceptsReturn="True" AcceptsTab="True" VerticalScrollBarVisibility="Auto" MaxWidth="278" Height="100" Margin="10" FontSize="14" CaretBrush="#FF235C9A" SelectionBrush="#FF235C9A" PreviewKeyDown="TextBox_PreviewKeyDown" Loaded="TextBox_Loaded" />
