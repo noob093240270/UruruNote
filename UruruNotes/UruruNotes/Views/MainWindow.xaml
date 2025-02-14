@@ -10,17 +10,41 @@
 
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <!--анимация закрытия левого меню-->
+        <Storyboard x:Key="ClosingLeftMenu">
+            <DoubleAnimation Storyboard.TargetName="LeftMenu"
+                     Storyboard.TargetProperty="Width" 
+                     From="200" To="0" 
+                     Duration="0:0:0.5" />
 
+        </Storyboard>
+        <!--анимация октрытия левого меню-->
+        <Storyboard x:Key="OpeningLeftMenu">
+            <DoubleAnimation Storyboard.TargetName="LeftMenu"
+             Storyboard.TargetProperty="Width" 
+             From="0" To="200" 
+             Duration="0:0:0.5" />
+
+        </Storyboard>
     </Window.Resources>
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="ButtonClose">
+            <BeginStoryboard Storyboard="{StaticResource ClosingLeftMenu}" />
+        </EventTrigger>
+        <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="ButtonOpen">
+            <BeginStoryboard Storyboard="{StaticResource OpeningLeftMenu}" />
+        </EventTrigger>
+    </Window.Triggers>
     <Window.Foreground>
         <SolidColorBrush Color="#FFF9F9F9" Opacity="0.2"/>
+        
 
     </Window.Foreground>
 
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="{Binding ElementName=TreeViewGrid, Path=Width}"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
@@ -45,18 +69,27 @@
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal">
-                    <!-- Кнопка для сворачивания и разворачивания -->
-                    <Button Width="25" Height="25" Click="ToggleVisibilityButton_Click" Focusable="False" BorderThickness="0"
-                            HorizontalAlignment="Left"
+                    <!-- Кнопка для разворачивания -->
+                    <Button x:Name="ButtonOpen" Width="23" Height="23" Margin="3,0" Click="ToggleVisibilityButton_Click" Focusable="False" BorderThickness="0"
+                            HorizontalAlignment="Left" Visibility="Collapsed" 
                             
                             >
                         <Button.Background>
                             <ImageBrush ImageSource="pack://application:,,,/UruruNotes;component/Resources/treeview.png" />
                         </Button.Background>
                     </Button>
+                    <!-- Кнопка для сворачивания -->
+                    <Button x:Name="ButtonClose" Width="23" Height="23" Margin="3,0" Click="ToggleVisibilityButton_Click" Focusable="False" BorderThickness="0"
+                            HorizontalAlignment="Left"
+        
+        >
+                        <Button.Background>
+                            <ImageBrush ImageSource="pack://application:,,,/UruruNotes;component/Resources/treeview.png" />
+                        </Button.Background>
+                    </Button>
 
                     <!-- Кнопка календаря -->
-                    <Button x:Name="Сalendar" Width="25" Height="25" Margin="5,0"  Command="{Binding OpenCalendarCommand}">
+                    <Button x:Name="Сalendar" Width="23" Height="23" Margin="5,0"  Command="{Binding OpenCalendarCommand}">
                         <Button.BorderBrush>
                             <ImageBrush />
                         </Button.BorderBrush>
@@ -67,7 +100,7 @@
 
 
                     <!--кнопка лупы-->
-                    <Image Width="25" Height="25" Margin="5,0" Focusable="False" Source="pack://application:,,,/UruruNotes;component/Resources/magnifier.png">
+                    <Image Width="23" Height="23" Margin="5,0" Focusable="False" Source="pack://application:,,,/UruruNotes;component/Resources/magnifier.png">
                        
                     </Image>
                     
@@ -96,13 +129,13 @@
         <Grid Grid.Row="1" x:Name="MainGrid" ShowGridLines="False" Grid.RowSpan="2" Grid.ColumnSpan="2" >
 
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="200" MaxWidth="300" />
+                <ColumnDefinition Width="{Binding ElementName=TreeViewGrid, Path=Width}" MaxWidth="300" />
                 <ColumnDefinition Width="57*" />
                 <ColumnDefinition Width="544*"/>
             </Grid.ColumnDefinitions>
 
 
-            <Grid Grid.Column="0" Background="#FF636161" x:Name="TreeViewGrid">
+            <Grid Grid.Column="0" Background="#FFEBEBEB" x:Name="TreeViewGrid">
 
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
@@ -112,16 +145,21 @@
 
 
                 <!-- Дерево файлов -->
-                <materialDesign:Card Grid.Column="0" Grid.Row="1" VerticalAlignment="Stretch" Background="#FF636161">
-
+                <materialDesign:Card x:Name="LeftMenu" Width="200" UniformCornerRadius="0" Grid.Column="0" Grid.Row="1" VerticalAlignment="Stretch" >
+                    <materialDesign:Card.Background>
+                        <SolidColorBrush Color="#FFEBEBEB" Opacity="0"/>
+                    </materialDesign:Card.Background>
                     <Grid>
+                        <Grid.Background>
+                            <SolidColorBrush Color="#FFCCCCCC" Opacity="1"/>
+                        </Grid.Background>
                         <!-- Верхняя строка для TreeView -->
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" MinHeight="100"/>
                             <RowDefinition Height="auto" />
                         </Grid.RowDefinitions>
 
-                        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Margin="5,5,5,5" >
+                        <ScrollViewer Grid.Row="0" Background="#FFF6F6F6" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Margin="3,0,3,3" >
                             <StackPanel Grid.Row="0">
 
                                 <!-- Первый TreeView для папок -->
@@ -162,7 +200,7 @@
 
 
                         <!-- Стек кнопок создания файла и папки -->
-                        <Grid Grid.Row="1" Margin="0,0,0,10">
+                        <Grid Grid.Row="1" Margin="0,1,0,3">
 
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition />
