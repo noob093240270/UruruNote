@@ -11,21 +11,20 @@ using GalaSoft.MvvmLight.Command;
 using System.Collections.ObjectModel;
 using System.Runtime.CompilerServices;
 using System.Xml;
+using System.IO;
+using System.Xml.Serialization;
+using System.Windows;
 
 
 namespace UruruNotes.ViewsModels
 {
     public class CalendarViewModel : INotifyPropertyChanged
     {
-
-
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
-
 
 
         private DateTime _currentDate;
@@ -34,6 +33,18 @@ namespace UruruNotes.ViewsModels
 
         public ObservableCollection<DayViewModel> Days { get; private set; }
         public string CurrentMonthYear => $"{_currentDate:MMMM yyyy}";
+
+        private ObservableCollection<Note> _notes;
+
+        public ObservableCollection<Note> Notes // Свойство Notes public
+        {
+            get => _notes;
+            set
+            {
+                _notes = value;
+                OnPropertyChanged();
+            }
+        }
 
         public bool IsTaskPanelVisible
         {
@@ -112,7 +123,8 @@ namespace UruruNotes.ViewsModels
             NextMonthCommand = new RelayCommand(ShowNextMonth);
             _openTaskAreaCommand = new RelayCommand<DayViewModel>(OpenTaskArea);
             _saveTaskCommand = new RelayCommand(SaveTask);
-
+            _notes = new ObservableCollection<Note>();
+            LoadNotes();
             UpdateCalendar();
         }
 
@@ -187,25 +199,136 @@ namespace UruruNotes.ViewsModels
             }
         }
 
-        private void SaveTask()
-        {
-            // Логика сохранения задачи
-            string taskContent = NewTaskContent;
-            string taskContentRemind = NewTaskContentRemind;
-        }
-
-
-
         private void OpenTaskArea(DayViewModel selectedDay)
         {
             if (selectedDay?.Date != null)
             {
                 SelectedDate = selectedDay.Date;
                 IsTaskPanelVisible = true; // Показываем панель задач
-                NewTaskContent = $"Создание задачи на {selectedDay.Date.Value:dd MMMM yyyy}\n";
-                NewTaskContentRemind = $"Создание напоминания на {selectedDay.Date.Value:dd MMMM yyyy}\n";
+                
+                // Загружаем данные для выбранного дня
+                LoadNotesForDate(selectedDay.Date.Value);
+
+                // Устанавливаем текст по умолчанию, если данных нет
+                if (string.IsNullOrEmpty(NewTaskContent))
+                {
+                    NewTaskContent = $"Создание задачи на {selectedDay.Date.Value:dd MMMM yyyy}\n";
+                }
+
+                if (string.IsNullOrEmpty(NewTaskContentRemind))
+                {
+                    NewTaskContentRemind = $"Создание напоминания на {selectedDay.Date.Value:dd MMMM yyyy}\n";
+                }
             }
         }
+
+        private void LoadNotesForDate(DateTime date)
+        {
+            string filePath = GetNotesFilePath(date);
+            if (File.Exists(filePath))
+            {
+                var serializer = new XmlSerializer(typeof(ObservableCollection<Note>));
+                using (var reader = new StreamReader(filePath))
+                {
+                    var notesForDate = (ObservableCollection<Note>)serializer.Deserialize(reader);
+
+                    // Обновляем текстовые поля
+                    var note = notesForDate.FirstOrDefault(n => !n.IsReminder);
+                    var reminder = notesForDate.FirstOrDefault(n => n.IsReminder);
+
+                    NewTaskContent = note?.Content ?? $"Создание задачи на {date:dd MMMM yyyy}\n";
+                    NewTaskContentRemind = reminder?.Content ?? $"Создание напоминания на {date:dd MMMM yyyy}\n";
+                }
+            }
+            else
+            {
+                // Если файл не существует, очищаем поля
+                NewTaskContent = $"Создание задачи на {date:dd MMMM yyyy}\n";
+                NewTaskContentRemind = $"Создание напоминания на {date:dd MMMM yyyy}\n";
+            }
+        }
+
+        private void SaveNotes()
+        {
+            string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "notes.xml");
+            var serializer = new XmlSerializer(typeof(ObservableCollection<Note>));
+            using (var writer = new StreamWriter(filePath))
+            {
+                serializer.Serialize(writer, _notes);
+            }
+        }
+
+        
+        private void SaveTask()
+        {
+            // Логика сохранения задачи
+            if (SelectedDate.HasValue && !string.IsNullOrEmpty(NewTaskContent) && !string.IsNullOrEmpty(NewTaskContentRemind))
+            {
+                var note = new Note
+                {
+                    Date = SelectedDate.Value,
+                    Content = NewTaskContent,
+                    IsReminder = false
+                };
+                _notes.Add(note);
+
+                var reminder = new Note
+                {
+                    Date = SelectedDate.Value,
+                    Content = NewTaskContentRemind,
+                    IsReminder = true
+                };
+                _notes.Add(reminder);
+
+                // Сохраняем данные для текущего дня
+                SaveNotesForDate(SelectedDate.Value, note, reminder);
+
+                MessageBox.Show("Данные успешно сохранены!");
+
+            }
+            else
+            {
+                MessageBox.Show("Ошибка: не все данные заполнены.");
+            }
+        }
+
+        private void SaveNotesForDate(DateTime date, Note note, Note reminder)
+        {
+            string filePath = GetNotesFilePath(date);
+            var notesForDate = new ObservableCollection<Note> { note, reminder };
+
+            var serializer = new XmlSerializer(typeof(ObservableCollection<Note>));
+            using (var writer = new StreamWriter(filePath))
+            {
+                serializer.Serialize(writer, notesForDate);
+            }
+        }
+
+        private string GetNotesFilePath(DateTime date)
+        {
+            string fileName = $"notes_{date:dd-MM-yyyy}.xml";
+            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), fileName);
+        }
+
+        private void LoadNotes()
+        {
+            string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "notes.xml");
+            if (File.Exists(filePath))
+            {
+                var serializer = new XmlSerializer(typeof(ObservableCollection<Note>));
+                using (var reader = new StreamReader(filePath))
+                {
+                    _notes = (ObservableCollection<Note>)serializer.Deserialize(reader);
+                }
+                                
+            }
+            else
+            {
+                _notes = new ObservableCollection<Note>(); // Инициализация, если файл не существует
+            }
+        }
+
+
 
     }
 }
