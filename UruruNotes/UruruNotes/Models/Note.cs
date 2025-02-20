@@ -17,6 +17,9 @@ namespace UruruNotes.Models
         // Флаг, указывающий, является ли это напоминанием (true) или обычной заметкой (false)
         public bool IsReminder { get; set; }
 
+        // Новое свойство для времени
+        public TimeSpan ReminderTime { get; set; } 
+
         // Конструктор без параметров для сериализации
         public Note() { }
     }

@@ -114,6 +114,50 @@ namespace UruruNotes.ViewsModels
                 return _openTaskAreaCommand ??= new RelayCommand<DayViewModel>(OpenTaskArea);
             }
         }
+        private int _selectedHour;
+        public int SelectedHour
+        {
+            get => _selectedHour;
+            set
+            {
+                _selectedHour = value;
+                OnPropertyChanged();
+                UpdateReminderTime(); // Обновляем общее время
+            }
+        }
+
+        private int _selectedMinute;
+        public int SelectedMinute
+        {
+            get => _selectedMinute;
+            set
+            {
+                _selectedMinute = value;
+                OnPropertyChanged();
+                UpdateReminderTime(); // Обновляем общее время
+            }
+        }
+
+        private TimeSpan _selectedReminderTime;
+        public TimeSpan SelectedReminderTime
+        {
+            get => _selectedReminderTime;
+            set
+            {
+                _selectedReminderTime = value;
+                OnPropertyChanged();
+            }
+        }
+
+        // Метод для обновления общего времени
+        private void UpdateReminderTime()
+        {
+            SelectedReminderTime = new TimeSpan(SelectedHour, SelectedMinute, 0);
+        }
+
+        public ObservableCollection<int> Hours { get; set; }
+        public ObservableCollection<int> Minutes { get; set; }
+
         public CalendarViewModel()
         {
             _currentDate = DateTime.Today;
@@ -125,6 +169,13 @@ namespace UruruNotes.ViewsModels
             _saveTaskCommand = new RelayCommand(SaveTask);
             _notes = new ObservableCollection<Note>();
             LoadNotes();
+            // Инициализация списков часов и минут
+            Hours = new ObservableCollection<int>(Enumerable.Range(0, 24)); // Часы от 0 до 23
+            Minutes = new ObservableCollection<int>(Enumerable.Range(0, 60)); // Минуты от 0 до 59
+
+            // Установка значений по умолчанию
+            SelectedHour = 8; // По умолчанию 8:00
+            SelectedMinute = 0;
             UpdateCalendar();
         }
 
@@ -238,6 +289,17 @@ namespace UruruNotes.ViewsModels
 
                     NewTaskContent = note?.Content ?? $"Создание задачи на {date:dd MMMM yyyy}\n";
                     NewTaskContentRemind = reminder?.Content ?? $"Создание напоминания на {date:dd MMMM yyyy}\n";
+                    // Устанавливаем часы и минуты
+                    if (reminder != null)
+                    {
+                        SelectedHour = reminder.ReminderTime.Hours;
+                        SelectedMinute = reminder.ReminderTime.Minutes;
+                    }
+                    else
+                    {
+                        SelectedHour = 8; // По умолчанию 8:00
+                        SelectedMinute = 0;
+                    }
                 }
             }
             else
@@ -245,6 +307,8 @@ namespace UruruNotes.ViewsModels
                 // Если файл не существует, очищаем поля
                 NewTaskContent = $"Создание задачи на {date:dd MMMM yyyy}\n";
                 NewTaskContentRemind = $"Создание напоминания на {date:dd MMMM yyyy}\n";
+                SelectedHour = 8; // По умолчанию 8:00
+                SelectedMinute = 0;
             }
         }
 
@@ -270,15 +334,16 @@ namespace UruruNotes.ViewsModels
                     Content = NewTaskContent,
                     IsReminder = false
                 };
-                _notes.Add(note);
+                
 
                 var reminder = new Note
                 {
                     Date = SelectedDate.Value,
                     Content = NewTaskContentRemind,
-                    IsReminder = true
+                    IsReminder = true,
+                    ReminderTime = SelectedReminderTime // Сохраняем выбранное время
                 };
-                _notes.Add(reminder);
+                
 
                 // Сохраняем данные для текущего дня
                 SaveNotesForDate(SelectedDate.Value, note, reminder);
