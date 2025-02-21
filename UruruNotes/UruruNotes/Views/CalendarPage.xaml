@@ -72,8 +72,10 @@
             Margin="10">
             <Grid Margin="-39,0,0,0">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/> <!-- Для кнопки -->
-                    <ColumnDefinition x:Name="TaskPanelColumn" Width="Auto"/> <!-- Для панели -->
+                    <ColumnDefinition Width="Auto"/>
+                    <!-- Для кнопки -->
+                    <ColumnDefinition x:Name="TaskPanelColumn" Width="Auto"/>
+                    <!-- Для панели -->
                 </Grid.ColumnDefinitions>
                 <Button x:Name="ToggleButton" Grid.Column="0"
                     Width="30" Height="30"
@@ -88,7 +90,7 @@
                           Data="M 5,25 L 25,25 L 15,5 Z"
                           Fill="Black"
                           Stroke="Black"
-                          StrokeThickness="1" Canvas.Left="-14.936" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                          StrokeThickness="1" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                         </Canvas>
                     </Button.Content>
                 </Button>

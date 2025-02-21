@@ -271,13 +271,17 @@ namespace UruruNotes.Views
         {
             var button = sender as Button;
 
-            if (TreeViewGrid.Visibility == Visibility.Visible)
+            if ((TreeViewGrid.Visibility == Visibility.Visible) & (ButtonOpen.Visibility == Visibility.Collapsed))
             {
-                TreeViewGrid.Visibility = Visibility.Collapsed;
+                //TreeViewGrid.Visibility = Visibility.Collapsed;
+                ButtonClose.Visibility = Visibility.Collapsed;
+                ButtonOpen.Visibility = Visibility.Visible;
             }
             else
             {
-                TreeViewGrid.Visibility = Visibility.Visible;
+                //TreeViewGrid.Visibility = Visibility.Visible;
+                ButtonOpen.Visibility = Visibility.Collapsed;
+                ButtonClose.Visibility = Visibility.Visible;
             }
         }
 
