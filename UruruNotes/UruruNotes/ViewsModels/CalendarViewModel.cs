@@ -161,6 +161,7 @@ namespace UruruNotes.ViewsModels
         public CalendarViewModel()
         {
             _currentDate = DateTime.Today;
+            EnsureFoldersExist();
 
             Days = new ObservableCollection<DayViewModel>();
             PreviousMonthCommand = new RelayCommand(ShowPreviousMonth);
@@ -169,6 +170,7 @@ namespace UruruNotes.ViewsModels
             _saveTaskCommand = new RelayCommand(SaveTask);
             _notes = new ObservableCollection<Note>();
             LoadNotes();
+
             // Инициализация списков часов и минут
             Hours = new ObservableCollection<int>(Enumerable.Range(0, 24)); // Часы от 0 до 23
             Minutes = new ObservableCollection<int>(Enumerable.Range(0, 60)); // Минуты от 0 до 59
@@ -273,54 +275,68 @@ namespace UruruNotes.ViewsModels
             }
         }
 
+        private void EnsureFoldersExist()
+        {
+            string baseFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "UruruNotes");
+            string notesFolder = Path.Combine(baseFolder, "Notes");
+            string remindersFolder = Path.Combine(baseFolder, "Reminders");
+
+            if (!Directory.Exists(baseFolder))
+            {
+                Directory.CreateDirectory(baseFolder);
+            }
+
+            if (!Directory.Exists(notesFolder))
+            {
+                Directory.CreateDirectory(notesFolder);
+            }
+
+            if (!Directory.Exists(remindersFolder))
+            {
+                Directory.CreateDirectory(remindersFolder);
+            }
+        }
+
         private void LoadNotesForDate(DateTime date)
         {
-            string filePath = GetNotesFilePath(date);
-            if (File.Exists(filePath))
+            string noteFilePath = GetNotesFilePath(date, false);
+            string reminderFilePath = GetNotesFilePath(date, true);
+
+            // Загружаем заметку
+            if (File.Exists(noteFilePath))
             {
-                var serializer = new XmlSerializer(typeof(ObservableCollection<Note>));
-                using (var reader = new StreamReader(filePath))
+                var noteSerializer = new XmlSerializer(typeof(Note));
+                using (var reader = new StreamReader(noteFilePath))
                 {
-                    var notesForDate = (ObservableCollection<Note>)serializer.Deserialize(reader);
-
-                    // Обновляем текстовые поля
-                    var note = notesForDate.FirstOrDefault(n => !n.IsReminder);
-                    var reminder = notesForDate.FirstOrDefault(n => n.IsReminder);
-
+                    var note = (Note)noteSerializer.Deserialize(reader);
                     NewTaskContent = note?.Content ?? $"Создание задачи на {date:dd MMMM yyyy}\n";
-                    NewTaskContentRemind = reminder?.Content ?? $"Создание напоминания на {date:dd MMMM yyyy}\n";
-                    // Устанавливаем часы и минуты
-                    if (reminder != null)
-                    {
-                        SelectedHour = reminder.ReminderTime.Hours;
-                        SelectedMinute = reminder.ReminderTime.Minutes;
-                    }
-                    else
-                    {
-                        SelectedHour = 8; // По умолчанию 8:00
-                        SelectedMinute = 0;
-                    }
                 }
             }
             else
             {
-                // Если файл не существует, очищаем поля
                 NewTaskContent = $"Создание задачи на {date:dd MMMM yyyy}\n";
+            }
+
+            // Загружаем напоминание
+            if (File.Exists(reminderFilePath))
+            {
+                var reminderSerializer = new XmlSerializer(typeof(Note));
+                using (var reader = new StreamReader(reminderFilePath))
+                {
+                    var reminder = (Note)reminderSerializer.Deserialize(reader);
+                    NewTaskContentRemind = reminder?.Content ?? $"Создание напоминания на {date:dd MMMM yyyy}\n";
+                    SelectedHour = reminder?.ReminderTime.Hours ?? 8;
+                    SelectedMinute = reminder?.ReminderTime.Minutes ?? 0;
+                }
+            }
+            else
+            {
                 NewTaskContentRemind = $"Создание напоминания на {date:dd MMMM yyyy}\n";
-                SelectedHour = 8; // По умолчанию 8:00
+                SelectedHour = 8;
                 SelectedMinute = 0;
             }
         }
 
-        private void SaveNotes()
-        {
-            string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "notes.xml");
-            var serializer = new XmlSerializer(typeof(ObservableCollection<Note>));
-            using (var writer = new StreamWriter(filePath))
-            {
-                serializer.Serialize(writer, _notes);
-            }
-        }
 
         
         private void SaveTask()
@@ -359,20 +375,29 @@ namespace UruruNotes.ViewsModels
 
         private void SaveNotesForDate(DateTime date, Note note, Note reminder)
         {
-            string filePath = GetNotesFilePath(date);
-            var notesForDate = new ObservableCollection<Note> { note, reminder };
-
-            var serializer = new XmlSerializer(typeof(ObservableCollection<Note>));
-            using (var writer = new StreamWriter(filePath))
+            // Сохраняем заметку
+            string noteFilePath = GetNotesFilePath(date, false);
+            var noteSerializer = new XmlSerializer(typeof(Note));
+            using (var writer = new StreamWriter(noteFilePath))
             {
-                serializer.Serialize(writer, notesForDate);
+                noteSerializer.Serialize(writer, note);
+            }
+
+            // Сохраняем напоминание
+            string reminderFilePath = GetNotesFilePath(date, true);
+            var reminderSerializer = new XmlSerializer(typeof(Note));
+            using (var writer = new StreamWriter(reminderFilePath))
+            {
+                reminderSerializer.Serialize(writer, reminder);
             }
         }
 
-        private string GetNotesFilePath(DateTime date)
+        private string GetNotesFilePath(DateTime date, bool isReminder)
         {
-            string fileName = $"notes_{date:dd-MM-yyyy}.xml";
-            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), fileName);
+            string baseFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "UruruNotes");
+            string subFolder = isReminder ? "Reminders" : "Notes";
+            string fileName = $"{(isReminder ? "reminder" : "note")}_{date:dd-MM-yyyy}.xml";
+            return Path.Combine(baseFolder, subFolder, fileName);
         }
 
         private void LoadNotes()
