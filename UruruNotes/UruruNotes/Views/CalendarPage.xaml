@@ -97,13 +97,13 @@
                 <StackPanel x:Name="TaskPanel" Grid.Column="1" Background="LightGray" Width="Auto" HorizontalAlignment="Center">
                     <TextBlock Text="Создать заметку" FontSize="20" FontWeight="Bold" Margin="10"/>
                     <TextBox TextWrapping="Wrap" Text="{Binding NewTaskContent}" AcceptsReturn="True" AcceptsTab="True" VerticalScrollBarVisibility="Auto" MaxWidth="278" Height="100" Margin="10" FontSize="14" CaretBrush="#FF235C9A" SelectionBrush="#FF235C9A" PreviewKeyDown="TextBox_PreviewKeyDown" Loaded="TextBox_Loaded" />
-                    <Button Content="Сохранить"  Command="{Binding SaveTaskCommand}" Width="110" Margin="10" HorizontalAlignment="Left" Background="White" BorderBrush="#FF235C9A" />
+                    <Button Content="Сохранить"  Command="{Binding SaveNoteCommand}" Width="110" Margin="10" HorizontalAlignment="Left" Background="White" BorderBrush="#FF235C9A" />
 
                     <TextBlock Text="Создать напоминание" FontSize="20" FontWeight="Bold" Margin="10"/>
                     <TextBox TextWrapping="Wrap" Text="{Binding NewTaskContentRemind}"  AcceptsReturn="True" AcceptsTab="True" VerticalScrollBarVisibility="Auto" MaxWidth="278" Height="100" Margin="10" FontSize="14" CaretBrush="#FF235C9A" SelectionBrush="#FF235C9A" PreviewKeyDown="TextBox_PreviewKeyDown" Loaded="TextBox_Loaded" />
                     <TextBlock Text="Время напоминания:" FontSize="14" Height="20" Width="133" Margin="10,5,10,0" HorizontalAlignment="Right"/>
                     <StackPanel Orientation="Horizontal" Margin="10,5,10,10">
-                        <Button Content="Сохранить"  Command="{Binding SaveTaskCommand}" Width="110" Margin="10" Background="White" BorderBrush="#FF235C9A" HorizontalAlignment="Left" />
+                        <Button Content="Сохранить"  Command="{Binding SaveReminderCommand}" Width="110" Margin="10" Background="White" BorderBrush="#FF235C9A" HorizontalAlignment="Left" />
                         <!-- Выбор времени для напоминания -->
                         <!-- Выбор часов -->
                         <ComboBox x:Name="HourPicker" SelectedItem="{Binding SelectedHour}" Width="60" VerticalAlignment="Center" Margin="10,0,5,0">
