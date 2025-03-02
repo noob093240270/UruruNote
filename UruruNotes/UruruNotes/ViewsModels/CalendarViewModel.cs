@@ -101,8 +101,13 @@ namespace UruruNotes.ViewsModels
         public ICommand ShowTaskPanelCommand { get; }
         
 
-        private ICommand _saveTaskCommand;
-        public ICommand SaveTaskCommand => _saveTaskCommand ??= new RelayCommand(SaveTask);
+        // Команда для сохранения заметки
+        private ICommand _saveNoteCommand;
+        public ICommand SaveNoteCommand => _saveNoteCommand ??= new RelayCommand(SaveNote);
+
+        // Команда для сохранения напоминания
+        private ICommand _saveReminderCommand;
+        public ICommand SaveReminderCommand => _saveReminderCommand ??= new RelayCommand(SaveReminder);
 
         private ICommand _openTaskAreaCommand;
         public ICommand OpenTaskAreaCommand
@@ -112,6 +117,7 @@ namespace UruruNotes.ViewsModels
                 return _openTaskAreaCommand ??= new RelayCommand<DayViewModel>(OpenTaskArea);
             }
         }
+
         private int _selectedHour;
         public int SelectedHour
         {
@@ -165,7 +171,6 @@ namespace UruruNotes.ViewsModels
             PreviousMonthCommand = new RelayCommand(ShowPreviousMonth);
             NextMonthCommand = new RelayCommand(ShowNextMonth);
             _openTaskAreaCommand = new RelayCommand<DayViewModel>(OpenTaskArea);
-            _saveTaskCommand = new RelayCommand(SaveTask);
             _notes = new ObservableCollection<Note>();
             
 
@@ -341,10 +346,10 @@ namespace UruruNotes.ViewsModels
         }
 
 
-        private void SaveTask()
+        // Метод для сохранения заметки
+        private void SaveNote()
         {
-            // Логика сохранения задачи
-            if (SelectedDate.HasValue && !string.IsNullOrEmpty(NewTaskContent) && !string.IsNullOrEmpty(NewTaskContentRemind))
+            if (SelectedDate.HasValue && !string.IsNullOrEmpty(NewTaskContent))
             {
                 var note = new Note
                 {
@@ -352,27 +357,55 @@ namespace UruruNotes.ViewsModels
                     Content = NewTaskContent,
                     IsReminder = false
                 };
-                
 
+                // Сохраняем заметку
+                SaveNoteForDate(SelectedDate.Value, note);
+
+                MessageBox.Show("Заметка успешно сохранена!");
+            }
+            else
+            {
+                MessageBox.Show("Ошибка: не все данные для заметки заполнены.");
+            }
+        }
+
+        // Метод для сохранения напоминания
+        private void SaveReminder()
+        {
+            if (SelectedDate.HasValue && !string.IsNullOrEmpty(NewTaskContentRemind))
+            {
                 var reminder = new Note
                 {
                     Date = SelectedDate.Value,
                     Content = NewTaskContentRemind,
                     IsReminder = true,
-                    ReminderTime = SelectedReminderTime // Сохраняем выбранное время
+                    ReminderTime = SelectedReminderTime
                 };
-                
 
-                // Сохраняем данные для текущего дня
-                SaveNotesForDate(SelectedDate.Value, note, reminder);
+                // Сохраняем напоминание
+                SaveReminderForDate(SelectedDate.Value, reminder);
 
-                MessageBox.Show("Данные успешно сохранены!");
-
+                MessageBox.Show("Напоминание успешно сохранено!");
             }
             else
             {
-                MessageBox.Show("Ошибка: не все данные заполнены.");
+                MessageBox.Show("Ошибка: не все данные для напоминания заполнены.");
             }
+        }
+
+        // Метод для сохранения заметки
+        private void SaveNoteForDate(DateTime date, Note note)
+        {
+            string noteFilePath = GetNotesFilePath(date, false);
+            File.WriteAllText(noteFilePath, note.Content);
+        }
+
+        // Метод для сохранения напоминания
+        private void SaveReminderForDate(DateTime date, Note reminder)
+        {
+            string reminderFilePath = GetNotesFilePath(date, true);
+            string reminderContent = $"{reminder.Content}\n\n**Время напоминания:** {reminder.ReminderTime:hh\\:mm}";
+            File.WriteAllText(reminderFilePath, reminderContent);
         }
 
         private void SaveNotesForDate(DateTime date, Note note, Note reminder)
