@@ -9,17 +9,18 @@ using System.Windows;
 
 namespace UruruNotes.Models
 {
-    public class BoolToVisibilityConverter : IValueConverter 
+    public class BoolToVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return (value is bool b && b) ? Visibility.Visible : Visibility.Collapsed;
+            // Если значение true, возвращаем Visible, иначе — Collapsed
+            return (value is bool && (bool)value) ? Visibility.Visible : Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return value is Visibility v && v == Visibility.Visible;
+            // Обратное преобразование (если нужно)
+            return value is Visibility && (Visibility)value == Visibility.Visible;
         }
     }
-
 }
