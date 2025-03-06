@@ -26,15 +26,25 @@
             <!-- Панель задач -->
         </Grid.ColumnDefinitions>
 
-        <StackPanel Grid.Column="0" Orientation="Vertical">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <!-- Для заголовка и кнопок -->
+                <RowDefinition Height="Auto" />
+                <!-- Для дней недели -->
+                <RowDefinition Height="*" />
+                <!-- Для календаря -->
+            </Grid.RowDefinitions>
+
+            <!-- Заголовок и кнопки -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10" Grid.Row="0">
                 <Button Content="⟨" Width="50" Height="30" Command="{Binding PreviousMonthCommand}" Background="White" BorderBrush="#FF235C9A" />
                 <TextBlock Text="{Binding CurrentMonthYear}" FontSize="20" FontWeight="Bold" Margin="20,0" />
                 <Button Content="⟩" Width="50" Height="30" Command="{Binding NextMonthCommand}" Background="White" BorderBrush="#FF235C9A" />
             </StackPanel>
 
             <!-- Сетка для дней недели -->
-            <UniformGrid Rows="1" Columns="7" Margin="10">
+            <UniformGrid Rows="1" Columns="7" Margin="10" Grid.Row="1">
                 <TextBlock Text="Пн" TextAlignment="Center" FontWeight="Bold" />
                 <TextBlock Text="Вт" TextAlignment="Center" FontWeight="Bold" />
                 <TextBlock Text="Ср" TextAlignment="Center" FontWeight="Bold" />
@@ -45,7 +55,7 @@
             </UniformGrid>
 
             <!-- Календарь -->
-            <ItemsControl ItemsSource="{Binding Days}">
+            <ItemsControl ItemsSource="{Binding Days}" Grid.Row="2">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <UniformGrid Rows="6" Columns="7" />
@@ -54,16 +64,18 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Button Content="{Binding DisplayText}" 
-                                Command="{Binding DataContext.OpenTaskAreaCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
-                                CommandParameter="{Binding}" 
-                                Padding="5" Margin="5"
-                                Background="{Binding IsCurrentMonth, Converter={StaticResource BoolToBrushConverter}}"
-                                BorderBrush="Transparent" BorderThickness="0">
+                        Command="{Binding DataContext.OpenTaskAreaCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
+                        CommandParameter="{Binding}" 
+                        Padding="5" Margin="2"
+                        HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                        Background="{Binding IsCurrentMonth, Converter={StaticResource BoolToBrushConverter}}"
+                        BorderBrush="Transparent" BorderThickness="0"
+                        HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                         </Button>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-        </StackPanel>
+        </Grid>
 
 
 
