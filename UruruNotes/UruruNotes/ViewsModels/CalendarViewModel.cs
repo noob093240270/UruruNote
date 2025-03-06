@@ -395,6 +395,9 @@ namespace UruruNotes.ViewsModels
                 SaveNoteForDate(SelectedDate.Value, note);
 
                 MessageBox.Show("Заметка успешно сохранена!");
+
+                // Обновляем календарь
+                UpdateCalendar();
             }
             else
             {
@@ -419,6 +422,9 @@ namespace UruruNotes.ViewsModels
                 SaveReminderForDate(SelectedDate.Value, reminder);
 
                 MessageBox.Show("Напоминание успешно сохранено!");
+
+                // Обновляем календарь
+                UpdateCalendar();
             }
             else
             {
