@@ -15,10 +15,7 @@
     </Window.Resources>
 
 
-
     <Grid>
-
-
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" MinWidth="400px"/>
             <!-- Календарь -->
@@ -63,14 +60,40 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Button Content="{Binding DisplayText}" 
-                        Command="{Binding DataContext.OpenTaskAreaCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
-                        CommandParameter="{Binding}" 
-                        Padding="5" Margin="2"
-                        HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                        Background="{Binding IsCurrentMonth, Converter={StaticResource BoolToBrushConverter}}"
-                        BorderBrush="Transparent" BorderThickness="0"
-                        HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        <Button Command="{Binding DataContext.OpenTaskAreaCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
+                CommandParameter="{Binding}" 
+                Padding="5" Margin="2"
+                HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                Background="{Binding IsCurrentMonth, Converter={StaticResource BoolToBrushConverter}}"
+                BorderBrush="Transparent" BorderThickness="0"
+                HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                            <Grid>
+                                <!-- Определяем строки для разделения элементов -->
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <!-- Для числа дня -->
+                                    <RowDefinition Height="Auto" />
+                                    <!-- Для красной точки и времени -->
+                                </Grid.RowDefinitions>
+
+                                <!-- Число дня (в первой строке) -->
+                                <TextBlock Text="{Binding DisplayText}" 
+                           HorizontalAlignment="Center" VerticalAlignment="Center" 
+                           FontSize="14" Grid.Row="0" />
+
+                                <!-- Контейнер для красной точки и времени напоминания (во второй строке) -->
+                                <StackPanel Orientation="Horizontal" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center" 
+                            Grid.Row="1" Margin="0,5,0,0">
+                                    <!-- Красная точка, если есть заметка -->
+                                    <Ellipse Width="6" Height="6" Fill="Red" VerticalAlignment="Center"
+                             Visibility="{Binding HasNote, Converter={StaticResource BoolToVisibilityConverter}}" />
+
+                                    <!-- Время напоминания, если оно есть -->
+                                    <TextBlock Text="{Binding ReminderTime}" VerticalAlignment="Center" 
+                               Foreground="Red" FontSize="10" Margin="5,0,0,0" />
+                                </StackPanel>
+                            </Grid>
                         </Button>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

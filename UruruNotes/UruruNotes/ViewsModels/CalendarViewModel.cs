@@ -211,12 +211,18 @@ namespace UruruNotes.ViewsModels
             // Заполнение текущего месяца
             for (int i = 1; i <= daysInMonth; i++)
             {
-                Days.Add(new DayViewModel
+                var date = new DateTime(_currentDate.Year, _currentDate.Month, i);
+                var dayViewModel = new DayViewModel
                 {
-                    Date = new DateTime(_currentDate.Year, _currentDate.Month, i),
+                    Date = date,
                     DisplayText = i.ToString(),
                     IsCurrentMonth = true
-                });
+                };
+
+                // Проверяем, есть ли заметка или напоминание для этого дня
+                CheckForNoteAndReminder(dayViewModel);
+
+                Days.Add(dayViewModel);
             }
 
             // Заполнение дней следующего месяца
@@ -232,6 +238,33 @@ namespace UruruNotes.ViewsModels
             }
 
             OnPropertyChanged(nameof(CurrentMonthYear));
+        }
+
+
+        private void CheckForNoteAndReminder(DayViewModel dayViewModel)
+        {
+            if (dayViewModel.Date.HasValue)
+            {
+                string noteFilePath = GetNotesFilePath(dayViewModel.Date.Value, false);
+                string reminderFilePath = GetNotesFilePath(dayViewModel.Date.Value, true);
+
+                // Проверяем наличие заметки
+                if (File.Exists(noteFilePath))
+                {
+                    dayViewModel.HasNote = true;
+                }
+
+                // Проверяем наличие напоминания
+                if (File.Exists(reminderFilePath))
+                {
+                    string reminderContent = File.ReadAllText(reminderFilePath);
+                    var timeMatch = System.Text.RegularExpressions.Regex.Match(reminderContent, @"\*\*Время напоминания:\*\* (\d{2}:\d{2})");
+                    if (timeMatch.Success)
+                    {
+                        dayViewModel.ReminderTime = timeMatch.Groups[1].Value;
+                    }
+                }
+            }
         }
 
         private void ShowPreviousMonth()
