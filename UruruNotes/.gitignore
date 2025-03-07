@@ -3,12 +3,6 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
-.vs/
-*.suo
-*.user
-*.cache
-*.db
-
 # Скомпилированные файлы
 bin/
 obj/
