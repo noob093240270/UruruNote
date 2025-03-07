@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using UruruNote.Views;
 using UruruNote.ViewsModels;
 using UruruNotes.Models;
@@ -74,18 +75,24 @@ namespace UruruNotes.Views
         /// <summary>
         /// Обработчик для сворачивания и разворачивания TreeView
         /// </summary>
+        private bool isMenuOpen = false;
+
         private void ToggleVisibilityButton_Click(object sender, RoutedEventArgs e)
         {
-            var button = sender as Button;
-
-            if (TreeViewGrid.Visibility == Visibility.Visible)
+            if (isMenuOpen)
             {
-                TreeViewGrid.Visibility = Visibility.Collapsed;
+                BeginStoryboard((Storyboard)FindResource("ClosingLeftMenu"));
+                ButtonClose.Visibility = Visibility.Collapsed;
+                ButtonOpen.Visibility = Visibility.Visible;
             }
             else
             {
-                TreeViewGrid.Visibility = Visibility.Visible;
+                BeginStoryboard((Storyboard)FindResource("OpeningLeftMenu"));
+                ButtonClose.Visibility = Visibility.Visible;
+                ButtonOpen.Visibility = Visibility.Collapsed;
             }
+
+            isMenuOpen = !isMenuOpen;
         }
 
         /// <summary>
