@@ -10,11 +10,14 @@
     <UserControl.Resources>
         <sys:Double x:Key="NoteFontSize">15</sys:Double>
     </UserControl.Resources>
+
     <Grid>
-        <Grid.LayoutTransform>
+        <!-- Закомментировал ScaleTransform, чтобы он не ломал размер -->
+        <!--<Grid.LayoutTransform>
             <ScaleTransform ScaleX="{Binding Scale, RelativeSource={RelativeSource AncestorType=UserControl}}" 
                             ScaleY="{Binding Scale, RelativeSource={RelativeSource AncestorType=UserControl}}" />
-        </Grid.LayoutTransform>
+        </Grid.LayoutTransform>-->
+
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
@@ -28,18 +31,17 @@
                      VerticalScrollBarVisibility="Auto" 
                      HorizontalScrollBarVisibility="Auto" 
                      FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=UserControl}}" 
-                     Margin="10" 
-                     HorizontalAlignment="Stretch" 
-                     VerticalAlignment="Stretch"
+                     Margin="10"
+                     MinWidth="300"
+                     HorizontalAlignment="Stretch"
                      AcceptsReturn="True" 
                      AcceptsTab="True"
                      PreviewKeyDown="MarkdownRichTextBox_PreviewKeyDown" 
                      CaretBrush="#FF235C9A" 
                      SelectionBrush="#FF235C9A" 
                      SelectionTextBrush="#FF235C9A">
-            <FlowDocument PageWidth="Auto" PagePadding="0">
+            <FlowDocument PagePadding="5">
                 <Paragraph />
-                <!-- Начальный абзац для ввода -->
             </FlowDocument>
             <RichTextBox.ContextMenu>
                 <ContextMenu>

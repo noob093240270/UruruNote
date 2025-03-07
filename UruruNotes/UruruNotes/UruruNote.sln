@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34511.84
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UruruNotes", "UruruNotes\UruruNotes.csproj", "{E86752DC-FC7A-4203-AAED-B3165F7C114A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E86752DC-FC7A-4203-AAED-B3165F7C114A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E86752DC-FC7A-4203-AAED-B3165F7C114A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E86752DC-FC7A-4203-AAED-B3165F7C114A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E86752DC-FC7A-4203-AAED-B3165F7C114A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {99D21808-76CC-407E-94F2-4AF5094DEB5E}
+	EndGlobalSection
+EndGlobal

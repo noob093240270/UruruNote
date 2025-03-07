@@ -1,0 +1,33 @@
+﻿<UserControl x:Class="UruruNote.Views.MarkdownViewer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             Margin="30"
+             >
+    <!-- Локальный ресурс для размера шрифта -->
+    <UserControl.Resources>
+        <sys:Double x:Key="NoteFontSize">15</sys:Double>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <!-- RichTextBox для редактирования содержимого -->
+        <RichTextBox Name="MarkdownRichTextBox" VerticalScrollBarVisibility="Auto" FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=UserControl}}" HorizontalScrollBarVisibility="Auto" Margin="10" 
+                     PreviewKeyDown="MarkdownRichTextBox_PreviewKeyDown" CaretBrush="#FF235C9A" SelectionBrush="#FF235C9A" SelectionTextBrush="#FF235C9A">
+            <RichTextBox.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Жирный" Click="BoldMenuItem_Click"/>
+                    <MenuItem Header="Курсив" Click="ItalicMenuItem_Click"/>
+                    <MenuItem Header="Зачеркнутый" Click="StrikethroughMenuItem_Click"/>
+                    <MenuItem Header="Выделенный" Click="HighlightMenuItem_Click"/>
+                </ContextMenu>
+            </RichTextBox.ContextMenu>
+        </RichTextBox>
+
+        
+    </Grid>
+</UserControl>

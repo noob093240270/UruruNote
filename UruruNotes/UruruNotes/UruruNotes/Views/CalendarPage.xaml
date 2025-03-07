@@ -1,0 +1,110 @@
+﻿<Window x:Class="UruruNotes.CalendarPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:UruruNotes" 
+      xmlns:converters="clr-namespace:UruruNotes.Models" xmlns:viewsmodels="clr-namespace:UruruNotes.ViewsModels" d:DataContext="{d:DesignInstance Type=viewsmodels:CalendarViewModel}"
+        mc:Ignorable="d" 
+      MinHeight="450" MaxHeight="650" MinWidth="450" MaxWidth="850"
+      Title="CalendarPage" Icon="/Views/calendar.png">
+
+    <Window.Resources>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <converters:BoolToBrushConverter x:Key="BoolToBrushConverter" />
+    </Window.Resources>
+
+
+
+    <Grid>
+
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MinWidth="400px"/>
+            <!-- Календарь -->
+            <ColumnDefinition Width="auto" x:Name="NotesColumn"/>
+            <!-- Панель задач -->
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Column="0" Orientation="Vertical">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+                <Button Content="⟨" Width="50" Height="30" Command="{Binding PreviousMonthCommand}" Background="White" BorderBrush="#FF235C9A" />
+                <TextBlock Text="{Binding CurrentMonthYear}" FontSize="20" FontWeight="Bold" Margin="20,0" />
+                <Button Content="⟩" Width="50" Height="30" Command="{Binding NextMonthCommand}" Background="White" BorderBrush="#FF235C9A" />
+            </StackPanel>
+
+            <!-- Сетка для дней недели -->
+            <UniformGrid Rows="1" Columns="7" Margin="10">
+                <TextBlock Text="Пн" TextAlignment="Center" FontWeight="Bold" />
+                <TextBlock Text="Вт" TextAlignment="Center" FontWeight="Bold" />
+                <TextBlock Text="Ср" TextAlignment="Center" FontWeight="Bold" />
+                <TextBlock Text="Чт" TextAlignment="Center" FontWeight="Bold" />
+                <TextBlock Text="Пт" TextAlignment="Center" FontWeight="Bold" />
+                <TextBlock Text="Сб" TextAlignment="Center" FontWeight="Bold" Foreground="Red" />
+                <TextBlock Text="Вс" TextAlignment="Center" FontWeight="Bold" Foreground="Red" />
+            </UniformGrid>
+
+            <!-- Календарь -->
+            <ItemsControl ItemsSource="{Binding Days}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Rows="6" Columns="7" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Content="{Binding DisplayText}" 
+                                Command="{Binding DataContext.OpenTaskAreaCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
+                                CommandParameter="{Binding}" 
+                                Padding="5" Margin="5"
+                                Background="{Binding IsCurrentMonth, Converter={StaticResource BoolToBrushConverter}}"
+                                BorderBrush="Transparent" BorderThickness="0">
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+
+
+
+        <Border Grid.Column="1"  Width="Auto" 
+            Visibility="{Binding IsTaskPanelVisible, Converter={StaticResource BoolToVisibilityConverter}}" 
+            Margin="10">
+            <Grid Margin="-39,0,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <!-- Для кнопки -->
+                    <ColumnDefinition x:Name="TaskPanelColumn" Width="Auto"/>
+                    <!-- Для панели -->
+                </Grid.ColumnDefinitions>
+                <Button x:Name="ToggleButton" Grid.Column="0"
+                    Width="30" Height="30"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    Background="Transparent"
+                    Click="TogglePanel_Click"
+                    BorderThickness="0">
+                    <Button.Content>
+                        <Canvas Width="30" Height="30">
+                            <Path x:Name="TrianglePath"
+                          Data="M 5,25 L 25,25 L 15,5 Z"
+                          Fill="Black"
+                          Stroke="Black"
+                          StrokeThickness="1" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                        </Canvas>
+                    </Button.Content>
+                </Button>
+                <StackPanel x:Name="TaskPanel" Grid.Column="1" Background="LightGray" Width="Auto">
+                    <TextBlock Text="Создать заметку" FontSize="20" FontWeight="Bold" Margin="10"/>
+                    <TextBox TextWrapping="Wrap" Text="{Binding NewTaskContent}" AcceptsReturn="True" AcceptsTab="True" VerticalScrollBarVisibility="Auto" MaxWidth="278" Height="100" Margin="10" FontSize="14" CaretBrush="#FF235C9A" SelectionBrush="#FF235C9A" PreviewKeyDown="TextBox_PreviewKeyDown" Loaded="TextBox_Loaded" />
+                    <Button Content="Сохранить" Command="{Binding SaveTaskCommand}" Width="110" Margin="10" HorizontalAlignment="Left" Background="White" BorderBrush="#FF235C9A" />
+
+                    <TextBlock Text="Создать напоминание" FontSize="20" FontWeight="Bold" Margin="10"/>
+                    <TextBox TextWrapping="Wrap" Text="{Binding NewTaskContentRemind}"  AcceptsReturn="True" AcceptsTab="True" VerticalScrollBarVisibility="Auto" MaxWidth="278" Height="100" Margin="10" FontSize="14" CaretBrush="#FF235C9A" SelectionBrush="#FF235C9A" PreviewKeyDown="TextBox_PreviewKeyDown" Loaded="TextBox_Loaded" />
+                    <Button Content="Сохранить" Command="{Binding SaveTaskCommand}" Width="110" Margin="10" HorizontalAlignment="Left" Background="White" BorderBrush="#FF235C9A" />
+
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
