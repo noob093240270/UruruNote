@@ -21,22 +21,50 @@
             <!-- Размер шрифта -->
             <sys:Double x:Key="GlobalFontSize">15</sys:Double>
             <sys:Double x:Key="NoteFontSize">15</sys:Double>
+            <!-- Масштаб интерфейса -->
+            <sys:Double x:Key="GlobalScale">1.0</sys:Double>
 
             <!-- Стили для элементов с глобальным шрифтом -->
             <Style TargetType="TextBlock">
                 <Setter Property="FontFamily" Value="{DynamicResource GlobalFont}" />
+                <Setter Property="LayoutTransform">
+                    <Setter.Value>
+                        <ScaleTransform ScaleX="{DynamicResource GlobalScale}" ScaleY="{DynamicResource GlobalScale}" />
+                    </Setter.Value>
+                </Setter>
             </Style>
+            
             <Style TargetType="TextBox">
                 <Setter Property="FontFamily" Value="{DynamicResource GlobalFont}" />
+                <Setter Property="LayoutTransform">
+                    <Setter.Value>
+                        <ScaleTransform ScaleX="{DynamicResource GlobalScale}" ScaleY="{DynamicResource GlobalScale}" />
+                    </Setter.Value>
+                </Setter>
             </Style>
             <Style TargetType="Button">
                 <Setter Property="FontFamily" Value="{DynamicResource GlobalFont}" />
+                <Setter Property="LayoutTransform">
+                    <Setter.Value>
+                        <ScaleTransform ScaleX="{DynamicResource GlobalScale}" ScaleY="{DynamicResource GlobalScale}" />
+                    </Setter.Value>
+                </Setter>
             </Style>
             <Style TargetType="ComboBox">
                 <Setter Property="FontFamily" Value="{DynamicResource GlobalFont}" />
+                <Setter Property="LayoutTransform">
+                    <Setter.Value>
+                        <ScaleTransform ScaleX="{DynamicResource GlobalScale}" ScaleY="{DynamicResource GlobalScale}" />
+                    </Setter.Value>
+                </Setter>
             </Style>
             <Style TargetType="RichTextBox">
                 <Setter Property="FontSize" Value="{DynamicResource NoteFontSize}" />
+                <Setter Property="LayoutTransform">
+                    <Setter.Value>
+                        <ScaleTransform ScaleX="{DynamicResource GlobalScale}" ScaleY="{DynamicResource GlobalScale}" />
+                    </Setter.Value>
+                </Setter>
             </Style>
         </ResourceDictionary>
     </Application.Resources>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using UruruNote.ViewsModels;
 using UruruNotes.ViewsModels;
 
 namespace UruruNotes
@@ -21,14 +23,53 @@ namespace UruruNotes
     /// </summary>
     public partial class CalendarPage : Window
     {
-
-        // Объявляем заголовок на уровне класса, чтобы он был доступен во всех методах
+        private readonly CalendarViewModel _viewModel;
+        private readonly double baseWidth = 450; // Базовая ширина окна
+        private readonly double baseHeight = 450; // Базовая высота окна
+        private bool _isPanelVisible = true;
         private string _defaultText = "Создание задачи на 07 января 2025";
-        public CalendarPage()
+
+        public CalendarPage(MainViewModel mainViewModel)
         {
             InitializeComponent();
-            DataContext = new CalendarViewModel();
+            _viewModel = new CalendarViewModel();
+            _viewModel.Scale = mainViewModel.Scale;
+            DataContext = _viewModel;
 
+            UpdateWindowSize(_viewModel.Scale);
+
+            mainViewModel.PropertyChanged += (s, e) =>
+            {
+                if (e.PropertyName == nameof(mainViewModel.Scale))
+                {
+                    _viewModel.Scale = mainViewModel.Scale;
+                    UpdateWindowSize(_viewModel.Scale);
+                    Debug.WriteLine($"CalendarPage: MainViewModel.Scale передан и применён: {_viewModel.Scale}");
+                }
+            };
+        }
+
+        private void UpdateWindowSize(double scale)
+        {
+            this.Width = Math.Max(baseWidth * scale, 450); // Учитываем MinWidth
+            this.Height = Math.Max(baseHeight * scale, 450); // Учитываем MinHeight
+            Debug.WriteLine($"CalendarPage: Масштаб {scale}, Размеры окна: {this.Width}x{this.Height}");
+        }
+
+        private void TogglePanel_Click(object sender, RoutedEventArgs e)
+        {
+            if (_isPanelVisible)
+            {
+                TaskPanelColumn.Width = new GridLength(0); // Полностью схлопываем колонку
+                TrianglePath.RenderTransform = new RotateTransform(90, 15, 15);
+            }
+            else
+            {
+                TaskPanelColumn.Width = GridLength.Auto; // Возвращаем колонку
+                TrianglePath.RenderTransform = new RotateTransform(0, 15, 15);
+            }
+
+            _isPanelVisible = !_isPanelVisible;
         }
 
         private void TextBox_Loaded(object sender, RoutedEventArgs e)
@@ -64,26 +105,6 @@ namespace UruruNotes
                 }
             }
         }
-
-        private bool _isPanelVisible = true;
-
-        private void TogglePanel_Click(object sender, RoutedEventArgs e)
-        {
-            if (_isPanelVisible)
-            {
-                TaskPanelColumn.Width = new GridLength(0); // Полностью схлопываем колонку
-                TrianglePath.RenderTransform = new RotateTransform(90, 15, 15);
-            }
-            else
-            {
-                TaskPanelColumn.Width = GridLength.Auto; // Возвращаем колонку
-                TrianglePath.RenderTransform = new RotateTransform(0, 15, 15);
-            }
-
-            _isPanelVisible = !_isPanelVisible;
-        }
-
-
-
     }
 }
+

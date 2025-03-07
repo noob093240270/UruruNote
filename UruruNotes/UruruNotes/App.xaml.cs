@@ -1,6 +1,8 @@
 ﻿using System.Configuration;
 using System.Data;
 using System.Windows;
+using System.Windows.Media;
+using UruruNote.ViewsModels;
 
 namespace UruruNotes
 {
@@ -25,6 +27,14 @@ namespace UruruNotes
                 Application.Current.Resources.Add("GlobalFontSize", fontSize);
             }
         }
+        public static void UpdateGlobalScale(double scale)
+        {
+            foreach (Window window in Application.Current.Windows)
+            {
+                var scaleTransform = new ScaleTransform(scale, scale);
+                window.LayoutTransform = scaleTransform;
+            }
+        }
 
         /// <summary>
         /// Событие запуска приложения
@@ -34,10 +44,12 @@ namespace UruruNotes
         {
             base.OnStartup(e);
 
-            // Устанавливаем размер шрифта по умолчанию
-            int savedFontSize = SettingsManager.LoadSettings();
-            UpdateGlobalFontSize(savedFontSize);
+            // Загрузка сохраненных настроек
+            var settings = SettingsManager.LoadSettings();
+            UpdateGlobalFontSize(settings.FontSize);
+            UpdateGlobalScale(settings.Scale);
         }
+
     }
 }
 

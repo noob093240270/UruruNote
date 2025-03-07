@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -18,7 +19,7 @@ using UruruNotes.ViewsModels;
 
 namespace UruruNote.ViewsModels
 {
-    internal class MainViewModel : INotifyPropertyChanged
+    public class MainViewModel : INotifyPropertyChanged
     {
         /*public event PropertyChangedEventHandler PropertyChanged;
 
@@ -78,29 +79,21 @@ namespace UruruNote.ViewsModels
             {
                 if (value >= 10 && value <= 35)
                 {
-                    if (_previousFontSize != value)
+                    if (_selectedFontSize != value) // Изменил условие, чтобы всегда сохранять
                     {
-                        if (_isUpdatingFontSize) return;
-
-                        try
+                        _isUpdatingFontSize = true;
+                        _selectedFontSize = value;
+                        Debug.WriteLine($"SelectedFontSize изменён на: {value}");
+                        OnPropertyChanged(nameof(SelectedFontSize));
+                        App.UpdateGlobalFontSize(value);
+                        ApplyFont();
+                        SettingsManager.SaveSettings(value, Scale); // Сохраняем всегда
+                        if (_previousFontSize.HasValue && _previousFontSize != value)
                         {
-                            _isUpdatingFontSize = true;
-
-                            _selectedFontSize = value;
-                            OnPropertyChanged(nameof(SelectedFontSize));
-
-                            // Обновляем глобальный ресурс
-                            App.UpdateGlobalFontSize(value);
-
-                            // Сохраняем новое значение
-                            SettingsManager.SaveSettings(value);
-
-                            _previousFontSize = value;
+                            Debug.WriteLine($"FontSize notification: {value}");
                         }
-                        finally
-                        {
-                            _isUpdatingFontSize = false;
-                        }
+                        _previousFontSize = value;
+                        _isUpdatingFontSize = false;
                     }
                 }
                 else
@@ -146,6 +139,167 @@ namespace UruruNote.ViewsModels
                 }
             }
         }
+        private double _scale = 1.0; // Начальный масштаб (100%)
+        private double? _previousScale;
+        private bool _isInitializing = true;
+        public double Scale
+        {
+            get => _scale;
+            set
+            {
+                if (_scale != value)
+                {
+                    _scale = value;
+                    Debug.WriteLine($"Scale изменён на: {value}");
+                    OnPropertyChanged(nameof(Scale));
+                    UpdateScale();
+                    SettingsManager.SaveSettings(SelectedFontSize, value); // Сохраняем при каждом изменении
+                    if (!_isInitializing)
+                    {
+                        ShowScaleNotification(value);
+                        UpdateSelectedScaleOption();
+                    }
+                    ScaleDisplay = $"{value * 100:F0}%";
+                    _previousScale = value;
+                }
+            }
+        }
+        public void UpdateScale()
+        {
+            foreach (Window window in Application.Current.Windows)
+            {
+                var scaleTransform = new ScaleTransform(Scale, Scale);
+                window.LayoutTransform = scaleTransform;
+                Debug.WriteLine($"Scale применён к окну: {window.GetType().Name}, Scale: {Scale}");
+            }
+        }
+        public void SetScaleFromInput(string input)
+        {
+            if (double.TryParse(input, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double scale))
+            {
+                if (scale > 2.0 && scale <= 200.0) // Предполагаем, что пользователь ввёл проценты
+                {
+                    scale /= 100.0;
+                }
+
+                if (scale >= 0.5 && scale <= 2.0)
+                {
+                    Scale = scale; // Уведомление в Scale setter
+                }
+                else
+                {
+                    MessageBox.Show("Масштаб должен быть от 50% до 200% (0.5–2.0).");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Введите числовое значение (например, 50 или 0.5).");
+            }
+        }
+        private void UpdateSelectedScaleOption()
+        {
+            if (ScaleOptions == null || !ScaleOptions.Any()) return;
+        var closestScale = ScaleOptions.OrderBy(option => Math.Abs(option - Scale)).First();
+        if (_selectedScaleOption != closestScale) // Избегаем лишнего вызова Scale setter
+        {
+            _selectedScaleOption = closestScale;
+            OnPropertyChanged(nameof(SelectedScaleOption));
+        }
+        }
+
+        private double _selectedScaleOption;
+        public double SelectedScaleOption
+        {
+            get => _selectedScaleOption;
+            set
+            {
+                if (value > 0 && ScaleOptions.Contains(value))
+                {
+                    _selectedScaleOption = value;
+                    Console.WriteLine($"SelectedScaleOption изменён на: {value}");
+                    Scale = value;
+                    OnPropertyChanged(nameof(SelectedScaleOption));
+                    OnPropertyChanged(nameof(ScaleDisplay));
+                }
+            }
+        }
+        private ObservableCollection<double> _scaleOptions;
+        public ObservableCollection<double> ScaleOptions
+        {
+            get => _scaleOptions;
+            set
+            {
+                _scaleOptions = value;
+                OnPropertyChanged(nameof(ScaleOptions));
+            }
+        }
+
+
+        // Команды для увеличения/уменьшения масштаба
+        private ICommand _increaseScaleCommand;
+        public ICommand IncreaseScaleCommand
+        {
+            get
+            {
+                return _increaseScaleCommand ??= new RelayCommand(IncreaseScale);
+            }
+        }
+
+        private ICommand _decreaseScaleCommand;
+        public ICommand DecreaseScaleCommand
+        {
+            get
+            {
+                return _decreaseScaleCommand ??= new RelayCommand(DecreaseScale);
+            }
+        }
+
+        private void IncreaseScale()
+        {
+            var closestScale = ScaleOptions.OrderBy(option => Math.Abs(option - Scale)).First();
+            var currentScaleIndex = ScaleOptions.IndexOf(closestScale);
+            if (currentScaleIndex < ScaleOptions.Count - 1)
+            {
+                var newScale = ScaleOptions[currentScaleIndex + 1];
+                Scale = newScale;
+                SelectedScaleOption = newScale; // Синхронизируем SelectedScaleOption
+               
+            }
+        }
+
+        private void DecreaseScale()
+        {
+            var closestScale = ScaleOptions.OrderBy(option => Math.Abs(option - Scale)).First();
+            var currentScaleIndex = ScaleOptions.IndexOf(closestScale);
+            if (currentScaleIndex > 0)
+            {
+                var newScale = ScaleOptions[currentScaleIndex - 1];
+                Scale = newScale;
+                SelectedScaleOption = newScale; // Синхронизируем SelectedScaleOption
+               
+            }
+        }
+        private string _scaleDisplay = "100%";
+        public string ScaleDisplay
+        {
+            get => _scaleDisplay;
+            set
+            {
+                if (_scaleDisplay != value)
+                {
+                    _scaleDisplay = value;
+                    OnPropertyChanged(nameof(ScaleDisplay));
+                }
+            }
+        }
+        private void ShowScaleNotification(double scale)
+        {
+            MessageBox.Show($"Установлен масштаб: {scale * 100:F0}%", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+
+
+
         /*private bool _isDarkModeEanbled;
         public bool IsDarkModeEnabled
         {
@@ -230,7 +384,11 @@ namespace UruruNote.ViewsModels
         }
 
 
+
         #endregion
+
+
+
 
 
         public ObservableCollection<FileItem> Files { get; set; }
@@ -257,10 +415,29 @@ namespace UruruNote.ViewsModels
 
         public MainViewModel()
         {
-            // Инициализация списка размеров шрифта
-
             FontSizeOptions = new ObservableCollection<int>(Enumerable.Range(10, 26));
-            SelectedFontSize = SettingsManager.LoadSettings();
+            ScaleOptions = new ObservableCollection<double> { 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0 };
+            var settings = SettingsManager.LoadSettings();
+
+            _isUpdatingFontSize = true;
+            _selectedFontSize = settings.FontSize; // Устанавливаем начальное значение напрямую
+            _previousFontSize = settings.FontSize; // Синхронизируем _previousFontSize
+            OnPropertyChanged(nameof(SelectedFontSize));
+            App.UpdateGlobalFontSize(_selectedFontSize);
+            ApplyFont();
+            _isUpdatingFontSize = false;
+
+            _isInitializing = true;
+            Scale = settings.Scale;
+            SelectedScaleOption = settings.Scale;
+            _isInitializing = false;
+
+            // Явно вызываем уведомления для начальной синхронизации
+            OnPropertyChanged(nameof(Scale));
+            OnPropertyChanged(nameof(SelectedScaleOption));
+            OnPropertyChanged(nameof(ScaleDisplay));
+
+            OpenCalendarCommand = new RelayCommand(OpenCalendar);
             /*
             var markdownService = new MarkdownFileService();
             string fileName = "initial_file.md";
@@ -301,7 +478,7 @@ namespace UruruNote.ViewsModels
 
         #region CreateFolder
 
-        private void CreateFolder()
+        public void CreateFolder()
         {
             var newFolderWindow = new NewFolderWindow();
 
@@ -382,7 +559,7 @@ namespace UruruNote.ViewsModels
 
         #region CreateFileInFolder
 
-        private void CreateNewMarkdownFile()
+        public void CreateNewMarkdownFile()
         {
             var newFileWindow = new NewFileWindow();
 
@@ -634,7 +811,8 @@ namespace UruruNote.ViewsModels
             // Создаем новый объект MarkdownViewer
             var markdownViewer = new MarkdownViewer(fileItem)
             {
-                FontSize = SelectedFontSize
+                FontSize = SelectedFontSize,
+                Scale = Scale,
             };
 
             // Если есть подписчики на событие, вызываем его
@@ -648,7 +826,7 @@ namespace UruruNote.ViewsModels
         private void OpenCalendar()
         {
             // Создаём и открываем окно календаря
-            var calendarWindow = new CalendarPage();
+            var calendarWindow = new CalendarPage(this);
             calendarWindow.ShowDialog(); // Если хотите, чтобы окно было модальным
         }
 

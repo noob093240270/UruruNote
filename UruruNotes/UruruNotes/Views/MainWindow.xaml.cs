@@ -1,5 +1,7 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -7,7 +9,6 @@ using System.Windows.Media;
 using UruruNote.Views;
 using UruruNote.ViewsModels;
 using UruruNotes.Models;
-using UruruNotes.ViewsModels;
 
 namespace UruruNotes.Views
 {
@@ -16,262 +17,62 @@ namespace UruruNotes.Views
     /// </summary>
     public partial class MainWindow : Window
     {
-        public ObservableCollection<FolderItem> Folders { get; set; }
-        public ObservableCollection<FileItem> Files { get; set; }
-        public CalendarViewModel CalendarViewModel { get; set; }
+        private readonly MainViewModel _viewModel;
+        private readonly double baseWidth = 800; // Базовая ширина окна
+        private readonly double baseHeight = 490; // Базовая высота окна
+
         public MainWindow()
         {
             InitializeComponent();
 
             // Создаем экземпляр ViewModel
-            var viewModel = new MainViewModel();
-            DataContext = viewModel; // Установка DataContext на ViewModel
-
-            Folders = new ObservableCollection<FolderItem>();
+            _viewModel = new MainViewModel();
+            DataContext = _viewModel; // Установка DataContext на ViewModel
 
             // Подписываемся на событие OpenFileRequest
-            viewModel.OpenFileRequest += ViewModel_OpenFileRequest;
+            _viewModel.OpenFileRequest += ViewModel_OpenFileRequest;
+            _viewModel.PropertyChanged += ViewModel_PropertyChanged;
 
-            CalendarViewModel = new CalendarViewModel();
+            UpdateWindowSize(_viewModel.Scale); // Устанавливаем начальные размеры окна с учётом масштаба
         }
 
+        /// <summary>
+        /// Обработчик события открытия файла из ViewModel
+        /// </summary>
         private void ViewModel_OpenFileRequest(UserControl userControl)
         {
             // Заменяем контент в PageFrame
             PageFrame.Content = userControl;
         }
 
-        //private void Button_Click(object sender, RoutedEventArgs e)
-        //{
-
-        //}
-
-        /*private void CreateNewFileButton_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Обработчик изменения свойств ViewModel для обновления масштаба
+        /// </summary>
+        private void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            NewFileWindow newFileWindow = new NewFileWindow();
-            if (newFileWindow.ShowDialog() == true)
+            if (e.PropertyName == nameof(_viewModel.Scale))
             {
-                string fileName = newFileWindow.FileName;
-
-                // Создаем новый файл
-                var markdownService = new MarkdownFileService();
-                string newFileName = fileName.Trim() + ".md";
-
-                // Проверяем, существует ли файл с таким именем
-                if (!markdownService.IsMarkdownFileExists(newFileName))
-                {
-                    // Если файл не существует, создаем его
-                    string filePath = markdownService.CreateMarkdownFile(newFileName);
-
-                    // Получаем доступ к ViewModel через DataContext
-                    var viewModel = DataContext as MainViewModel;
-
-                    if (viewModel != null)
-                    {
-                        // Добавляем файл в коллекцию Files для обновления UI
-                        viewModel.Files.Add(new FileItem { FileName = newFileName, FilePath = filePath });
-                    }
-
-                    MessageBox.Show($"Файл успешно создан: {filePath}");
-                }
-            }
-        }*/
-
-        private void TreeView_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            // Получаем элемент, по которому кликнули
-            var clickedElement = e.OriginalSource as DependencyObject;
-
-            // Ищем TreeViewItem, к которому относится клик
-            while (clickedElement != null && !(clickedElement is TreeViewItem))
-            {
-                clickedElement = VisualTreeHelper.GetParent(clickedElement);
-            }
-
-            if (clickedElement is TreeViewItem treeViewItem)
-            {
-                // Сбрасываем выделение, если оно было
-                if (treeViewItem.IsSelected)
-                {
-                    treeViewItem.IsSelected = false; // Убираем выделение
-                    e.Handled = true;               // Останавливаем дальнейшую обработку события
-                }
+                UpdateWindowSize(_viewModel.Scale); // Обновляем размеры окна при изменении масштаба
             }
         }
 
-
-
-
-        private void CreateNewFileButton_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Метод для динамического обновления размеров окна в зависимости от масштаба
+        /// </summary>
+        private void UpdateWindowSize(double scale)
         {
-            var viewModel = DataContext as MainViewModel; // Получаем доступ к ViewModel
-            viewModel?.CreateNewMarkdownFileCommand.Execute(null);
+            this.Width = Math.Max(baseWidth * scale, MinWidth);
+            this.Height = Math.Max(baseHeight * scale, MinHeight);
         }
 
-
-        private void CreateNewFolderButton_Click(object sender, RoutedEventArgs e)
-        {
-            var viewModel = DataContext as MainViewModel;
-            viewModel?.CreateFolderCommand.Execute(null);
-        }
-
-
-        private void AddFileMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            if ((sender as MenuItem)?.DataContext is FolderItem selectedFolder)
-            {
-                if (DataContext is MainViewModel viewModel)
-                {
-                    viewModel.AddFileCommand.Execute(selectedFolder);
-                }
-            }
-        }
-
-
-
-
-        private MarkdownViewer _currentMarkdownViewer; // Ссылка на текущее открытое окно
-
-
-        /*private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
-        {
-            var viewModel = DataContext as MainViewModel;
-            if (viewModel != null)
-            {
-                var selectedItem = e.NewValue as FileItem;
-                viewModel.SelectedTreeViewItemChanged(selectedItem); // Передаем выбранный элемент
-
-                // Очищаем выделение
-                var treeView = sender as TreeView;
-                if (treeView != null)
-                {
-                    UnselectAll(treeView); // Используем наш метод для снятия выделения
-                }
-            }
-        }*/
-
-        private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
-        {
-            var viewModel = DataContext as MainViewModel;
-            if (viewModel != null)
-            {
-                var selectedItem = e.NewValue as FileItem;
-                if (selectedItem != null)
-                {
-                    viewModel.SelectedTreeViewItemChanged(selectedItem); // Передаем выбранный элемент
-
-                    // Очищаем выделение
-                    var treeView = sender as TreeView;
-                    if (treeView != null)
-                    {
-                        UnselectAll(treeView); // Используем наш метод для снятия выделения
-                    }
-
-                    // Загружаем содержимое выбранного файла в правую часть окна
-                    OpenFile(selectedItem);
-                }
-            }
-        }
-
-        // Для папок
-        private void FoldersTreeView_SelectedItemChanged(object sender, RoutedEventArgs e)
-        {
-            var selectedFolder = (sender as TreeView).SelectedItem;
-            if (selectedFolder is FolderItem folderItem)
-            {
-                // Логика работы с выбранной папкой
-                MessageBox.Show("Выбрана папка: " + folderItem.FileName);
-            }
-        }
-
-        // Для файлов
-        private void FilesTreeView_SelectedItemChanged(object sender, RoutedEventArgs e)
-        {
-            var selectedFile = (sender as TreeView).SelectedItem;
-            if (selectedFile is FileItem fileItem)
-            {
-                // Логика работы с выбранным файлом
-                MessageBox.Show("Выбран файл: " + fileItem.FileName);
-            }
-        }
-
-
-
-        private void OpenFileInPageFrame(FileItem file)
-        {
-            try
-            {
-                // Создаём экземпляр страницы для просмотра Markdown
-                var markdownViewerPage = new MarkdownViewer(file);
-
-                // Устанавливаем страницу в PageFrame
-                PageFrame.Content = markdownViewerPage;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Ошибка при открытии файла: {ex.Message}");
-            }
-        }
-
-
-        private void UnselectAll(TreeView treeView)
-        {
-            // Перебираем все элементы в TreeView и отменяем выделение
-            foreach (var item in treeView.Items)
-            {
-                if (item is TreeViewItem treeViewItem)
-                {
-                    treeViewItem.IsSelected = false;
-                    UnselectAllItems(treeViewItem);
-                }
-            }
-        }
-
-        private void UnselectAllItems(TreeViewItem treeViewItem)
-        {
-            // Рекурсивно отменяем выделение всех дочерних элементов
-            foreach (var child in treeViewItem.Items)
-            {
-                if (child is TreeViewItem childTreeViewItem)
-                {
-                    childTreeViewItem.IsSelected = false;
-                    UnselectAllItems(childTreeViewItem);
-                }
-            }
-        }
-
-
-        private void UnselectChildItems(TreeViewItem item)
-        {
-            foreach (var child in item.Items)
-            {
-                var childItem = item.ItemContainerGenerator.ContainerFromItem(child) as TreeViewItem;
-                if (childItem != null)
-                {
-                    childItem.IsSelected = false; // Сбрасываем выделение
-                    UnselectChildItems(childItem); // Рекурсивно для дочерних
-                }
-            }
-        }
-        // Обработчик для значка настроек
-        private void SettingsIcon_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-
-            // Открываем окно настроек
-            if (DataContext is MainViewModel mainViewModel)
-            {
-                // Передаем MainViewModel в конструктор SettingsWindow
-                var settingsWindow = new SettingsWindow(mainViewModel, _currentMarkdownViewer);
-                settingsWindow.ShowDialog();
-            }
-        }
-
-        // Обработчик для сворачивания и разворачивания treeview
+        /// <summary>
+        /// Обработчик для сворачивания и разворачивания TreeView
+        /// </summary>
         private void ToggleVisibilityButton_Click(object sender, RoutedEventArgs e)
         {
             var button = sender as Button;
 
-            if ((TreeViewGrid.Visibility == Visibility.Visible) & (ButtonOpen.Visibility == Visibility.Collapsed))
+            if ((TreeViewGrid.Visibility == Visibility.Visible) && (ButtonOpen.Visibility == Visibility.Collapsed))
             {
                 //TreeViewGrid.Visibility = Visibility.Collapsed;
                 ButtonClose.Visibility = Visibility.Collapsed;
@@ -285,6 +86,117 @@ namespace UruruNotes.Views
             }
         }
 
+        /// <summary>
+        /// Обработчик клика по кнопке создания нового файла
+        /// </summary>
+        public void CreateNewFileButton_Click(object sender, RoutedEventArgs e)
+        {
+            _viewModel.CreateNewMarkdownFile();
+        }
+
+        /// <summary>
+        /// Обработчик клика по кнопке создания новой папки
+        /// </summary>
+        private void CreateNewFolderButton_Click(object sender, RoutedEventArgs e)
+        {
+            _viewModel.CreateFolder();
+        }
+
+        /// <summary>
+        /// Обработчик для добавления файла в папку ПКМ
+        /// </summary>
+        private void AddFileMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuItem menuItem && menuItem.DataContext is FolderItem selectedFolder)
+            {
+                _viewModel.AddFileCommand.Execute(selectedFolder);
+            }
+        }
+
+        /// <summary>
+        /// Обработчик для предварительного клика мышью по TreeView (снятие выделения)
+        /// </summary>
+        private void TreeView_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            // Получаем элемент, по которому кликнули
+            var clickedElement = e.OriginalSource as DependencyObject;
+
+            // Ищем TreeViewItem, к которому относится клик
+            while (clickedElement != null && !(clickedElement is TreeViewItem))
+            {
+                clickedElement = VisualTreeHelper.GetParent(clickedElement);
+            }
+
+            if (clickedElement is TreeViewItem treeViewItem && treeViewItem.IsSelected)
+            {
+                treeViewItem.IsSelected = false; // Убираем выделение
+                e.Handled = true;               // Останавливаем дальнейшую обработку события
+            }
+        }
+
+        /// <summary>
+        /// Обработчик изменения выбранного элемента в TreeView
+        /// </summary>
+        private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            if (e.NewValue is FileItem fileItem)
+            {
+                _viewModel.SelectedTreeViewItemChanged(fileItem); // Передаем выбранный элемент
+                OpenFile(fileItem); // Открываем файл в PageFrame
+
+                // Очищаем выделение
+                if (sender is TreeView treeView)
+                {
+                    UnselectAll(treeView);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Метод для снятия выделения со всех элементов TreeView
+        /// </summary>
+        private void UnselectAll(TreeView treeView)
+        {
+            // Перебираем все элементы в TreeView и отменяем выделение
+            foreach (var item in treeView.Items)
+            {
+                var treeViewItem = treeView.ItemContainerGenerator.ContainerFromItem(item) as TreeViewItem;
+                if (treeViewItem != null)
+                {
+                    treeViewItem.IsSelected = false;
+                    UnselectAllItems(treeViewItem); // Рекурсивно для дочерних
+                }
+            }
+        }
+
+        /// <summary>
+        /// Рекурсивный метод для снятия выделения с дочерних элементов TreeViewItem
+        /// </summary>
+        private void UnselectAllItems(TreeViewItem treeViewItem)
+        {
+            foreach (var child in treeViewItem.Items)
+            {
+                var childTreeViewItem = treeViewItem.ItemContainerGenerator.ContainerFromItem(child) as TreeViewItem;
+                if (childTreeViewItem != null)
+                {
+                    childTreeViewItem.IsSelected = false;
+                    UnselectAllItems(childTreeViewItem);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Обработчик для значка настроек
+        /// </summary>
+        private void SettingsIcon_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            // Открываем окно настроек
+            _viewModel.OpenSettingsCommand.Execute(null);
+        }
+
+        /// <summary>
+        /// Обработчик для поля поиска при нажатии Enter
+        /// </summary>
         private void SearchTextBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
@@ -294,15 +206,16 @@ namespace UruruNotes.Views
             }
         }
 
+        /// <summary>
+        /// Метод для выполнения поиска по введённому запросу
+        /// </summary>
         private void PerformSearch(string query)
         {
-            var viewModel = DataContext as MainViewModel;
-            
-            var foundFile = viewModel.Files.FirstOrDefault(file => file.FileName.Contains(query, StringComparison.OrdinalIgnoreCase));
-
+            var foundFile = _viewModel.Files.FirstOrDefault(file => file.FileName.Contains(query, StringComparison.OrdinalIgnoreCase));
             if (foundFile != null)
             {
-                OpenFile(foundFile); return;
+                OpenFile(foundFile);
+                return;
             }
 
             string rootDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "MyFolders");
@@ -313,58 +226,40 @@ namespace UruruNotes.Views
             }
 
             var allFiles = Directory.GetFiles(rootDirectory, "*", SearchOption.AllDirectories)
-                            .Where(path => Path.GetFileName(path).Contains(query, StringComparison.OrdinalIgnoreCase))
-                            .ToList();
+                                   .Where(path => Path.GetFileName(path).Contains(query, StringComparison.OrdinalIgnoreCase))
+                                   .ToList();
 
             if (allFiles.Any())
             {
-                string foundFilePath = allFiles.First(); 
-
+                string foundFilePath = allFiles.First();
                 var newFileItem = new FileItem
                 {
-                    FileName = Path.GetFileName(foundFilePath), 
+                    FileName = Path.GetFileName(foundFilePath),
                     FilePath = foundFilePath
                 };
-
                 OpenFile(newFileItem);
             }
             else
             {
                 MessageBox.Show("Файл не найден во всём каталоге.");
             }
-
         }
 
-
-
+        /// <summary>
+        /// Метод для открытия файла в PageFrame
+        /// </summary>
         private void OpenFile(FileItem file)
         {
             try
             {
-                // Создаем новый экземпляр MarkdownViewer и передаем ему файл для отображения
-                var markdownViewer = new MarkdownViewer(file);// MarkdownViewer — это UserControl, который отображает содержимое
-                _currentMarkdownViewer = markdownViewer;
-                PageFrame.Content = markdownViewer; // Загружаем этот UserControl в PageFrame
+                var markdownViewer = new MarkdownViewer(file);
+                PageFrame.Content = markdownViewer;
+                Debug.WriteLine($"PageFrame Width: {PageFrame.ActualWidth}");
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Ошибка при открытии файла: {ex.Message}");
             }
         }
-
-
-        // Страница с календарём
-
-        private void CalendarButton_Click(object sender, RoutedEventArgs e)
-        {
-            PageFrame.Content = new CalendarPage();
-        }
-
-        // Начальная страница
-        private void HomePageButton_Click(object sender, RoutedEventArgs e)
-        {
-            PageFrame.Content = new HomePage();
-        }
-
     }
 }

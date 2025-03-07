@@ -25,6 +25,7 @@ namespace UruruNotes.Views
             {
                 string content = File.ReadAllText(_file.FilePath, Encoding.UTF8);
                 MarkdownTextBox.Text = content;
+                MarkdownTextBox.TextWrapping = TextWrapping.Wrap;
             }
             else
             {

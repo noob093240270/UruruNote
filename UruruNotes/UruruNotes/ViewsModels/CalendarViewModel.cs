@@ -11,6 +11,8 @@ using GalaSoft.MvvmLight.Command;
 using System.Collections.ObjectModel;
 using System.Runtime.CompilerServices;
 using System.Xml;
+using System.Diagnostics;
+using System.Windows;
 
 
 namespace UruruNotes.ViewsModels
@@ -30,7 +32,8 @@ namespace UruruNotes.ViewsModels
 
         private DateTime _currentDate;
         private bool _isTaskPanelVisible;
-        
+        private double _scale = 1.0;
+
 
         public ObservableCollection<DayViewModel> Days { get; private set; }
         public string CurrentMonthYear => $"{_currentDate:MMMM yyyy}";
@@ -86,7 +89,152 @@ namespace UruruNotes.ViewsModels
                 OnPropertyChanged();
             }
         }
+        public double Scale
+        {
+            get => _scale;
+            set
+            {
+                if (_scale != value)
+                {
+                    _scale = value;
+                    Debug.WriteLine($"CalendarViewModel.Scale изменён на: {_scale}");
+                    UpdateScaledProperties();
+                    OnPropertyChanged();
+                }
+            }
+        }
+        // Динамические свойства для размеров
+        private double _buttonWidth = 50;
+        public double ButtonWidth
+        {
+            get => _buttonWidth;
+            set
+            {
+                _buttonWidth = value;
+                OnPropertyChanged();
+            }
+        }
 
+        private double _buttonHeight = 30;
+        public double ButtonHeight
+        {
+            get => _buttonHeight;
+            set
+            {
+                _buttonHeight = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Thickness _marginTop = new Thickness(10);
+        public Thickness MarginTop
+        {
+            get => _marginTop;
+            set
+            {
+                _marginTop = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Thickness _marginMiddle = new Thickness(20, 0, 20, 0);
+        public Thickness MarginMiddle
+        {
+            get => _marginMiddle;
+            set
+            {
+                _marginMiddle = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Thickness _marginDays = new Thickness(10);
+        public Thickness MarginDays
+        {
+            get => _marginDays;
+            set
+            {
+                _marginDays = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Thickness _marginButtons = new Thickness(5);
+        public Thickness MarginButtons
+        {
+            get => _marginButtons;
+            set
+            {
+                _marginButtons = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Thickness _marginNotes = new Thickness(10);
+        public Thickness MarginNotes
+        {
+            get => _marginNotes;
+            set
+            {
+                _marginNotes = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private double _titleFontSize = 20;
+        public double TitleFontSize
+        {
+            get => _titleFontSize;
+            set
+            {
+                _titleFontSize = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private double _dayFontSize = 12;
+        public double DayFontSize
+        {
+            get => _dayFontSize;
+            set
+            {
+                _dayFontSize = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private double _noteTitleFontSize = 20;
+        public double NoteTitleFontSize
+        {
+            get => _noteTitleFontSize;
+            set
+            {
+                _noteTitleFontSize = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private double _noteFontSize = 14;
+        public double NoteFontSize
+        {
+            get => _noteFontSize;
+            set
+            {
+                _noteFontSize = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private double _textBoxHeight = 100;
+        public double TextBoxHeight
+        {
+            get => _textBoxHeight;
+            set
+            {
+                _textBoxHeight = value;
+                OnPropertyChanged();
+            }
+        }
         public ICommand PreviousMonthCommand { get; }
         public ICommand NextMonthCommand { get; }
         public ICommand ShowTaskPanelCommand { get; }
@@ -114,8 +262,23 @@ namespace UruruNotes.ViewsModels
             _saveTaskCommand = new RelayCommand(SaveTask);
 
             UpdateCalendar();
+            UpdateScaledProperties();
         }
-
+        private void UpdateScaledProperties()
+        {
+            ButtonWidth = Math.Max(50 * Scale, 30); 
+            ButtonHeight = Math.Max(30 * Scale, 20); 
+            MarginTop = new Thickness(10 * Scale);
+            MarginMiddle = new Thickness(20 * Scale, 0, 20 * Scale, 0);
+            MarginDays = new Thickness(10 * Scale);
+            MarginButtons = new Thickness(5 * Scale);
+            MarginNotes = new Thickness(10 * Scale);
+            TitleFontSize = Math.Max(20 * Scale, 12); 
+            DayFontSize = Math.Max(12 * Scale, 8); 
+            NoteTitleFontSize = Math.Max(20 * Scale, 12); 
+            NoteFontSize = Math.Max(14 * Scale, 10); 
+            TextBoxHeight = Math.Max(100 * Scale, 50); 
+        }
         private void UpdateCalendar()
         {
             Days.Clear();
