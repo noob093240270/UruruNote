@@ -76,14 +76,15 @@
                             </Button.Background>
                         </Button>
                         <Button x:Name="Сalendar" Width="23" Height="23" Margin="5,0" Command="{Binding OpenCalendarCommand}">
+                            <Button.BorderBrush>
+                                <ImageBrush/>
+                            </Button.BorderBrush>
                             <Button.Background>
                                 <ImageBrush ImageSource="pack://application:,,,/UruruNotes;component/Resources/calendar.png" />
                             </Button.Background>
                         </Button>
                         <Image Width="23" Height="23" Margin="5,0" Focusable="False" Source="pack://application:,,,/UruruNotes;component/Resources/magnifier.png"/>
                         <TextBox x:Name="SearchTextBox" Width="200" Height="20" Margin="10,0,0,0" KeyDown="SearchTextBox_KeyDown"/>
-                        <TextBox x:Name="FileContentTextBox" IsReadOnly="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" 
-                                 Margin="5,0" Width="141" CaretBrush="#FF235C9A" SelectionBrush="#FF235C9A" SelectionTextBrush="#FF235C9A" />
                     </StackPanel>
                     <Image Source="pack://application:,,,/UruruNotes;component/Resources/settingsbutton.png" 
                            Cursor="Hand" HorizontalAlignment="Right" ToolTip="Настройки" MouseUp="SettingsIcon_MouseUp" Grid.Column="1" VerticalAlignment="Top"/>
