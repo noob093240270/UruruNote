@@ -12,6 +12,7 @@ using System.Collections.ObjectModel;
 using System.Runtime.CompilerServices;
 using System.IO;
 using System.Windows;
+using Microsoft.Toolkit.Uwp.Notifications;
 
 
 namespace UruruNotes.ViewsModels
@@ -27,7 +28,7 @@ namespace UruruNotes.ViewsModels
 
         private DateTime _currentDate;
         private bool _isTaskPanelVisible;
-        
+
 
         public ObservableCollection<DayViewModel> Days { get; private set; }
         public string CurrentMonthYear => $"{_currentDate:MMMM yyyy}";
@@ -66,7 +67,7 @@ namespace UruruNotes.ViewsModels
                     _newTaskContent = value;
                     OnPropertyChanged(nameof(NewTaskContent));
                 }
-                
+
             }
         }
 
@@ -99,7 +100,7 @@ namespace UruruNotes.ViewsModels
         public ICommand PreviousMonthCommand { get; }
         public ICommand NextMonthCommand { get; }
         public ICommand ShowTaskPanelCommand { get; }
-        
+
 
         // Команда для сохранения заметки
         private ICommand _saveNoteCommand;
@@ -172,7 +173,7 @@ namespace UruruNotes.ViewsModels
             NextMonthCommand = new RelayCommand(ShowNextMonth);
             _openTaskAreaCommand = new RelayCommand<DayViewModel>(OpenTaskArea);
             _notes = new ObservableCollection<Note>();
-            
+
 
             // Инициализация списков часов и минут
             Hours = new ObservableCollection<int>(Enumerable.Range(0, 24)); // Часы от 0 до 23
@@ -294,7 +295,7 @@ namespace UruruNotes.ViewsModels
             {
                 SelectedDate = selectedDay.Date;
                 IsTaskPanelVisible = true; // Показываем панель задач
-                
+
                 // Загружаем данные для выбранного дня
                 LoadNotesForDate(selectedDay.Date.Value);
 
@@ -405,6 +406,31 @@ namespace UruruNotes.ViewsModels
             }
         }
 
+        // Метод для показа уведомления
+        public void ShowToastNotification(string title, string message)
+        {
+            new ToastContentBuilder()
+                .AddText(title)
+                .AddText(message)
+                .Show();
+        }
+
+        // Метод для планирования уведомления
+        private async Task ScheduleReminderNotification(DateTime reminderTime, string message)
+        {
+            // Вычисляем, сколько времени осталось до напоминания
+            var timeUntilReminder = reminderTime - DateTime.Now;
+
+            // Если время ещё не наступило, ждём
+            if (timeUntilReminder > TimeSpan.Zero)
+            {
+                await Task.Delay(timeUntilReminder);
+
+                // Показываем уведомление
+                ShowToastNotification("Напоминание", message);
+            }
+        }
+
         // Метод для сохранения напоминания
         private void SaveReminder()
         {
@@ -420,6 +446,10 @@ namespace UruruNotes.ViewsModels
 
                 // Сохраняем напоминание
                 SaveReminderForDate(SelectedDate.Value, reminder);
+
+                // Планируем уведомление на указанное время
+                DateTime reminderDateTime = SelectedDate.Value.Date + SelectedReminderTime;
+                ScheduleReminderNotification(reminderDateTime, NewTaskContentRemind);
 
                 MessageBox.Show("Напоминание успешно сохранено!");
 
@@ -467,7 +497,7 @@ namespace UruruNotes.ViewsModels
             return Path.Combine(baseFolder, subFolder, fileName);
         }
 
-        
+
 
 
 
