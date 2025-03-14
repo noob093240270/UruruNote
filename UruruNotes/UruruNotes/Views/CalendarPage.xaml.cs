@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -29,32 +32,78 @@ namespace UruruNotes
         private bool _isPanelVisible = true;
         private string _defaultText = "Создание задачи на 07 января 2025";
 
+        private double _buttonWidth = 50;
+        public double ButtonWidth
+        {
+            get => _buttonWidth;
+            set { _buttonWidth = value; OnPropertyChanged(); }
+        }
+
+        private double _buttonHeight = 50;
+        public double ButtonHeight
+        {
+            get => _buttonHeight;
+            set { _buttonHeight = value; OnPropertyChanged(); }
+        }
+
+        private double _dayFontSize = 14;
+        public double DayFontSize
+        {
+            get => _dayFontSize;
+            set { _dayFontSize = value; OnPropertyChanged(); }
+        }
+
+        public void UpdateScale(double scale)
+        {
+            ButtonWidth = 50 * scale;
+            ButtonHeight = 50 * scale;
+            DayFontSize = 14 * scale;
+        }
+
         public CalendarPage(MainViewModel mainViewModel)
         {
             InitializeComponent();
             _viewModel = new CalendarViewModel();
+
+            // Передаём масштаб главного окна
             _viewModel.Scale = mainViewModel.Scale;
             DataContext = _viewModel;
-
-            UpdateWindowSize(_viewModel.Scale);
 
             mainViewModel.PropertyChanged += (s, e) =>
             {
                 if (e.PropertyName == nameof(mainViewModel.Scale))
                 {
                     _viewModel.Scale = mainViewModel.Scale;
-                    UpdateWindowSize(_viewModel.Scale);
-                    Debug.WriteLine($"CalendarPage: MainViewModel.Scale передан и применён: {_viewModel.Scale}");
+                    Debug.WriteLine($"CalendarPage: Scale обновлён: {_viewModel.Scale}");
                 }
             };
         }
 
-        private void UpdateWindowSize(double scale)
+        private double _scale = 1.0;
+
+        public double Scale
         {
-            this.Width = Math.Max(baseWidth * scale, 450); // Учитываем MinWidth
-            this.Height = Math.Max(baseHeight * scale, 450); // Учитываем MinHeight
-            Debug.WriteLine($"CalendarPage: Масштаб {scale}, Размеры окна: {this.Width}x{this.Height}");
+            get => _scale;
+            set
+            {
+                if (_scale != value)
+                {
+                    _scale = value;
+                    OnPropertyChanged();
+                    ScaleTransform.ScaleX = _scale;
+                    ScaleTransform.ScaleY = _scale;
+                }
+            }
         }
+
+        public ScaleTransform ScaleTransform { get; } = new ScaleTransform(1.0, 1.0);
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
 
         private void TogglePanel_Click(object sender, RoutedEventArgs e)
         {

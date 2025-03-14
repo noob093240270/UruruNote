@@ -9,16 +9,17 @@
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         d:DataContext="{d:DesignInstance Type=viewsmodels:CalendarViewModel}"
         mc:Ignorable="d" 
-        MinHeight="450" MaxHeight="650" MinWidth="450" MaxWidth="850"
+        MinHeight="550" MinWidth="850"
         Title="CalendarPage" Icon="/Views/calendar.png"
         SizeToContent="WidthAndHeight">
     <Window.Resources>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <converters:BoolToBrushConverter x:Key="BoolToBrushConverter" />
+        <ScaleTransform x:Key="MainScaleTransform" ScaleX="{Binding Scale}" ScaleY="{Binding Scale}" />
     </Window.Resources>
 
     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-        <Grid x:Name="ContentGrid">
+        <Grid x:Name="ContentGrid" LayoutTransform="{Binding ScaleTransform}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" MinWidth="400"/>
                 <ColumnDefinition Width="Auto" x:Name="NotesColumn"/>
@@ -43,7 +44,7 @@
                 </StackPanel>
 
                 <!-- Дни недели -->
-                <UniformGrid Rows="1" Columns="7" Margin="10" Grid.Row="1">
+                <UniformGrid Rows="1" Columns="7" Margin="10" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                     <TextBlock Text="Пн" TextAlignment="Center" FontWeight="Bold" FontSize="{Binding DayFontSize}"/>
                     <TextBlock Text="Вт" TextAlignment="Center" FontWeight="Bold" FontSize="{Binding DayFontSize}"/>
                     <TextBlock Text="Ср" TextAlignment="Center" FontWeight="Bold" FontSize="{Binding DayFontSize}"/>
@@ -64,11 +65,14 @@
                         <DataTemplate>
                             <Button Command="{Binding DataContext.OpenTaskAreaCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
                                     CommandParameter="{Binding}" 
-                                    Padding="5" Margin="{Binding DataContext.MarginButtons, RelativeSource={RelativeSource AncestorType=Window}}"
+                                    Padding="0"
                                     Background="{Binding IsCurrentMonth, Converter={StaticResource BoolToBrushConverter}}"
                                     BorderBrush="Transparent" BorderThickness="0"
-                                    Width="{Binding DataContext.ButtonWidth, RelativeSource={RelativeSource AncestorType=Window}}"
-                                    Height="{Binding DataContext.ButtonHeight, RelativeSource={RelativeSource AncestorType=Window}}">
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Stretch"
+                                    VerticalContentAlignment="Center"
+                                    HorizontalContentAlignment="Center"
+                                    Margin="{Binding DataContext.MarginButtons, RelativeSource={RelativeSource AncestorType=Window}}">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*" />
@@ -76,14 +80,14 @@
                                     </Grid.RowDefinitions>
                                     <TextBlock Text="{Binding DisplayText}" 
                                                HorizontalAlignment="Center" VerticalAlignment="Center" 
-                                               FontSize="14" Grid.Row="0" />
+                                               Grid.Row="0" FontSize="{Binding DataContext.DayFontSize, RelativeSource={RelativeSource AncestorType=Window}}"/>
                                     <StackPanel Orientation="Horizontal" 
                                                 HorizontalAlignment="Center" VerticalAlignment="Center" 
-                                                Grid.Row="1" Margin="0,5,0,0">
+                                                Grid.Row="1" >
                                         <Ellipse Width="6" Height="6" Fill="Red" VerticalAlignment="Center"
                                                  Visibility="{Binding HasNote, Converter={StaticResource BoolToVisibilityConverter}}" />
                                         <TextBlock Text="{Binding ReminderTime}" VerticalAlignment="Center" 
-                                                   Foreground="Red" FontSize="10" Margin="5,0,0,0" />
+                                                   Foreground="Red" FontSize="{Binding DataContext.DayFontSize, RelativeSource={RelativeSource AncestorType=Window}}" />
                                     </StackPanel>
                                 </Grid>
                             </Button>
