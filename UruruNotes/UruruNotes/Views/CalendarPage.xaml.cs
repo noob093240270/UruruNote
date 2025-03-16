@@ -109,16 +109,14 @@ namespace UruruNotes
         {
             if (_isPanelVisible)
             {
-                TaskPanelColumn.Width = new GridLength(0); // Полностью схлопываем колонку
-                TrianglePath.RenderTransform = new RotateTransform(90, 15, 15);
+                TaskPanelColumn.Width = new GridLength(0); // Закрываем шторку
             }
             else
             {
-                TaskPanelColumn.Width = GridLength.Auto; // Возвращаем колонку
-                TrianglePath.RenderTransform = new RotateTransform(0, 15, 15);
+                TaskPanelColumn.Width = GridLength.Auto; // Открываем шторку
             }
 
-            _isPanelVisible = !_isPanelVisible;
+            _isPanelVisible = !_isPanelVisible; // Меняем состояние
         }
 
         private void TextBox_Loaded(object sender, RoutedEventArgs e)

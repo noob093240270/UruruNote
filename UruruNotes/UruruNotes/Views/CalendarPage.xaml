@@ -55,7 +55,7 @@
                 </UniformGrid>
 
                 <!-- Календарь -->
-                <ItemsControl ItemsSource="{Binding Days}" Grid.Row="2">
+                <ItemsControl ItemsSource="{Binding Days}" Grid.Row="2" Margin="0,0,32,0">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <UniformGrid Rows="6" Columns="7" />
@@ -106,21 +106,25 @@
                         <ColumnDefinition x:Name="TaskPanelColumn" Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <Button x:Name="ToggleButton" Grid.Column="0"
-                            Width="30" Height="30"
+                            Width="20" Height="50"
+                             HorizontalAlignment="Right"
+                             VerticalAlignment="Bottom"
+                             Background="Transparent"
+                             Click="TogglePanel_Click"
+                             BorderThickness="0">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Grid>
+                                    <!-- Прямоугольник-закладка -->
+                                    <Rectangle x:Name="BookmarkRectangle"
+                            Width="20" Height="50"
+                            Fill="LightGray" Stroke="Gray"
+                            StrokeThickness="1"
                             HorizontalAlignment="Right"
-                            VerticalAlignment="Bottom"
-                            Background="Transparent"
-                            Click="TogglePanel_Click"
-                            BorderThickness="0">
-                        <Button.Content>
-                            <Canvas Width="30" Height="30">
-                                <Path x:Name="TrianglePath"
-                                      Data="M 5,25 L 25,25 L 15,5 Z"
-                                      Fill="Black"
-                                      Stroke="Black"
-                                      StrokeThickness="1" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                            </Canvas>
-                        </Button.Content>
+                            VerticalAlignment="Center" />
+                                </Grid>
+                            </ControlTemplate>
+                        </Button.Template>
                     </Button>
                     <StackPanel x:Name="TaskPanel" Grid.Column="1" Background="LightGray" Width="Auto">
                         <TextBlock Text="Создать заметку" FontSize="{Binding NoteTitleFontSize}" FontWeight="Bold" Margin="10"/>
@@ -133,7 +137,7 @@
                                  PreviewKeyDown="TextBox_PreviewKeyDown" Loaded="TextBox_Loaded" />
                         <Button Content="Сохранить" Command="{Binding SaveNoteCommand}" 
                                 MinWidth="80" MinHeight="25" 
-                                Margin="10" HorizontalAlignment="Left" 
+                                Margin="10,10,10,10" HorizontalAlignment="Left" 
                                 Background="White" BorderBrush="#FF235C9A" FontSize="{Binding NoteFontSize}"/>
 
                         <TextBlock Text="Создать напоминание" FontSize="{Binding NoteTitleFontSize}" FontWeight="Bold" Margin="10"/>
@@ -144,16 +148,15 @@
                                  FontSize="{Binding NoteFontSize}" 
                                  CaretBrush="#FF235C9A" SelectionBrush="#FF235C9A" 
                                  PreviewKeyDown="TextBox_PreviewKeyDown" Loaded="TextBox_Loaded" />
-                        <TextBlock Text="Время напоминания:" FontSize="14" Height="20" Width="133" Margin="10,5,10,0" HorizontalAlignment="Right"/>
+                        <TextBlock Text="Время напоминания:" FontSize="{Binding NoteFontSize}" Height="Auto" Width="Auto" Margin="10" HorizontalAlignment="Center" />
                         <StackPanel Orientation="Horizontal" Margin="10,5,10,10">
                             <Button Content="Сохранить" Command="{Binding SaveReminderCommand}" 
                                     MinWidth="80" MinHeight="25" 
-                                    Margin="10,0,10,0" Background="White" BorderBrush="#FF235C9A" 
-                                    HorizontalAlignment="Left" />
+                                    Background="White" BorderBrush="#FF235C9A" FontSize="{Binding NoteFontSize}"/>
                             <ComboBox x:Name="HourPicker" SelectedItem="{Binding SelectedHour}" 
-                                      Width="60" VerticalAlignment="Center" Margin="0,0,5,0">
+                                      Width="60" VerticalAlignment="Center" Margin="5,0,5,0" FontSize="{Binding NoteFontSize}">
                                 <ComboBox.ItemsSource>
-                                    <x:Array Type="sys:Int32">
+                                    <x:Array Type="{x:Type sys:Int32}">
                                         <sys:Int32>0</sys:Int32>
                                         <sys:Int32>1</sys:Int32>
                                         <sys:Int32>2</sys:Int32>
@@ -182,9 +185,9 @@
                                 </ComboBox.ItemsSource>
                             </ComboBox>
                             <ComboBox x:Name="MinutePicker" SelectedItem="{Binding SelectedMinute}" 
-                                      Width="60" VerticalAlignment="Center" Margin="0,0,10,0">
+                                      Width="60" VerticalAlignment="Center" Margin="0,0,10,0" FontSize="{Binding NoteFontSize}">
                                 <ComboBox.ItemsSource>
-                                    <x:Array Type="sys:Int32">
+                                    <x:Array Type="{x:Type sys:Int32}">
                                         <sys:Int32>0</sys:Int32>
                                         <sys:Int32>5</sys:Int32>
                                         <sys:Int32>10</sys:Int32>
