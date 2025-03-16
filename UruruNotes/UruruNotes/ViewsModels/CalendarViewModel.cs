@@ -14,6 +14,7 @@ using System.Xml;           // Из HEAD
 using System.Diagnostics;   // Из HEAD
 using System.IO;           // Из ветки
 using System.Windows;
+using Microsoft.Toolkit.Uwp.Notifications;
 
 namespace UruruNotes.ViewsModels
 {
@@ -525,12 +526,41 @@ namespace UruruNotes.ViewsModels
                     ReminderTime = SelectedReminderTime
                 };
                 SaveReminderForDate(SelectedDate.Value, reminder);
+                // Планируем уведомление на указанное время
+                DateTime reminderDateTime = SelectedDate.Value.Date + SelectedReminderTime;
+                _ = ScheduleReminderNotification(reminderDateTime, NewTaskContentRemind);
+
                 MessageBox.Show("Напоминание успешно сохранено!");
                 UpdateCalendar();
             }
             else
             {
                 MessageBox.Show("Ошибка: не все данные для напоминания заполнены.");
+            }
+        }
+
+        // Метод для показа уведомления
+        public void ShowToastNotification(string title, string message)
+        {
+            new ToastContentBuilder()
+                .AddText(title)
+                .AddText(message)
+                .Show();
+        }
+
+        // Метод для планирования уведомления
+        private async Task ScheduleReminderNotification(DateTime reminderTime, string message)
+        {
+            // Вычисляем, сколько времени осталось до напоминания
+            var timeUntilReminder = reminderTime - DateTime.Now;
+
+            // Если время ещё не наступило, ждём
+            if (timeUntilReminder > TimeSpan.Zero)
+            {
+                await Task.Delay(timeUntilReminder);
+
+                // Показываем уведомление
+                ShowToastNotification("Напоминание", message);
             }
         }
 
