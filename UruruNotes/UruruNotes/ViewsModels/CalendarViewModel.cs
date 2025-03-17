@@ -15,6 +15,7 @@ using System.Diagnostics;   // Из HEAD
 using System.IO;           // Из ветки
 using System.Windows;
 using Microsoft.Toolkit.Uwp.Notifications;
+using Microsoft.Win32.TaskScheduler;
 
 namespace UruruNotes.ViewsModels
 {
@@ -525,10 +526,13 @@ namespace UruruNotes.ViewsModels
                     IsReminder = true,
                     ReminderTime = SelectedReminderTime
                 };
+
+                // Сохраняем напоминание в файл
                 SaveReminderForDate(SelectedDate.Value, reminder);
-                // Планируем уведомление на указанное время
+
+                // Планируем уведомление через планировщик задач
                 DateTime reminderDateTime = SelectedDate.Value.Date + SelectedReminderTime;
-                _ = ScheduleReminderNotification(reminderDateTime, NewTaskContentRemind);
+                ScheduleReminderTask(reminderDateTime, NewTaskContentRemind);
 
                 MessageBox.Show("Напоминание успешно сохранено!");
                 UpdateCalendar();
@@ -539,28 +543,44 @@ namespace UruruNotes.ViewsModels
             }
         }
 
+
         // Метод для показа уведомления
-        public void ShowToastNotification(string title, string message)
+        private void ShowToastNotification(string title, string message)
         {
             new ToastContentBuilder()
                 .AddText(title)
                 .AddText(message)
+                .AddArgument("action", "openReminder") // Аргумент для обработки
+                .AddArgument("date", DateTime.Now.ToString("yyyy-MM-dd")) // Пример: передача даты
                 .Show();
         }
 
-        // Метод для планирования уведомления
-        private async Task ScheduleReminderNotification(DateTime reminderTime, string message)
+        private void ScheduleReminderTask(DateTime reminderTime, string message)
         {
-            // Вычисляем, сколько времени осталось до напоминания
-            var timeUntilReminder = reminderTime - DateTime.Now;
-
-            // Если время ещё не наступило, ждём
-            if (timeUntilReminder > TimeSpan.Zero)
+            try
             {
-                await Task.Delay(timeUntilReminder);
+                using (TaskService ts = new TaskService())
+                {
+                    TaskDefinition td = ts.NewTask();
+                    td.RegistrationInfo.Description = "UruruNotes Reminder";
+                    td.Triggers.Add(new TimeTrigger(reminderTime));
 
-                // Показываем уведомление
-                ShowToastNotification("Напоминание", message);
+                    // Указываем путь к .exe файлу
+                    string appPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+                    string exePath = appPath.Replace(".dll", ".exe"); // Заменяем .dll на .exe
+
+                    td.Actions.Add(new ExecAction(exePath, $"\"{message}\"", null));
+
+                    string taskName = $"UruruNotesReminder_{reminderTime:yyyyMMddHHmm}";
+                    ts.RootFolder.RegisterTaskDefinition(taskName, td);
+
+                    Debug.WriteLine($"Задача создана: {taskName}, Время: {reminderTime}, Путь: {exePath}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Ошибка при создании задачи: {ex.Message}");
+                MessageBox.Show($"Ошибка при создании задачи в планировщике: {ex.Message}");
             }
         }
 
@@ -572,16 +592,38 @@ namespace UruruNotes.ViewsModels
 
         private void SaveReminderForDate(DateTime date, Note reminder)
         {
-            string reminderFilePath = GetNotesFilePath(date, true);
-            string reminderContent = $"{reminder.Content}\n\n**Время напоминания:** {reminder.ReminderTime:hh\\:mm}";
-            File.WriteAllText(reminderFilePath, reminderContent);
+            try
+            {
+                // Получаем путь к файлу напоминания
+                string reminderFilePath = GetNotesFilePath(date, true);
+
+                // Формируем содержимое файла
+                string reminderContent = $"{reminder.Content}\n\n**Время напоминания:** {reminder.ReminderTime:hh\\:mm}";
+
+                // Сохраняем содержимое в файл
+                File.WriteAllText(reminderFilePath, reminderContent);
+
+                Debug.WriteLine($"Напоминание сохранено: {reminderFilePath}");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Ошибка при сохранении напоминания: {ex.Message}");
+                MessageBox.Show($"Ошибка при сохранении напоминания: {ex.Message}");
+            }
         }
 
         private string GetNotesFilePath(DateTime date, bool isReminder)
         {
+            // Базовый путь к папке с заметками
             string baseFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "UruruNotes");
+
+            // Подпапка для заметок или напоминаний
             string subFolder = isReminder ? "Reminders" : "Notes";
+
+            // Имя файла
             string fileName = $"{(isReminder ? "reminder" : "note")}_{date:dd-MM-yyyy}.md";
+
+            // Полный путь к файлу
             return Path.Combine(baseFolder, subFolder, fileName);
         }
     }
