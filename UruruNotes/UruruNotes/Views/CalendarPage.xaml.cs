@@ -152,6 +152,22 @@ namespace UruruNotes
                 }
             }
         }
+
+        //private bool _isPanelVisible = true;
+
+        /*private void TogglePanel_Click(object sender, RoutedEventArgs e)
+        {
+            if (_isPanelVisible)
+            {
+                TaskPanelColumn.Width = new GridLength(0); // Закрываем шторку
+            }
+            else
+            {
+                TaskPanelColumn.Width = GridLength.Auto; // Открываем шторку
+            }
+
+            _isPanelVisible = !_isPanelVisible; // Меняем состояние
+        }*/
     }
 }
 
