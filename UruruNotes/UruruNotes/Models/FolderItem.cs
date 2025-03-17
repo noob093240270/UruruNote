@@ -12,12 +12,20 @@ namespace UruruNotes.Models
     public class FolderItem
     {
         public string FileName { get; set; }
-
         public string FilePath { get; set; }
+
         public ObservableCollection<FolderItem> SubFolders { get; set; } = new ObservableCollection<FolderItem>();
         public ObservableCollection<FileItem> Files { get; set; } = new ObservableCollection<FileItem>();
 
-        // Проверка уникальности имени папки
+        // Метод для удаления файла из коллекции
+        public void RemoveFile(FileItem fileItem)
+        {
+            if (fileItem != null && Files.Contains(fileItem))
+            {
+                Files.Remove(fileItem);  // Удаляем файл из коллекции
+            }
+        }
+
         public bool IsFolderNameUnique(string folderName)
         {
             return !SubFolders.Any(f => f.FileName.Equals(folderName, StringComparison.OrdinalIgnoreCase));
@@ -34,10 +42,10 @@ namespace UruruNotes.Models
             get
             {
                 var composite = new CompositeCollection
-                {
-                    new CollectionContainer { Collection = SubFolders },
-                    new CollectionContainer { Collection = Files }
-                };
+            {
+                new CollectionContainer { Collection = SubFolders },
+                new CollectionContainer { Collection = Files }
+            };
                 return composite;
             }
         }
