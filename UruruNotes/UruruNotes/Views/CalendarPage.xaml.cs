@@ -153,9 +153,9 @@ namespace UruruNotes
             }
         }
 
-        private bool _isPanelVisible = true;
+        //private bool _isPanelVisible = true;
 
-        private void TogglePanel_Click(object sender, RoutedEventArgs e)
+        /*private void TogglePanel_Click(object sender, RoutedEventArgs e)
         {
             if (_isPanelVisible)
             {
@@ -167,7 +167,7 @@ namespace UruruNotes
             }
 
             _isPanelVisible = !_isPanelVisible; // Меняем состояние
-        }
+        }*/
     }
 }
 

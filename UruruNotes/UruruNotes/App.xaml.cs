@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Media;
 using UruruNote.ViewsModels;
 using Microsoft.Toolkit.Uwp.Notifications;
-using Microsoft.Win32.TaskScheduler;
+//using Microsoft.Win32.TaskScheduler;
 using System;
 using UruruNotes;
 using UruruNotes.Views;
