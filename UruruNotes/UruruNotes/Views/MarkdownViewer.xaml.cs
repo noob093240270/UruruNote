@@ -1,9 +1,11 @@
-﻿using System.IO;
+﻿using System.Diagnostics;
+using System.IO;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Media;
 using UruruNotes.Models;
 
 namespace UruruNote.Views
@@ -34,6 +36,13 @@ namespace UruruNote.Views
                 markdownViewer.UpdateFontSize(fontSize);
             }
         }
+        public void ApplyScale(double scale)
+        {
+            if (scale > 0)
+            {
+                this.LayoutTransform = new ScaleTransform(scale, scale);
+            }
+        }
 
 
         public MarkdownViewer(FileItem file = null)
@@ -49,14 +58,16 @@ namespace UruruNote.Views
                 double globalFontSize = (double)Application.Current.Resources["GlobalFontSize"];
                 UpdateFontSize(globalFontSize);
             }
-
-            // Загружаем файл, если он передан
-            if (file != null)
+            if (Application.Current.Resources.Contains("GlobalScale"))
             {
-                LoadFileContent(file.FilePath);
+                double globalScale = (double)Application.Current.Resources["GlobalScale"];
+                ApplyScale(globalScale);
             }
 
-            // Подписываемся на событие KeyDown
+            // Устанавливаем начальные настройки FlowDocument
+            MarkdownRichTextBox.Document.PageWidth = double.NaN;
+            MarkdownRichTextBox.Document.PagePadding = new Thickness(0);
+
             this.KeyDown += MarkdownViewer_KeyDown;
         }
 
@@ -100,25 +111,21 @@ namespace UruruNote.Views
             if (File.Exists(filePath))
             {
                 string fileContent = File.ReadAllText(filePath, Encoding.UTF8);
-
-                // Очищаем RichTextBox перед загрузкой нового текста
                 MarkdownRichTextBox.Document.Blocks.Clear();
-
-                // Загружаем текст в RichTextBox
-                TextRange range = new TextRange(MarkdownRichTextBox.Document.ContentStart, MarkdownRichTextBox.Document.ContentEnd);
-                range.Text = fileContent;
-
-                // Применяем размер шрифта к содержимому
-                if (MarkdownRichTextBox.Document is FlowDocument flowDocument)
+                var paragraphs = fileContent.Split(new[] { "\r\n\r\n", "\n\n" }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (var para in paragraphs)
                 {
-                    foreach (Block block in flowDocument.Blocks)
+                    string singleLinePara = para.Replace("\r\n", " ").Replace("\n", " ").Trim();
+                    var paragraph = new Paragraph(new Run(singleLinePara))
                     {
-                        if (block is Paragraph paragraph)
-                        { 
-                            paragraph.FontSize = MarkdownRichTextBox.FontSize;
-                        }
-                    }
+                        FontSize = MarkdownRichTextBox.FontSize,
+                        TextAlignment = TextAlignment.Left
+                    };
+                    MarkdownRichTextBox.Document.Blocks.Add(paragraph);
                 }
+                MarkdownRichTextBox.Document.PageWidth = double.NaN;
+                MarkdownRichTextBox.Document.PagePadding = new Thickness(0);
+                Debug.WriteLine($"RichTextBox Width: {MarkdownRichTextBox.ActualWidth}");
             }
         }
 
@@ -149,8 +156,35 @@ namespace UruruNote.Views
                 }
             }
         }
-// Обработчик для "Жирного" текста
-private void BoldMenuItem_Click(object sender, RoutedEventArgs e)
+        public void UpdateScale(double scale)
+        {
+            Scale = scale; 
+        }
+        // Зависимое свойство для Scale
+        public static readonly DependencyProperty ScaleProperty =
+            DependencyProperty.Register(
+                nameof(Scale),
+                typeof(double),
+                typeof(MarkdownViewer),
+                new PropertyMetadata(1.0, OnScaleChanged)); // По умолчанию масштаб 1.0 (100%)
+
+        // Обычное свойство для доступа к зависимому свойству
+        public double Scale
+        {
+            get => (double)GetValue(ScaleProperty);
+            set => SetValue(ScaleProperty, value);
+        }
+
+        // Метод вызывается при изменении значения Scale
+        private static void OnScaleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is MarkdownViewer markdownViewer && e.NewValue is double scale)
+            {
+                markdownViewer.ApplyScale(scale);
+            }
+        }
+        // Обработчик для "Жирного" текста
+        private void BoldMenuItem_Click(object sender, RoutedEventArgs e)
         {
             ApplyTextStyleToSelection("**");
         }

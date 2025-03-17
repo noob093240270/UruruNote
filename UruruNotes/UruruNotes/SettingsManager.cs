@@ -7,32 +7,96 @@ using System.IO;
 using Newtonsoft.Json;
 using System.Xml;
 using Formatting = Newtonsoft.Json.Formatting;
+using UruruNotes.Properties;
 
 namespace UruruNotes
 {
     public static class SettingsManager
     {
-        // Путь к файлу settings.json
         private static readonly string SettingsFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "settings.json");
-
-        // Метод для сохранения настроек
-        public static void SaveSettings(int fontSize)
+        public class Settings
         {
-            var settings = new { SelectedFontSize = fontSize }; // Создаем объект для сериализации
-            string json = JsonConvert.SerializeObject(settings, Formatting.Indented); // Преобразуем в JSON
-            File.WriteAllText(SettingsFilePath, json); // Записываем в файл
+            public int FontSize { get; set; }
+            public double Scale { get; set; }
+        }
+        public static void SaveSettings(int fontSize, double scale)
+        {
+            try
+            {
+                var settings = new Settings
+                {
+                    FontSize = fontSize,
+                    Scale = scale
+                };
+                string json = JsonConvert.SerializeObject(settings, Formatting.Indented);
+                File.WriteAllText(SettingsFilePath, json);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка при сохранении настроек: {ex.Message}");
+            }
         }
 
-        // Метод для загрузки настроек
-        public static int LoadSettings()
+        // Метод для загрузки размера шрифта
+        public static int LoadFontSize()
         {
-            if (File.Exists(SettingsFilePath)) // Проверяем, существует ли файл
+            try
             {
-                string json = File.ReadAllText(SettingsFilePath); // Читаем содержимое файла
-                var settings = JsonConvert.DeserializeObject<dynamic>(json); // Десериализуем JSON
-                return settings.SelectedFontSize; // Возвращаем значение SelectedFontSize
+                if (File.Exists(SettingsFilePath))
+                {
+                    string json = File.ReadAllText(SettingsFilePath);
+                    var settings = JsonConvert.DeserializeObject<Settings>(json);
+                    return Math.Clamp(settings?.FontSize ?? 15, 10, 35);
+                }
             }
-            return 15; // Возвращаем значение по умолчанию, если файл не существует
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка при загрузке размера шрифта: {ex.Message}");
+            }
+            return 15; // Значение по умолчанию
+        }
+
+        // Метод для загрузки масштаба
+        public static double LoadScale()
+        {
+            try
+            {
+                if (File.Exists(SettingsFilePath))
+                {
+                    string json = File.ReadAllText(SettingsFilePath);
+                    var settings = JsonConvert.DeserializeObject<Settings>(json);
+                    return Math.Clamp(settings?.Scale ?? 1.0, 0.5, 2.0);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка при загрузке масштаба: {ex.Message}");
+            }
+            return 1.0; // Значение по умолчанию
+        }
+
+        // Метод для загрузки всех настроек сразу (опционально)
+        public static Settings LoadSettings()
+        {
+            try
+            {
+                if (File.Exists(SettingsFilePath))
+                {
+                    string json = File.ReadAllText(SettingsFilePath);
+                    var settings = JsonConvert.DeserializeObject<Settings>(json);
+                    var loadedSettings = new Settings
+                    {
+                        FontSize = Math.Clamp(settings?.FontSize ?? 15, 10, 35),
+                        Scale = Math.Clamp(settings?.Scale ?? 1.0, 0.5, 2.0)
+                    };
+                    return loadedSettings;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка при загрузке настроек: {ex.Message}");
+            }
+            return new Settings { FontSize = 15, Scale = 1.0 }; // Значения по умолчанию
         }
     }
 }

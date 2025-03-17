@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -12,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using UruruNote.ViewsModels;
 using UruruNotes.ViewsModels;
 
 namespace UruruNotes
@@ -21,14 +26,97 @@ namespace UruruNotes
     /// </summary>
     public partial class CalendarPage : Window
     {
-
-        // Объявляем заголовок на уровне класса, чтобы он был доступен во всех методах
+        private readonly CalendarViewModel _viewModel;
+        private readonly double baseWidth = 450; // Базовая ширина окна
+        private readonly double baseHeight = 450; // Базовая высота окна
+        private bool _isPanelVisible = true;
         private string _defaultText = "Создание задачи на 07 января 2025";
-        public CalendarPage()
+
+        private double _buttonWidth = 50;
+        public double ButtonWidth
+        {
+            get => _buttonWidth;
+            set { _buttonWidth = value; OnPropertyChanged(); }
+        }
+
+        private double _buttonHeight = 50;
+        public double ButtonHeight
+        {
+            get => _buttonHeight;
+            set { _buttonHeight = value; OnPropertyChanged(); }
+        }
+
+        private double _dayFontSize = 14;
+        public double DayFontSize
+        {
+            get => _dayFontSize;
+            set { _dayFontSize = value; OnPropertyChanged(); }
+        }
+
+        public void UpdateScale(double scale)
+        {
+            ButtonWidth = 50 * scale;
+            ButtonHeight = 50 * scale;
+            DayFontSize = 14 * scale;
+        }
+
+        public CalendarPage(MainViewModel mainViewModel)
         {
             InitializeComponent();
-            DataContext = new CalendarViewModel();
+            _viewModel = new CalendarViewModel();
 
+            // Передаём масштаб главного окна
+            _viewModel.Scale = mainViewModel.Scale;
+            DataContext = _viewModel;
+
+            mainViewModel.PropertyChanged += (s, e) =>
+            {
+                if (e.PropertyName == nameof(mainViewModel.Scale))
+                {
+                    _viewModel.Scale = mainViewModel.Scale;
+                    Debug.WriteLine($"CalendarPage: Scale обновлён: {_viewModel.Scale}");
+                }
+            };
+        }
+
+        private double _scale = 1.0;
+
+        public double Scale
+        {
+            get => _scale;
+            set
+            {
+                if (_scale != value)
+                {
+                    _scale = value;
+                    OnPropertyChanged();
+                    ScaleTransform.ScaleX = _scale;
+                    ScaleTransform.ScaleY = _scale;
+                }
+            }
+        }
+
+        public ScaleTransform ScaleTransform { get; } = new ScaleTransform(1.0, 1.0);
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+
+        private void TogglePanel_Click(object sender, RoutedEventArgs e)
+        {
+            if (_isPanelVisible)
+            {
+                TaskPanelColumn.Width = new GridLength(0); // Закрываем шторку
+            }
+            else
+            {
+                TaskPanelColumn.Width = GridLength.Auto; // Открываем шторку
+            }
+
+            _isPanelVisible = !_isPanelVisible; // Меняем состояние
         }
 
         private void TextBox_Loaded(object sender, RoutedEventArgs e)
@@ -80,8 +168,6 @@ namespace UruruNotes
 
             _isPanelVisible = !_isPanelVisible; // Меняем состояние
         }
-
-
-
     }
 }
+
