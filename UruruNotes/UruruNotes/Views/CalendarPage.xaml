@@ -16,7 +16,30 @@
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <converters:BoolToBrushConverter x:Key="BoolToBrushConverter" />
         <ScaleTransform x:Key="MainScaleTransform" ScaleX="{Binding Scale}" ScaleY="{Binding Scale}" />
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <!-- Анимация закрытия правого меню -->
+        <Storyboard x:Key="ClosingRightMenu">
+            <DoubleAnimation Storyboard.TargetName="TaskPanel"
+                 Storyboard.TargetProperty="Width" 
+                 From="278" To="0" 
+                 Duration="0:0:0.5" />
+        </Storyboard>
+        <!-- Анимация открытия правого меню -->
+        <Storyboard x:Key="OpeningRightMenu">
+            <DoubleAnimation Storyboard.TargetName="TaskPanel"
+                 Storyboard.TargetProperty="Width" 
+                 From="0" To="278" 
+                 Duration="0:0:0.5" />
+        </Storyboard>
     </Window.Resources>
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="ToggleButtonClose">
+            <BeginStoryboard Storyboard="{StaticResource ClosingRightMenu}" />
+        </EventTrigger>
+        <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="ToggleButtonOpen">
+            <BeginStoryboard Storyboard="{StaticResource OpeningRightMenu}" />
+        </EventTrigger>
+    </Window.Triggers>
 
     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
         <Grid x:Name="ContentGrid" LayoutTransform="{Binding ScaleTransform}">
@@ -105,13 +128,14 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition x:Name="TaskPanelColumn" Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <Button x:Name="ToggleButton" Grid.Column="0"
+                    <Button x:Name="ToggleButtonOpen" Grid.Column="0"
                             Width="20" Height="50"
                              HorizontalAlignment="Right"
                              VerticalAlignment="Bottom"
                              Background="Transparent"
                              Click="TogglePanel_Click"
-                             BorderThickness="0">
+                             BorderThickness="0"
+                            Visibility="Collapsed">
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
                                 <Grid>
@@ -122,6 +146,28 @@
                             StrokeThickness="1"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center" />
+                                </Grid>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                    <Button x:Name="ToggleButtonClose" Grid.Column="0"
+                            Width="20" Height="50"
+                             HorizontalAlignment="Right"
+                             VerticalAlignment="Bottom"
+                             Background="Transparent"
+                             Click="TogglePanel_Click"
+                             BorderThickness="0" 
+                            >
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Grid>
+                                    <!-- Прямоугольник-закладка -->
+                                    <Rectangle x:Name="BookmarkRectangle"
+                                    Width="20" Height="50"
+                                    Fill="LightGray" Stroke="Gray"
+                                    StrokeThickness="1"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Center" />   
                                 </Grid>
                             </ControlTemplate>
                         </Button.Template>
