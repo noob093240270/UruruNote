@@ -147,6 +147,7 @@ AllowDrop="True">
                                                 <TextBlock Text="{Binding FileName}" ToolTip="{Binding FilePath}">
                                                     <TextBlock.ContextMenu>
                                                         <ContextMenu>
+                                                            <MenuItem Header="Открыть в новой вкладке" Click="OpenInNewTab_Click" CommandParameter="{Binding}" />
                                                             <MenuItem Header="Удалить файл" Click="DeleteFileButton_Click" CommandParameter="{Binding}" />
                                                             <MenuItem Header="Перенести в..." Click="MoveToFolderMenuItem_Click" />
                                                         </ContextMenu>
@@ -174,8 +175,11 @@ AllowDrop="True">
                 </Grid>
 
                 <!-- Основная область для страниц -->
+                <TabControl x:Name="TabControlFiles" Grid.Column="1" Background="#FFEBEBEB">
+                    
+                </TabControl>
                 <Frame x:Name="PageFrame" NavigationUIVisibility="Hidden" Grid.Column="1" Background="#FFEBEBEB" 
-                       HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Navigated="PageFrame_Navigated"/>
+                        HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Navigated="PageFrame_Navigated"/>
             </Grid>
         </Grid>
     </ScrollViewer>
