@@ -30,18 +30,15 @@ namespace UruruNotes.ViewsModels
         private bool _isUpdatingScale = false;
         private double? _previousScale;
         private MainViewModel _mainViewModel;
-        private CalendarPage _calendarPage;
-        internal SettingsWindow(MainViewModel mainViewModel, MarkdownViewer markdownViewer = null, CalendarPage calendarPage = null)
+        internal SettingsWindow(MainViewModel mainViewModel, MarkdownViewer markdownViewer = null)
         {
             InitializeComponent();
 
             DataContext = mainViewModel;
             _markdownViewer = markdownViewer;
             _mainViewModel = mainViewModel;
-            _calendarPage = calendarPage;
 
-            Loaded += (s, e) =>
-            {
+            Loaded += (s, e) => {
                 if (!_isInitializedF)
                 {
                     _isInitializedF = true;
@@ -60,7 +57,6 @@ namespace UruruNotes.ViewsModels
                     }, DispatcherPriority.Render);
                 }
             };
-
         }
         protected override void OnClosed(EventArgs e)
         {

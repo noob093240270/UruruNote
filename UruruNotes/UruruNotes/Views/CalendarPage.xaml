@@ -9,40 +9,16 @@
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         d:DataContext="{d:DesignInstance Type=viewsmodels:CalendarViewModel}"
         mc:Ignorable="d" 
-        MinHeight="550" MinWidth="850"
+        MinHeight="450" MaxHeight="650" MinWidth="450" MaxWidth="850"
         Title="CalendarPage" Icon="/Views/calendar.png"
         SizeToContent="WidthAndHeight">
     <Window.Resources>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <converters:BoolToBrushConverter x:Key="BoolToBrushConverter" />
-        <ScaleTransform x:Key="MainScaleTransform" ScaleX="{Binding Scale}" ScaleY="{Binding Scale}" />
-        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-        <!-- Анимация закрытия правого меню -->
-        <Storyboard x:Key="ClosingRightMenu">
-            <DoubleAnimation Storyboard.TargetName="TaskPanel"
-                 Storyboard.TargetProperty="Width" 
-                 From="278" To="0" 
-                 Duration="0:0:0.5" />
-        </Storyboard>
-        <!-- Анимация открытия правого меню -->
-        <Storyboard x:Key="OpeningRightMenu">
-            <DoubleAnimation Storyboard.TargetName="TaskPanel"
-                 Storyboard.TargetProperty="Width" 
-                 From="0" To="278" 
-                 Duration="0:0:0.5" />
-        </Storyboard>
     </Window.Resources>
-    <Window.Triggers>
-        <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="ToggleButtonClose">
-            <BeginStoryboard Storyboard="{StaticResource ClosingRightMenu}" />
-        </EventTrigger>
-        <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="ToggleButtonOpen">
-            <BeginStoryboard Storyboard="{StaticResource OpeningRightMenu}" />
-        </EventTrigger>
-    </Window.Triggers>
 
     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-        <Grid x:Name="ContentGrid" LayoutTransform="{Binding ScaleTransform}">
+        <Grid x:Name="ContentGrid">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" MinWidth="400"/>
                 <ColumnDefinition Width="Auto" x:Name="NotesColumn"/>
@@ -67,7 +43,7 @@
                 </StackPanel>
 
                 <!-- Дни недели -->
-                <UniformGrid Rows="1" Columns="7" Margin="10" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <UniformGrid Rows="1" Columns="7" Margin="10" Grid.Row="1">
                     <TextBlock Text="Пн" TextAlignment="Center" FontWeight="Bold" FontSize="{Binding DayFontSize}"/>
                     <TextBlock Text="Вт" TextAlignment="Center" FontWeight="Bold" FontSize="{Binding DayFontSize}"/>
                     <TextBlock Text="Ср" TextAlignment="Center" FontWeight="Bold" FontSize="{Binding DayFontSize}"/>
@@ -78,7 +54,7 @@
                 </UniformGrid>
 
                 <!-- Календарь -->
-                <ItemsControl ItemsSource="{Binding Days}" Grid.Row="2" Margin="0,0,32,0">
+                <ItemsControl ItemsSource="{Binding Days}" Grid.Row="2">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <UniformGrid Rows="6" Columns="7" />
@@ -88,14 +64,11 @@
                         <DataTemplate>
                             <Button Command="{Binding DataContext.OpenTaskAreaCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
                                     CommandParameter="{Binding}" 
-                                    Padding="0"
+                                    Padding="5" Margin="{Binding DataContext.MarginButtons, RelativeSource={RelativeSource AncestorType=Window}}"
                                     Background="{Binding IsCurrentMonth, Converter={StaticResource BoolToBrushConverter}}"
                                     BorderBrush="Transparent" BorderThickness="0"
-                                    HorizontalAlignment="Stretch"
-                                    VerticalAlignment="Stretch"
-                                    VerticalContentAlignment="Center"
-                                    HorizontalContentAlignment="Center"
-                                    Margin="{Binding DataContext.MarginButtons, RelativeSource={RelativeSource AncestorType=Window}}">
+                                    Width="{Binding DataContext.ButtonWidth, RelativeSource={RelativeSource AncestorType=Window}}"
+                                    Height="{Binding DataContext.ButtonHeight, RelativeSource={RelativeSource AncestorType=Window}}">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*" />
@@ -103,14 +76,14 @@
                                     </Grid.RowDefinitions>
                                     <TextBlock Text="{Binding DisplayText}" 
                                                HorizontalAlignment="Center" VerticalAlignment="Center" 
-                                               Grid.Row="0" FontSize="{Binding DataContext.DayFontSize, RelativeSource={RelativeSource AncestorType=Window}}"/>
+                                               FontSize="14" Grid.Row="0" />
                                     <StackPanel Orientation="Horizontal" 
                                                 HorizontalAlignment="Center" VerticalAlignment="Center" 
-                                                Grid.Row="1" >
+                                                Grid.Row="1" Margin="0,5,0,0">
                                         <Ellipse Width="6" Height="6" Fill="Red" VerticalAlignment="Center"
                                                  Visibility="{Binding HasNote, Converter={StaticResource BoolToVisibilityConverter}}" />
                                         <TextBlock Text="{Binding ReminderTime}" VerticalAlignment="Center" 
-                                                   Foreground="Red" FontSize="{Binding DataContext.DayFontSize, RelativeSource={RelativeSource AncestorType=Window}}" />
+                                                   Foreground="Red" FontSize="10" Margin="5,0,0,0" />
                                     </StackPanel>
                                 </Grid>
                             </Button>
@@ -128,49 +101,22 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition x:Name="TaskPanelColumn" Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <Button x:Name="ToggleButtonOpen" Grid.Column="0"
-                            Width="20" Height="50"
-                             HorizontalAlignment="Right"
-                             VerticalAlignment="Bottom"
-                             Background="Transparent"
-                             Click="TogglePanel_Click"
-                             BorderThickness="0"
-                            Visibility="Collapsed">
-                        <Button.Template>
-                            <ControlTemplate TargetType="Button">
-                                <Grid>
-                                    <!-- Прямоугольник-закладка -->
-                                    <Rectangle x:Name="BookmarkRectangle"
-                            Width="20" Height="50"
-                            Fill="LightGray" Stroke="Gray"
-                            StrokeThickness="1"
+                    <Button x:Name="ToggleButton" Grid.Column="0"
+                            Width="30" Height="30"
                             HorizontalAlignment="Right"
-                            VerticalAlignment="Center" />
-                                </Grid>
-                            </ControlTemplate>
-                        </Button.Template>
-                    </Button>
-                    <Button x:Name="ToggleButtonClose" Grid.Column="0"
-                            Width="20" Height="50"
-                             HorizontalAlignment="Right"
-                             VerticalAlignment="Bottom"
-                             Background="Transparent"
-                             Click="TogglePanel_Click"
-                             BorderThickness="0" 
-                            >
-                        <Button.Template>
-                            <ControlTemplate TargetType="Button">
-                                <Grid>
-                                    <!-- Прямоугольник-закладка -->
-                                    <Rectangle x:Name="BookmarkRectangle"
-                                    Width="20" Height="50"
-                                    Fill="LightGray" Stroke="Gray"
-                                    StrokeThickness="1"
-                                    HorizontalAlignment="Right"
-                                    VerticalAlignment="Center" />   
-                                </Grid>
-                            </ControlTemplate>
-                        </Button.Template>
+                            VerticalAlignment="Bottom"
+                            Background="Transparent"
+                            Click="TogglePanel_Click"
+                            BorderThickness="0">
+                        <Button.Content>
+                            <Canvas Width="30" Height="30">
+                                <Path x:Name="TrianglePath"
+                                      Data="M 5,25 L 25,25 L 15,5 Z"
+                                      Fill="Black"
+                                      Stroke="Black"
+                                      StrokeThickness="1" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                            </Canvas>
+                        </Button.Content>
                     </Button>
                     <StackPanel x:Name="TaskPanel" Grid.Column="1" Background="LightGray" Width="Auto">
                         <TextBlock Text="Создать заметку" FontSize="{Binding NoteTitleFontSize}" FontWeight="Bold" Margin="10"/>
@@ -183,7 +129,7 @@
                                  PreviewKeyDown="TextBox_PreviewKeyDown" Loaded="TextBox_Loaded" />
                         <Button Content="Сохранить" Command="{Binding SaveNoteCommand}" 
                                 MinWidth="80" MinHeight="25" 
-                                Margin="10,10,10,10" HorizontalAlignment="Left" 
+                                Margin="10" HorizontalAlignment="Left" 
                                 Background="White" BorderBrush="#FF235C9A" FontSize="{Binding NoteFontSize}"/>
 
                         <TextBlock Text="Создать напоминание" FontSize="{Binding NoteTitleFontSize}" FontWeight="Bold" Margin="10"/>
@@ -194,15 +140,16 @@
                                  FontSize="{Binding NoteFontSize}" 
                                  CaretBrush="#FF235C9A" SelectionBrush="#FF235C9A" 
                                  PreviewKeyDown="TextBox_PreviewKeyDown" Loaded="TextBox_Loaded" />
-                        <TextBlock Text="Время напоминания:" FontSize="{Binding NoteFontSize}" Height="Auto" Width="Auto" Margin="10" HorizontalAlignment="Center" />
+                        <TextBlock Text="Время напоминания:" FontSize="14" Height="20" Width="133" Margin="10,5,10,0" HorizontalAlignment="Right"/>
                         <StackPanel Orientation="Horizontal" Margin="10,5,10,10">
                             <Button Content="Сохранить" Command="{Binding SaveReminderCommand}" 
                                     MinWidth="80" MinHeight="25" 
-                                    Background="White" BorderBrush="#FF235C9A" FontSize="{Binding NoteFontSize}"/>
+                                    Margin="10,0,10,0" Background="White" BorderBrush="#FF235C9A" 
+                                    HorizontalAlignment="Left" />
                             <ComboBox x:Name="HourPicker" SelectedItem="{Binding SelectedHour}" 
-                                      Width="60" VerticalAlignment="Center" Margin="5,0,5,0" FontSize="{Binding NoteFontSize}">
+                                      Width="60" VerticalAlignment="Center" Margin="0,0,5,0">
                                 <ComboBox.ItemsSource>
-                                    <x:Array Type="{x:Type sys:Int32}">
+                                    <x:Array Type="sys:Int32">
                                         <sys:Int32>0</sys:Int32>
                                         <sys:Int32>1</sys:Int32>
                                         <sys:Int32>2</sys:Int32>
@@ -231,9 +178,9 @@
                                 </ComboBox.ItemsSource>
                             </ComboBox>
                             <ComboBox x:Name="MinutePicker" SelectedItem="{Binding SelectedMinute}" 
-                                      Width="60" VerticalAlignment="Center" Margin="0,0,10,0" FontSize="{Binding NoteFontSize}">
+                                      Width="60" VerticalAlignment="Center" Margin="0,0,10,0">
                                 <ComboBox.ItemsSource>
-                                    <x:Array Type="{x:Type sys:Int32}">
+                                    <x:Array Type="sys:Int32">
                                         <sys:Int32>0</sys:Int32>
                                         <sys:Int32>5</sys:Int32>
                                         <sys:Int32>10</sys:Int32>

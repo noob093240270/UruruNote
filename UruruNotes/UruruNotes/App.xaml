@@ -4,8 +4,7 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:local="clr-namespace:UruruNotes.Helpers"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
-             StartupUri="Views/MainWindow.xaml"
-             ShutdownMode="OnExplicitShutdown">
+             StartupUri="Views/MainWindow.xaml">
 
     <Application.Resources>
         <ResourceDictionary>
