@@ -2,74 +2,66 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d"
              HorizontalAlignment="Stretch"
              VerticalAlignment="Stretch">
-
     <UserControl.Resources>
         <sys:Double x:Key="NoteFontSize">15</sys:Double>
     </UserControl.Resources>
 
     <Grid>
+        <!-- Закомментировал ScaleTransform, чтобы он не ломал размер -->
+        <!--<Grid.LayoutTransform>
+            <ScaleTransform ScaleX="{Binding Scale, RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                            ScaleY="{Binding Scale, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+        </Grid.LayoutTransform>-->
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TabControl Name="TabControl" Grid.Row="0" SelectionChanged="TabControl_SelectionChanged">
-            <TabItem Header="Редактирование">
-                <RichTextBox Name="MarkdownRichTextBox"
-             VerticalScrollBarVisibility="Auto"
-             HorizontalScrollBarVisibility="Auto"
-             FontSize="{StaticResource NoteFontSize}"
-             Margin="10"
-             MinWidth="300"
-             AcceptsReturn="True"
-             AcceptsTab="True"
-             PreviewKeyDown="MarkdownRichTextBox_PreviewKeyDown"
-             CaretBrush="#FF235C9A"
-             SelectionBrush="#FF235C9A"
-             SelectionTextBrush="#FF235C9A"
-             TextChanged="MarkdownRichTextBox_TextChanged">
-                    <RichTextBox.ContextMenu>
-                        <ContextMenu>
-                            <MenuItem Header="Жирный" Click="BoldMenuItem_Click" />
-                            <MenuItem Header="Курсив" Click="ItalicMenuItem_Click" />
-                            <MenuItem Header="Зачеркнутый" Click="StrikethroughMenuItem_Click" />
-                            <MenuItem Header="Выделенный" Click="HighlightMenuItem_Click" />
-                        </ContextMenu>
-                    </RichTextBox.ContextMenu>
-                    <FlowDocument PagePadding="5">
-                        <Paragraph />
-                    </FlowDocument>
-                </RichTextBox>
-            </TabItem>
+        <!-- RichTextBox для редактирования содержимого -->
+        <RichTextBox Name="MarkdownRichTextBox" 
+                     VerticalScrollBarVisibility="Auto" 
+                     HorizontalScrollBarVisibility="Auto" 
+                     FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                     Margin="10"
+                     MinWidth="300"
+                     HorizontalAlignment="Stretch"
+                     AcceptsReturn="True" 
+                     AcceptsTab="True"
+                     PreviewKeyDown="MarkdownRichTextBox_PreviewKeyDown" 
+                     CaretBrush="#FF235C9A" 
+                     SelectionBrush="#FF235C9A" 
+                     SelectionTextBrush="#FF235C9A">
+            <FlowDocument PagePadding="5">
+                <Paragraph />
+            </FlowDocument>
+            <RichTextBox.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Жирный" Click="BoldMenuItem_Click"/>
+                    <MenuItem Header="Курсив" Click="ItalicMenuItem_Click"/>
+                    <MenuItem Header="Зачеркнутый" Click="StrikethroughMenuItem_Click"/>
+                    <MenuItem Header="Выделенный" Click="HighlightMenuItem_Click"/>
+                </ContextMenu>
+            </RichTextBox.ContextMenu>
+        </RichTextBox>
 
-            <TabItem Header="Предпросмотр">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Margin="10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                        <wv2:WebView2 Name="MarkdownPreview" Width="Auto" Visibility="Visible"/>
-                    </ScrollViewer>
-                    <Button Grid.Row="1" Content="Загрузить тестовый текст" Click="LoadTestHtmlButton_Click"/>
-                </Grid>
-            </TabItem>
-        </TabControl>
-
-        <Button Grid.Row="1"
-                Content="Сохранить"
-                VerticalAlignment="Bottom"
-                HorizontalAlignment="Right"
-                Margin="10"
-                Click="SaveButton_Click"
-                Background="White"
-                BorderBrush="#FF235C9A"
-                FontFamily="{DynamicResource GlobalFont}" />
+        <!-- Кнопка для сохранения -->
+        <Button Grid.Row="1" 
+                Content="Сохранить" 
+                VerticalAlignment="Bottom" 
+                HorizontalAlignment="Right" 
+                Margin="10" 
+                Click="SaveButton_Click" 
+                Background="White" 
+                BorderBrush="#FF235C9A" 
+                FontFamily="{DynamicResource GlobalFont}"/>
     </Grid>
 </UserControl>
