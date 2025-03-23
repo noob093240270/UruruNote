@@ -10,7 +10,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Navigation;
 using UruruNote.Views;
 using UruruNote.ViewsModels;
 using UruruNotes.Models;
@@ -78,7 +77,7 @@ namespace UruruNotes.Views
             PageFrame.Content = userControl;
         }
 
-        private Point _startPoint;  
+        private Point _startPoint;
 
         /// <summary>
         /// Обработчик изменения свойств ViewModel для обновления масштаба
@@ -96,7 +95,7 @@ namespace UruruNotes.Views
         /// Метод для динамического обновления размеров окна в зависимости от масштаба
         /// </summary>
         private void UpdateWindowSize(double scale)
-        {   
+        {
             this.Width = Math.Max(baseWidth * scale, MinWidth);
             this.Height = Math.Max(baseHeight * scale, MinHeight);
         }
@@ -455,40 +454,5 @@ namespace UruruNotes.Views
                 }
             }
         }
-
-        private void OpenInNewTab_Click(object sender, RoutedEventArgs e)
-{
-    if (sender is MenuItem menuItem && menuItem.CommandParameter is FileItem selectedFile)
-    {
-        OpenMarkdownFile(selectedFile);
-    }
-}
-
-
-        private void OpenMarkdownFile(FileItem file)
-        {
-            if (file == null) return;
-
-            foreach (TabItem tab in TabControlFiles.Items)
-            {
-                if (tab.Tag is FileItem existingFile && existingFile.FilePath == file.FilePath)
-                {
-                    TabControlFiles.SelectedItem = tab;
-                    return;
-                }
-            }
-
-            var tabItem = new TabItem
-            {
-                Header = System.IO.Path.GetFileName(file.FilePath),
-                Tag = file,
-                Content = new MarkdownViewer(file) // Передаем FileItem
-            };
-
-            TabControlFiles.Items.Add(tabItem);
-            TabControlFiles.SelectedItem = tabItem;
-        }
-
-
     }
 }
