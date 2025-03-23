@@ -13,6 +13,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
@@ -109,11 +110,21 @@ namespace UruruNotes
         {
             if (_isPanelVisible)
             {
-                TaskPanelColumn.Width = new GridLength(0); // Закрываем шторку
+
+                BeginStoryboard((Storyboard)FindResource("ClosingRightMenu"));
+                ToggleButtonClose.Visibility = Visibility.Collapsed;
+                ToggleButtonOpen.Visibility = Visibility.Visible;
+                
+                //TaskPanelColumn.Width = new GridLength(0); // Закрываем шторку
             }
             else
             {
-                TaskPanelColumn.Width = GridLength.Auto; // Открываем шторку
+                BeginStoryboard((Storyboard)FindResource("OpeningRightMenu"));
+                ToggleButtonClose.Visibility = Visibility.Visible;
+                ToggleButtonOpen.Visibility = Visibility.Collapsed;
+                
+                
+                //TaskPanelColumn.Width = GridLength.Auto; // Открываем шторку
             }
 
             _isPanelVisible = !_isPanelVisible; // Меняем состояние
