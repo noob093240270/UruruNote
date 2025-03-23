@@ -7,6 +7,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Resources\logo3.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,9 +20,11 @@
     <None Remove="Views\calendar.png" />
     <None Remove="Views\homeButton.png" />
     <None Remove="Views\logo2.png" />
+    <None Remove="Views\logo3.ico" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Resources\logo3.ico" />
     <Content Include="settings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -51,6 +54,7 @@
     <Resource Include="Views\calendar.png" />
     <Resource Include="Views\homeButton.png" />
     <Resource Include="Views\logo2.png" />
+    <Resource Include="Views\logo3.ico" />
   </ItemGroup>
 
   <ItemGroup>
