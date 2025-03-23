@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -18,7 +20,7 @@ namespace UruruNotes.Views
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window , INotifyPropertyChanged
     {
         private readonly MainViewModel _viewModel;
         private readonly double baseWidth = 800; // Базовая ширина окна
@@ -26,7 +28,7 @@ namespace UruruNotes.Views
         public ObservableCollection<FolderItem> Folders { get; set; }
         public ObservableCollection<FileItem> Files { get; set; }
 
-        public MainWindow()
+        public MainWindow() 
         {
             InitializeComponent();
 
@@ -39,6 +41,31 @@ namespace UruruNotes.Views
             _viewModel.PropertyChanged += ViewModel_PropertyChanged;
 
             UpdateWindowSize(_viewModel.Scale); // Устанавливаем начальные размеры окна с учётом масштаба
+        }
+
+        private double _scale = 1.0; // Начальный масштаб
+
+        public double Scale
+        {
+            get => _scale;
+            set
+            {
+                if (_scale != value)
+                {
+                    _scale = value;
+                    OnPropertyChanged();
+                    ScaleTransform.ScaleX = _scale;
+                    ScaleTransform.ScaleY = _scale;
+                }
+            }
+        }
+
+        public ScaleTransform ScaleTransform { get; } = new ScaleTransform(1.0, 1.0);
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         /// <summary>
@@ -55,13 +82,14 @@ namespace UruruNotes.Views
         /// <summary>
         /// Обработчик изменения свойств ViewModel для обновления масштаба
         /// </summary>
-        private void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void ViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(_viewModel.Scale))
             {
-                UpdateWindowSize(_viewModel.Scale); // Обновляем размеры окна при изменении масштаба
+                UpdateWindowSize(_viewModel.Scale); // Обновляем размеры окна
             }
         }
+
 
         /// <summary>
         /// Метод для динамического обновления размеров окна в зависимости от масштаба

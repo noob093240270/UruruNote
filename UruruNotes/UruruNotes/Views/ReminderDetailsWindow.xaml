@@ -1,0 +1,28 @@
+﻿<Window x:Class="UruruNotes.Views.ReminderDetailsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:UruruNotes.Views"
+        mc:Ignorable="d"
+        Title="Детали напоминания" Height="300" Width="400">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Заголовок -->
+        <TextBlock Grid.Row="0" Text="{Binding ReminderDate}" FontSize="16" Margin="10"/>
+
+        <!-- Текст напоминания -->
+        <RichTextBox x:Name="ReminderTextBlock" Grid.Row="1" Margin="10" IsReadOnly="True"/>
+
+        <!-- Кнопки -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
+            <Button Content="Удалить" Click="DeleteReminder_Click" Margin="5"/>
+            <Button Content="Закрыть" Click="CloseWindow_Click" Margin="5"/>
+        </StackPanel>
+    </Grid>
+</Window>
