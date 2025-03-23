@@ -23,7 +23,7 @@
         </Grid.LayoutTransform>
 
         <!-- Заголовок -->
-        <TextBlock Text="Настройки" FontWeight="Bold" Margin="0,0,0,20" />
+        <TextBlock Text="Настройки" FontWeight="Bold" Margin="0,0,0,20" HorizontalAlignment="Center" />
         
 
         <!-- Настройки -->
@@ -50,7 +50,7 @@
 
 
             <!-- Тема приложения -->
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,10,0,10">
                 <TextBlock Text="Тема приложения:" Width="120" VerticalAlignment="Center" />
                 <ComboBox Width="200" ItemsSource="{Binding ThemeOptions}" SelectedItem="{Binding SelectedTheme}"/>
             </StackPanel>
