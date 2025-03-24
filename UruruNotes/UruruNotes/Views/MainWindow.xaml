@@ -8,7 +8,7 @@
         xmlns:viewsmodels="clr-namespace:UruruNote.ViewsModels" 
         mc:Ignorable="d"
         SizeToContent="WidthAndHeight"
-        Title="UruruNote" MinWidth="400" MinHeight="300" Background="#FFEBEBEB" Icon="/Views/logo2.png">
+        Title="UruruNote" MinWidth="400" MinHeight="300" Background="#FFEBEBEB" Icon="/Views/logo3.ico">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         <!-- Анимация закрытия левого меню -->

@@ -612,6 +612,12 @@ namespace UruruNotes.ViewsModels
                     td.RegistrationInfo.Description = "UruruNotes Reminder";
                     td.Triggers.Add(new TimeTrigger(reminderTime));
 
+                    // Убедимся, что задача не повторяется
+                    td.Settings.AllowDemandStart = false;
+                    td.Settings.DisallowStartIfOnBatteries = false;
+                    td.Settings.StopIfGoingOnBatteries = false;
+                    td.Settings.AllowHardTerminate = true;
+
                     // Указываем путь к .exe файлу
                     string appPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
                     string exePath = appPath.Replace(".dll", ".exe"); // Заменяем .dll на .exe

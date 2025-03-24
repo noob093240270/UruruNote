@@ -14,6 +14,7 @@ using System.Windows.Shapes;
 using System.IO;
 using Microsoft.Toolkit.Uwp.Notifications;
 using Microsoft.Win32.TaskScheduler;
+using System.Diagnostics;
 
 namespace UruruNotes.Views
 {
@@ -81,7 +82,38 @@ namespace UruruNotes.Views
 
         private void CloseWindow_Click(object sender, RoutedEventArgs e)
         {
+            // Удаляем задачу из планировщика задач
+            DeleteScheduledTask(_reminderDate);
+
             Close();
+        }
+
+        private void DeleteScheduledTask(DateTime date)
+        {
+            try
+            {
+                using (TaskService ts = new TaskService())
+                {
+                    // Формируем имя задачи
+                    string taskName = $"UruruNotesReminder_{date:yyyyMMddHHmm}";
+
+                    // Пытаемся найти задачу и удалить её
+                    Microsoft.Win32.TaskScheduler.Task task = ts.GetTask(taskName);
+                    if (task != null)
+                    {
+                        ts.RootFolder.DeleteTask(taskName);
+                        Debug.WriteLine($"Задача удалена: {taskName}");
+                    }
+                    else
+                    {
+                        Debug.WriteLine($"Задача не найдена: {taskName}");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Ошибка при удалении задачи: {ex.Message}");
+            }
         }
 
         private string GetNotesFilePath(DateTime date, bool isReminder)

@@ -9,6 +9,7 @@ using System;
 using UruruNotes;
 using UruruNotes.Views;
 using System.Diagnostics;
+using Microsoft.Win32.TaskScheduler;
 
 namespace UruruNotes
 {
@@ -85,20 +86,66 @@ namespace UruruNotes
             UpdateGlobalScale(settings.Scale);
         }
 
+        public static bool IsReminderWindowOpen { get; set; } = false;
+
         private void OpenReminderDetails(DateTime date)
         {
-            // Открываем окно с деталями напоминания как модальное
+            // Удаляем задачу из планировщика задач
+            DeleteScheduledTask(date);
+
+            // Устанавливаем флаг, что окно открыто
+            IsReminderWindowOpen = true;
+
+            // Открываем окно
             var reminderWindow = new ReminderDetailsWindow(date);
-            reminderWindow.ShowDialog(); // Используем ShowDialog() вместо Show()
+            reminderWindow.Closed += (s, e) => IsReminderWindowOpen = false; // Сбрасываем флаг при закрытии окна
+            reminderWindow.ShowDialog();
+        }
+
+        private void DeleteScheduledTask(DateTime date)
+        {
+            try
+            {
+                using (TaskService ts = new TaskService())
+                {
+                    // Формируем имя задачи (исправлено имя и формат даты)
+                    string taskName = $"UruruNotesReminder_{date:yyyyMMddHHmm}";
+
+                    // Пытаемся найти задачу и удалить её
+                    Microsoft.Win32.TaskScheduler.Task task = ts.GetTask(taskName);
+                    if (task != null)
+                    {
+                        ts.RootFolder.DeleteTask(taskName);
+                        Debug.WriteLine($"Задача удалена: {taskName}");
+                    }
+                    else
+                    {
+                        Debug.WriteLine($"Задача не найдена: {taskName}");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Ошибка при удалении задачи: {ex.Message}");
+            }
         }
 
         private void ShowToastNotification(string title, string message)
         {
-            new ToastContentBuilder()
-                .AddText(title)
-                .AddText(message)
-                .AddArgument("action", "openReminder") // Добавляем аргумент для обработки
-                .Show();
+            // Проверяем, открыто ли окно "Детали напоминания"
+            if (!IsReminderWindowOpen)
+            {
+                // Показываем уведомление
+                new ToastContentBuilder()
+                    .AddText(title)
+                    .AddText(message)
+                    .AddArgument("action", "openReminder")
+                    .Show();
+            }
+            else
+            {
+                Debug.WriteLine("Окно 'Детали напоминания' уже открыто, уведомление не показывается.");
+            }
         }
 
     }
