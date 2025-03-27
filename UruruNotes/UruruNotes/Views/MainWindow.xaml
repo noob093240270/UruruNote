@@ -127,11 +127,12 @@
                                 <StackPanel>
                                     <!-- Первый TreeView для папок -->
                                     <TreeView ItemsSource="{Binding Folders}" Margin="10,10,10,10"
-SelectedItemChanged="TreeView_SelectedItemChanged"
-PreviewMouseLeftButtonDown="TreeView_PreviewMouseLeftButtonDown"
-DragEnter="TreeView_DragEnter"
-Drop="TreeView_Drop"
-AllowDrop="True">
+                                                SelectedItemChanged="TreeView_SelectedItemChanged"
+                                                PreviewMouseLeftButtonDown="TreeView_PreviewMouseLeftButtonDown"
+                                                PreviewMouseMove="TreeView_PreviewMouseMove"
+                                                DragEnter="TreeView_DragEnter"
+                                                Drop="TreeView_Drop"
+                                                AllowDrop="True">
                                         <TreeView.ItemTemplate>
                                             <HierarchicalDataTemplate ItemsSource="{Binding CompositeSubItems}">
                                                 <StackPanel Orientation="Horizontal">
