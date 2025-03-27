@@ -18,12 +18,13 @@
         <converters:SubtractMarginConverter x:Key="SubtractMarginConverter" />
         <ScaleTransform x:Key="MainScaleTransform" ScaleX="{Binding Scale}" ScaleY="{Binding Scale}" />
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <sys:Double x:Key="PanelWidth">400</sys:Double>
 
         <!-- Анимация закрытия правого меню -->
         <Storyboard x:Key="ClosingRightMenu">
             <DoubleAnimation Storyboard.TargetName="TaskPanel"
                  Storyboard.TargetProperty="Width" 
-                 From="278" To="0" 
+                 From="{StaticResource PanelWidth}" To="0" 
                  Duration="0:0:0.5" />
         </Storyboard>
 
@@ -31,7 +32,7 @@
         <Storyboard x:Key="OpeningRightMenu">
             <DoubleAnimation Storyboard.TargetName="TaskPanel"
                  Storyboard.TargetProperty="Width" 
-                 From="0" To="278" 
+                 From="0" To="{StaticResource PanelWidth}" 
                  Duration="0:0:0.5" />
         </Storyboard>   
      </Window.Resources>
@@ -176,7 +177,7 @@
                             </ControlTemplate>
                         </Button.Template>
                     </Button>
-                    <StackPanel x:Name="TaskPanel" Grid.Column="1" Background="LightGray" Width="Auto">
+                    <StackPanel x:Name="TaskPanel" Grid.Column="1" Background="LightGray" Width="{StaticResource PanelWidth}">
                         <!-- Заметка -->
                         <TextBlock Text="Создать заметку" FontSize="{Binding NoteTitleFontSize}" FontWeight="Bold" Margin="10" HorizontalAlignment="Stretch"/>
                         <TextBox TextWrapping="Wrap" Text="{Binding NewTaskContent}" 
