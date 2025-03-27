@@ -32,6 +32,8 @@ namespace UruruNotes.Views
         {
             InitializeComponent();
 
+            this.Closing += MainWindow_Closing;
+
             // Создаем экземпляр ViewModel
             _viewModel = new MainViewModel();
             DataContext = _viewModel; // Установка DataContext на ViewModel
@@ -41,6 +43,16 @@ namespace UruruNotes.Views
             _viewModel.PropertyChanged += ViewModel_PropertyChanged;
 
             UpdateWindowSize(_viewModel.Scale); // Устанавливаем начальные размеры окна с учётом масштаба
+        }
+
+        private void MainWindow_Closing(object sender, CancelEventArgs e)
+        {
+            // Отписка от событий
+            _viewModel.OpenFileRequest -= ViewModel_OpenFileRequest;
+            _viewModel.PropertyChanged -= ViewModel_PropertyChanged;
+
+            // Явное завершение приложения
+            Application.Current.Shutdown();
         }
 
         private double _scale = 1.0; // Начальный масштаб
