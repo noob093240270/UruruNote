@@ -1,4 +1,7 @@
-﻿using System.Diagnostics;
+﻿using Microsoft.Web.WebView2.Core;
+using Microsoft.Win32;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Windows;
@@ -6,16 +9,8 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using UruruNotes.Models;
-using Markdig;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using Microsoft.Win32;
-using System.Threading.Tasks;
 using System.Windows.Threading;
-
-using Microsoft.Web.WebView2.Wpf;
-using Microsoft.Web.WebView2.Core;
+using UruruNotes.Models;
 
 
 namespace UruruNote.Views
@@ -33,7 +28,7 @@ namespace UruruNote.Views
                 new PropertyMetadata(15.0, OnFontSizeChanged));
 
         // Обычное свойство для доступа к зависимому свойству
-        public double FontSize
+        public new double FontSize
         {
             get => (double)GetValue(FontSizeProperty);
             set => SetValue(FontSizeProperty, value);
@@ -290,9 +285,21 @@ namespace UruruNote.Views
             {
                 _file = file;
                 LoadFileContent(file.FilePath);
-
+            }
+            if (Application.Current.Resources.Contains("GlobalFontSize"))
+            {
+                double globalFontSize = (double)Application.Current.Resources["GlobalFontSize"];
+                UpdateFontSize(globalFontSize);
+            }
+            if (Application.Current.Resources.Contains("GlobalScale"))
+            {
+                double globalScale = (double)Application.Current.Resources["GlobalScale"];
+                ApplyScale(globalScale);
             }
 
+            MarkdownRichTextBox.Document.PageWidth = double.NaN;
+            MarkdownRichTextBox.Document.PagePadding = new Thickness(0);
+            
             this.KeyDown += MarkdownViewer_KeyDown;
         }
 
@@ -355,7 +362,6 @@ namespace UruruNote.Views
                 }
                 MarkdownRichTextBox.Document.PageWidth = double.NaN;
                 MarkdownRichTextBox.Document.PagePadding = new Thickness(0);
-                Debug.WriteLine($"RichTextBox Width: {MarkdownRichTextBox.ActualWidth}");
             }
         }
         public void UpdateFontSize(double fontSize)
@@ -376,18 +382,34 @@ namespace UruruNote.Views
             // Обновляем размер шрифта для всего содержимого FlowDocument
             if (MarkdownRichTextBox.Document is FlowDocument flowDocument)
             {
-                for (int i = flowDocument.Blocks.Count - 1; i >= 0; i--)
+                foreach (Block block in flowDocument.Blocks)
                 {
-                    if (flowDocument.Blocks.ElementAt(i) is Paragraph paragraph)
+                    if (block is Paragraph paragraph)
                     {
                         paragraph.FontSize = fontSize;
                     }
                 }
             }
         }
+
+        private void LoadTextIntoRichTextBox(string text, double fontSize)
+        {
+            MarkdownRichTextBox.Document.Blocks.Clear();
+            var paragraphs = text.Split(new[] { "\r\n\r\n", "\n\n" }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var para in paragraphs)
+            {
+                var paragraph = new Paragraph(new Run(para))
+                {
+                    FontSize = fontSize,
+                    TextAlignment = TextAlignment.Left
+                };
+                MarkdownRichTextBox.Document.Blocks.Add(paragraph);
+            }
+        }
+
         public void UpdateScale(double scale)
         {
-            Scale = scale; 
+            Scale = scale;
         }
         // Зависимое свойство для Scale
         public static readonly DependencyProperty ScaleProperty =

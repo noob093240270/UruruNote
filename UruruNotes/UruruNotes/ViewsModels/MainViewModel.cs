@@ -71,7 +71,7 @@ namespace UruruNote.ViewsModels
         }
         private int _selectedFontSize = 15;
         private int? _previousFontSize;
-        private bool _isUpdatingFontSize = false;
+        private bool _isUpdatingFontSize = true;
         public int SelectedFontSize
         {
             get => _selectedFontSize;
@@ -81,19 +81,18 @@ namespace UruruNote.ViewsModels
                 {
                     if (_selectedFontSize != value) // Изменил условие, чтобы всегда сохранять
                     {
-                        _isUpdatingFontSize = true;
                         _selectedFontSize = value;
                         Debug.WriteLine($"SelectedFontSize изменён на: {value}");
                         OnPropertyChanged(nameof(SelectedFontSize));
-                        App.UpdateGlobalFontSize(value);
                         ApplyFont();
+                        App.UpdateGlobalFontSize(value);
                         SettingsManager.SaveSettings(value, Scale); // Сохраняем всегда
-                        if (_previousFontSize.HasValue && _previousFontSize != value)
+                        if (!_isUpdatingFontSize)
                         {
                             Debug.WriteLine($"FontSize notification: {value}");
+
                         }
                         _previousFontSize = value;
-                        _isUpdatingFontSize = false;
                     }
                 }
                 else
@@ -120,7 +119,7 @@ namespace UruruNote.ViewsModels
         }
 
         // Применение нового шрифта к приложению
-        private void ApplyFont()
+        public void ApplyFont()
         {
             if (!string.IsNullOrEmpty(_selectedFont))
             {
@@ -199,12 +198,12 @@ namespace UruruNote.ViewsModels
         private void UpdateSelectedScaleOption()
         {
             if (ScaleOptions == null || !ScaleOptions.Any()) return;
-        var closestScale = ScaleOptions.OrderBy(option => Math.Abs(option - Scale)).First();
-        if (_selectedScaleOption != closestScale) // Избегаем лишнего вызова Scale setter
-        {
-            _selectedScaleOption = closestScale;
-            OnPropertyChanged(nameof(SelectedScaleOption));
-        }
+            var closestScale = ScaleOptions.OrderBy(option => Math.Abs(option - Scale)).First();
+            if (_selectedScaleOption != closestScale) // Избегаем лишнего вызова Scale setter
+            {
+                _selectedScaleOption = closestScale;
+                OnPropertyChanged(nameof(SelectedScaleOption));
+            }
         }
 
         private double _selectedScaleOption;
