@@ -370,8 +370,6 @@ namespace UruruNote.Views
                         MarkdownRichTextBox.Document.Blocks.Add(paragraph);
                     }
                 }
-                MarkdownRichTextBox.Document.PageWidth = double.NaN;
-                MarkdownRichTextBox.Document.PagePadding = new Thickness(0);
             }
         }
 
