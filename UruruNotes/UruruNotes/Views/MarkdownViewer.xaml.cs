@@ -317,16 +317,22 @@ namespace UruruNote.Views
             string filePath = _file.FilePath;
             if (!string.IsNullOrEmpty(filePath) && File.Exists(filePath))
             {
-                string textToSave = "";
+                StringBuilder textToSave = new StringBuilder();
                 foreach (var block in MarkdownRichTextBox.Document.Blocks)
                 {
                     if (block is Paragraph paragraph)
                     {
                         TextRange textRange = new TextRange(paragraph.ContentStart, paragraph.ContentEnd);
-                        textToSave += textRange.Text + "\r\n\r\n"; // Добавляем двойные переносы строк
+                        string paragraphText = textRange.Text.TrimEnd(); // Убираем лишние пробелы в конце строки
+
+                        if (!string.IsNullOrWhiteSpace(paragraphText))
+                        {
+                            textToSave.AppendLine(paragraphText);
+                            textToSave.AppendLine(); // Оставляем ОДИН пустой ряд между абзацами
+                        }
                     }
                 }
-                File.WriteAllText(filePath, textToSave, Encoding.UTF8);
+                File.WriteAllText(filePath, textToSave.ToString().TrimEnd(), Encoding.UTF8); // Убираем лишние пробелы и пустые строки в конце
                 MessageBox.Show("Файл успешно сохранен.");
             }
             else
@@ -335,6 +341,7 @@ namespace UruruNote.Views
             }
         }
 
+
         private void LoadFileContent(string filePath)
         {
             if (File.Exists(filePath))
@@ -342,22 +349,23 @@ namespace UruruNote.Views
                 string fileContent = File.ReadAllText(filePath, Encoding.UTF8);
                 MarkdownText = fileContent;
                 MarkdownRichTextBox.Document.Blocks.Clear();
-                var paragraphs = fileContent.Split(new[] { "\r\n\r\n", "\n\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+                var paragraphs = fileContent.Split(new[] { "\r\n\r\n", "\n\n" }, StringSplitOptions.None);
                 foreach (var para in paragraphs)
                 {
-                    string singleLinePara = para.Replace("\r\n", Environment.NewLine).Replace("\n", Environment.NewLine).Trim();
-                    var paragraph = new Paragraph(new Run(singleLinePara))
+                    if (!string.IsNullOrWhiteSpace(para)) // Пропускаем пустые строки
                     {
-                        FontSize = MarkdownRichTextBox.FontSize,
-                        TextAlignment = TextAlignment.Left
-                    };
-                    MarkdownRichTextBox.Document.Blocks.Add(paragraph);
+                        var paragraph = new Paragraph(new Run(para.Trim()))
+                        {
+                            FontSize = MarkdownRichTextBox.FontSize,
+                            TextAlignment = TextAlignment.Left
+                        };
+                        MarkdownRichTextBox.Document.Blocks.Add(paragraph);
+                    }
                 }
-                MarkdownRichTextBox.Document.PageWidth = double.NaN;
-                MarkdownRichTextBox.Document.PagePadding = new Thickness(0);
-                Debug.WriteLine($"RichTextBox Width: {MarkdownRichTextBox.ActualWidth}");
             }
         }
+
         public void UpdateFontSize(double fontSize)
         {
             // Обновляем локальный ресурс

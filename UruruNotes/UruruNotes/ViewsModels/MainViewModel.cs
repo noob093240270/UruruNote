@@ -476,6 +476,7 @@ namespace UruruNote.ViewsModels
                 Directory.CreateDirectory(RootDirectory);
             }
 
+            /*
             Files = new ObservableCollection<FileItem>();
             CreateNewMarkdownFileCommand = new RelayCommand(CreateNewMarkdownFile);
             LoadFiles();
@@ -484,7 +485,15 @@ namespace UruruNote.ViewsModels
             CreateFolderCommand = new RelayCommand(CreateFolder);
             LoadFolders();
 
+            OpenCalendarCommand = new RelayCommand(OpenCalendar);*/
+            Files = new ObservableCollection<FileItem>();
+            Folders = new ObservableCollection<FolderItem>();
+
+            CreateNewMarkdownFileCommand = new RelayCommand(CreateNewMarkdownFile);
+            CreateFolderCommand = new RelayCommand(CreateFolder);
             OpenCalendarCommand = new RelayCommand(OpenCalendar);
+
+            LoadFileStructure(); // Загружаем сразу и папки, и файлы в одной структуре
 
 
 
@@ -547,17 +556,29 @@ namespace UruruNote.ViewsModels
         }
 
         // Рекурсивный метод для загрузки папок
+        // Рекурсивный метод для загрузки папок и файлов в них
         private ObservableCollection<FolderItem> LoadFoldersRecursively(string directoryPath)
         {
+            Debug.WriteLine($"Читаем папку: {directoryPath}");
+
             var folders = new ObservableCollection<FolderItem>();
 
             foreach (var dir in Directory.GetDirectories(directoryPath))
             {
+                string folderName = Path.GetFileName(dir);
+
+                // Проверяем, нет ли уже папки с таким именем
+                if (folders.Any(f => f.FileName == folderName))
+                {
+                    Debug.WriteLine($"Пропускаем дублирующуюся папку: {folderName}");
+                    continue; // Пропускаем дубликаты
+                }
+
                 var folder = new FolderItem
                 {
-                    FileName = Path.GetFileName(dir),
+                    FileName = folderName,
                     FilePath = dir,
-                    SubFolders = LoadFoldersRecursively(dir), // Загружаем вложенные папки
+                    SubFolders = LoadFoldersRecursively(dir),
                     Files = new ObservableCollection<FileItem>(
                         Directory.GetFiles(dir, "*.md").Select(filePath => new FileItem
                         {
@@ -566,11 +587,14 @@ namespace UruruNote.ViewsModels
                         })
                     )
                 };
+
+                Debug.WriteLine($"Добавляем папку: {folder.FileName}");
                 folders.Add(folder);
             }
 
             return folders;
         }
+
 
 
 
@@ -778,6 +802,32 @@ namespace UruruNote.ViewsModels
         }
 
         public ICommand LoadFilesCommand { get; }
+
+
+        private void LoadFileStructure()
+        {
+            Folders.Clear(); // Очищаем перед добавлением
+            Files.Clear();   // Очищаем перед добавлением
+
+            var rootFolders = LoadFoldersRecursively(RootDirectory);
+            foreach (var folder in rootFolders)
+            {
+                Folders.Add(folder);
+            }
+
+            var files = Directory.GetFiles(RootDirectory, "*.md")
+                .Select(filePath => new FileItem
+                {
+                    FileName = Path.GetFileName(filePath),
+                    FilePath = filePath
+                });
+
+            foreach (var file in files)
+            {
+                Files.Add(file);
+            }
+        }
+
 
         public void LoadFiles()
         {
