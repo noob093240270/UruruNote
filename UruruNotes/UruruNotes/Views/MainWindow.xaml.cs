@@ -32,6 +32,21 @@ namespace UruruNotes.Views
         {
             InitializeComponent();
 
+            // Предварительная загрузка анимаций
+            var openAnimation = (Storyboard)FindResource("OpeningLeftMenu");
+            var closeAnimation = (Storyboard)FindResource("ClosingLeftMenu");
+            openAnimation.Seek(TimeSpan.Zero, TimeSeekOrigin.BeginTime);
+            closeAnimation.Seek(TimeSpan.Zero, TimeSeekOrigin.BeginTime);
+
+            // Устанавливаем начальное состояние (панель открыта)
+            LeftMenu.Width = 200;  // Значение должно совпадать с "To" в анимации открытия
+            ButtonClose.Visibility = Visibility.Visible;
+            ButtonOpen.Visibility = Visibility.Collapsed;
+            isMenuOpen = true;     // Панель открыта
+            _isFirstClick = false; // Первый клик не нужен, так как состояние уже корректное
+
+            this.Closing += MainWindow_Closing;
+
             // Создаем экземпляр ViewModel
             _viewModel = new MainViewModel();
             DataContext = _viewModel; // Установка DataContext на ViewModel
@@ -41,6 +56,16 @@ namespace UruruNotes.Views
             _viewModel.PropertyChanged += ViewModel_PropertyChanged;
 
             UpdateWindowSize(_viewModel.Scale); // Устанавливаем начальные размеры окна с учётом масштаба
+        }
+
+        private void MainWindow_Closing(object sender, CancelEventArgs e)
+        {
+            // Отписка от событий
+            _viewModel.OpenFileRequest -= ViewModel_OpenFileRequest;
+            _viewModel.PropertyChanged -= ViewModel_PropertyChanged;
+
+            // Явное завершение приложения
+            Application.Current.Shutdown();
         }
 
         private double _scale = 1.0; // Начальный масштаб
@@ -77,7 +102,6 @@ namespace UruruNotes.Views
             PageFrame.Content = userControl;
         }
 
-        private Point _startPoint;
 
         /// <summary>
         /// Обработчик изменения свойств ViewModel для обновления масштаба
@@ -104,23 +128,28 @@ namespace UruruNotes.Views
         /// Обработчик для сворачивания и разворачивания TreeView
         /// </summary>
         private bool isMenuOpen = false;
+        private bool _isFirstClick = true; // Флаг для первого клика
 
         private void ToggleVisibilityButton_Click(object sender, RoutedEventArgs e)
         {
+            var openAnimation = (Storyboard)FindResource("OpeningLeftMenu");
+            var closeAnimation = (Storyboard)FindResource("ClosingLeftMenu");
+
             if (isMenuOpen)
             {
-                BeginStoryboard((Storyboard)FindResource("ClosingLeftMenu"));
+                closeAnimation.Begin();
                 ButtonClose.Visibility = Visibility.Collapsed;
                 ButtonOpen.Visibility = Visibility.Visible;
             }
             else
             {
-                BeginStoryboard((Storyboard)FindResource("OpeningLeftMenu"));
+                openAnimation.Begin();
                 ButtonClose.Visibility = Visibility.Visible;
                 ButtonOpen.Visibility = Visibility.Collapsed;
             }
 
             isMenuOpen = !isMenuOpen;
+            e.Handled = true;
         }
 
         /// <summary>
@@ -369,13 +398,35 @@ namespace UruruNotes.Views
         }
 
 
-        private void TreeView_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private Point _startPoint;
+        private bool _isDragging;
+
+        private void TreeView_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            var treeViewItem = VisualUpwardSearch(e.OriginalSource as DependencyObject);
-            if (treeViewItem != null)
+            // Запоминаем точку начала клика
+            _startPoint = e.GetPosition(null);
+            _isDragging = false;
+        }
+
+        private void TreeView_PreviewMouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.LeftButton != MouseButtonState.Pressed || _isDragging)
+                return;
+
+            var currentPoint = e.GetPosition(null);
+            var diff = _startPoint - currentPoint;
+
+            // Начинаем перетаскивание только если мышь переместилась достаточно
+            if (Math.Abs(diff.X) > SystemParameters.MinimumHorizontalDragDistance ||
+                Math.Abs(diff.Y) > SystemParameters.MinimumVerticalDragDistance)
             {
-                var dataObject = new DataObject("myFormat", treeViewItem.DataContext);
-                DragDrop.DoDragDrop(treeViewItem, dataObject, DragDropEffects.Move);
+                _isDragging = true;
+                var treeViewItem = VisualUpwardSearch(e.OriginalSource as DependencyObject);
+                if (treeViewItem != null)
+                {
+                    var dataObject = new DataObject("myFormat", treeViewItem.DataContext);
+                    DragDrop.DoDragDrop(treeViewItem, dataObject, DragDropEffects.Move);
+                }
             }
         }
 
