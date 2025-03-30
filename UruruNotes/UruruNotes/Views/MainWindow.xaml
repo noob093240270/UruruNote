@@ -26,6 +26,60 @@
                              From="0" To="200" 
                              Duration="0:0:0.5" />
         </Storyboard>
+
+        <Style x:Key="StyledButton" TargetType="Button">
+            <Setter Property="Padding" Value="6,3"/>
+            <Setter Property="Width" Value="130"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="#5C6D93"/>
+            <Setter Property="Background" Value="#F8F9FC"/>
+            <Setter Property="BorderBrush" Value="#C5CDE6"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#E3EAF8"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="#B0BADF"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#D6E0F5"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="#A1AAD3"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="MenuButtons" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="OverridesDefaultStyle" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
     </Window.Resources>
     <Window.Triggers>
         <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="ButtonClose">
@@ -64,18 +118,18 @@
                     </Grid.ColumnDefinitions>
                     <StackPanel Orientation="Horizontal">
                         <Button x:Name="ButtonOpen" Width="23" Height="23" Margin="3,0" Click="ToggleVisibilityButton_Click" Focusable="False" BorderThickness="0"
-                                HorizontalAlignment="Left" Visibility="Collapsed">
+                                HorizontalAlignment="Left" Visibility="Collapsed" Style="{StaticResource MenuButtons}">
                             <Button.Background>
                                 <ImageBrush ImageSource="pack://application:,,,/UruruNotes;component/Resources/treeview.png" />
                             </Button.Background>
                         </Button>
                         <Button x:Name="ButtonClose" Width="23" Height="23" Margin="3,0" Click="ToggleVisibilityButton_Click" Focusable="False" BorderThickness="0"
-                                HorizontalAlignment="Left">
+                                HorizontalAlignment="Left" Style="{StaticResource MenuButtons}">
                             <Button.Background>
                                 <ImageBrush ImageSource="pack://application:,,,/UruruNotes;component/Resources/treeview.png" />
                             </Button.Background>
                         </Button>
-                        <Button x:Name="Сalendar" Width="23" Height="23" Margin="5,0" Command="{Binding OpenCalendarCommand}">
+                        <Button x:Name="Сalendar" Width="23" Height="23" Margin="5,0" Command="{Binding OpenCalendarCommand}" Style="{StaticResource MenuButtons}">
                             <Button.BorderBrush>
                                 <ImageBrush/>
                             </Button.BorderBrush>
@@ -116,11 +170,11 @@
                                 <StackPanel>
                                     <!-- Первый TreeView для папок -->
                                     <TreeView ItemsSource="{Binding Folders}" Margin="10,10,10,10"
-SelectedItemChanged="TreeView_SelectedItemChanged"
-PreviewMouseLeftButtonDown="TreeView_PreviewMouseLeftButtonDown"
-DragEnter="TreeView_DragEnter"
-Drop="TreeView_Drop"
-AllowDrop="True">
+                                            SelectedItemChanged="TreeView_SelectedItemChanged"
+                                            PreviewMouseLeftButtonDown="TreeView_PreviewMouseLeftButtonDown"
+                                            DragEnter="TreeView_DragEnter"
+                                            Drop="TreeView_Drop"
+                                            AllowDrop="True">
                                         <TreeView.ItemTemplate>
                                             <HierarchicalDataTemplate ItemsSource="{Binding CompositeSubItems}">
                                                 <StackPanel Orientation="Horizontal">
@@ -138,10 +192,10 @@ AllowDrop="True">
                                         </TreeView.ItemTemplate>
                                     </TreeView>
                                     <TreeView ItemsSource="{Binding Files}" SelectedItemChanged="TreeView_SelectedItemChanged"
-Margin="10,10,10,10" PreviewMouseLeftButtonDown="TreeView_PreviewMouseLeftButtonDown"
-DragEnter="TreeView_DragEnter"
-Drop="TreeView_Drop"
-AllowDrop="True">
+                                                Margin="10,10,10,10" PreviewMouseLeftButtonDown="TreeView_PreviewMouseLeftButtonDown"
+                                                DragEnter="TreeView_DragEnter"
+                                                Drop="TreeView_Drop"
+                                                AllowDrop="True">
                                         <TreeView.ItemTemplate>
                                             <HierarchicalDataTemplate ItemsSource="{Binding CompositeSubItems}">
                                                 <TextBlock Text="{Binding FileName}" ToolTip="{Binding FilePath}">
@@ -163,10 +217,12 @@ AllowDrop="True">
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
                                 <StackPanel Grid.Column="0" HorizontalAlignment="Center">
-                                    <Button Content="Новый файл" Click="CreateNewFileButton_Click" Padding="3" Width="90" BorderBrush="#FF235C9A" Background="#FFF6F6F6"/>
+                                    <Button Content="Новый файл" Click="CreateNewFileButton_Click" Padding="3" Width="90" BorderBrush="#FF235C9A" Background="#FFF6F6F6"
+                                            Style="{StaticResource StyledButton}"/>
                                 </StackPanel>
                                 <StackPanel Grid.Column="1" HorizontalAlignment="Center">
-                                    <Button Click="CreateNewFolderButton_Click" Padding="3" Content="Новая папка" Background="#FFF6F6F6" FontWeight="Normal" Width="92" BorderBrush="#FF235C9A"/>
+                                    <Button Click="CreateNewFolderButton_Click" Padding="3" Content="Новая папка" Background="#FFF6F6F6" Width="92" BorderBrush="#FF235C9A"
+                                            Style="{StaticResource StyledButton}"/>
                                 </StackPanel>
                             </Grid>
                         </Grid>

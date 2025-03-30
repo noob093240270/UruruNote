@@ -31,6 +31,64 @@
                  From="0" To="278" 
                  Duration="0:0:0.5" />
         </Storyboard>
+
+        <Style x:Key="NoHoverButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="OverridesDefaultStyle" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="0"
+                            Padding="5">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="White"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="White"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="GrayHoverButtonStyle" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="OverridesDefaultStyle" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="0"
+                        Padding="5">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#F0F0F0"/>
+                    <!-- Серый фон при наведении -->
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#E0E0E0"/>
+                    <!-- Темнее при нажатии -->
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+
+
     </Window.Resources>
     <Window.Triggers>
         <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="ToggleButtonClose">
@@ -61,9 +119,9 @@
 
                 <!-- Заголовок и кнопки -->
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="{Binding MarginTop}" Grid.Row="0">
-                    <Button Content="⟨" Width="{Binding ButtonWidth}" Height="{Binding ButtonHeight}" Command="{Binding PreviousMonthCommand}" Background="White" BorderBrush="{x:Null}" />
+                    <Button Content="⟨" Width="{Binding ButtonWidth}" Height="{Binding ButtonHeight}" Command="{Binding PreviousMonthCommand}" Background="White" BorderBrush="{x:Null}" Style="{StaticResource NoHoverButtonStyle}"/>
                     <TextBlock Text="{Binding CurrentMonthYear}" FontSize="{Binding TitleFontSize}" FontWeight="Bold" Margin="{Binding MarginMiddle}" />
-                    <Button Content="⟩" Width="{Binding ButtonWidth}" Height="{Binding ButtonHeight}" Command="{Binding NextMonthCommand}" Background="White" BorderBrush="{x:Null}" />
+                    <Button Content="⟩" Width="{Binding ButtonWidth}" Height="{Binding ButtonHeight}" Command="{Binding NextMonthCommand}" Background="White" BorderBrush="{x:Null}" Style="{StaticResource NoHoverButtonStyle}"/>
                 </StackPanel>
 
                 <!-- Дни недели -->
