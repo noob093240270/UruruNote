@@ -37,6 +37,9 @@ namespace UruruNotes.Models
                    !SubFolders.Any(f => f.FileName.Equals(folderName, StringComparison.OrdinalIgnoreCase));
         }
 
+
+
+
         public CompositeCollection CompositeSubItems
         {
             get

@@ -53,6 +53,7 @@ namespace UruruNotes.ViewsModels
                     ScaleComboBox.SelectionChanged += ScaleComboBox_SelectionChanged;
                     ScaleComboBox.SelectedItem = _mainViewModel.SelectedScaleOption;
                     _mainViewModel.UpdateScale();
+                    _mainViewModel.ApplyFont();
                     Dispatcher.Invoke(() =>
                     {
                         ScaleComboBox.SelectedItem = _mainViewModel.SelectedScaleOption;
@@ -129,6 +130,8 @@ namespace UruruNotes.ViewsModels
             {
                 // Если значение корректное, применяем его
                 _mainViewModel.SelectedFontSize = size;
+                _markdownViewer.FontSize = size;
+                UpdateFontSize(size);
             }
         }
 
@@ -142,11 +145,13 @@ namespace UruruNotes.ViewsModels
                 // Проверяем, изменился ли шрифт пользователем, а не при загрузке
                 if (_previousFontSize.HasValue && _previousFontSize != size)
                 {
+                    _mainViewModel.SelectedFontSize = size;
                     UpdateFontSize(size);
                 }
                 else if (!_previousFontSize.HasValue)
                 {
                     _previousFontSize = size; // Устанавливаем начальное значение без уведомления
+                    _mainViewModel.SelectedFontSize = size;
                 }
             }
         }

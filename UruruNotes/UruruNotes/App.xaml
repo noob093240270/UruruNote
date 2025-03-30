@@ -5,7 +5,7 @@
              xmlns:local="clr-namespace:UruruNotes.Helpers"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              StartupUri="Views/MainWindow.xaml"
-             ShutdownMode="OnExplicitShutdown">
+             ShutdownMode="OnMainWindowClose">
 
     <Application.Resources>
         <ResourceDictionary>

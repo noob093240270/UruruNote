@@ -7,6 +7,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Resources\logo3.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,9 +20,11 @@
     <None Remove="Views\calendar.png" />
     <None Remove="Views\homeButton.png" />
     <None Remove="Views\logo2.png" />
+    <None Remove="Views\logo3.ico" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Resources\logo3.ico" />
     <Content Include="settings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -34,9 +37,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Markdig" Version="0.40.0" />
     <PackageReference Include="MaterialDesignThemes" Version="5.1.0" />
     <PackageReference Include="MaterialDesignThemes.MahApps" Version="3.1.0" />
     <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.1.3" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3124.44" />
     <PackageReference Include="MvvmLightLibs" Version="5.4.1.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="TaskScheduler" Version="2.12.1" />
@@ -51,6 +56,7 @@
     <Resource Include="Views\calendar.png" />
     <Resource Include="Views\homeButton.png" />
     <Resource Include="Views\logo2.png" />
+    <Resource Include="Views\logo3.ico" />
   </ItemGroup>
 
   <ItemGroup>

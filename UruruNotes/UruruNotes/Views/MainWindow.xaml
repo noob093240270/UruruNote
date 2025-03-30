@@ -6,10 +6,9 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
         xmlns:local="clr-namespace:UruruNotes.Models" 
         xmlns:viewsmodels="clr-namespace:UruruNote.ViewsModels" 
-        d:DataContext="{d:DesignInstance Type=viewsmodels:MainViewModel}"
         mc:Ignorable="d"
         SizeToContent="WidthAndHeight"
-        Title="UruruNote" MinWidth="400" MinHeight="300" Background="#FFEBEBEB" Icon="/Views/logo2.png">
+        Title="UruruNote" MinWidth="400" MinHeight="300" Background="#FFEBEBEB" Icon="/Views/logo3.ico">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         <!-- Анимация закрытия левого меню -->
@@ -152,6 +151,18 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
+                <!-- Правая область -->
+                <Grid Grid.Column="1">
+                    <!-- Панель с режимом редактирования и предпросмотра -->
+                    <Grid x:Name="EditorAndPreviewContainer">
+                        <!-- Режим редактирования (RichTextBox) -->
+                        <RichTextBox Name="MarkdownRichTextBox" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Visible" />
+
+                        <!-- Режим предпросмотра (WebBrowser) -->
+                        <WebBrowser Name="MarkdownPreview" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed"/>
+                    </Grid>
+                </Grid>
+
                 <!-- Левое меню -->
                 <Grid Grid.Column="0" Background="#FFEBEBEB" x:Name="TreeViewGrid">
                     <materialDesign:Card x:Name="LeftMenu" Width="200" UniformCornerRadius="0" VerticalAlignment="Stretch">
@@ -233,6 +244,8 @@
                 <Frame x:Name="PageFrame" NavigationUIVisibility="Hidden" Grid.Column="1" Background="#FFEBEBEB" 
                        HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Navigated="PageFrame_Navigated"/>
             </Grid>
+            
+            
         </Grid>
     </ScrollViewer>
 </Window>
