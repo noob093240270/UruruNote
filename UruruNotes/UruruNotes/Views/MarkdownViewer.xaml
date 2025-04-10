@@ -36,10 +36,12 @@
              TextChanged="MarkdownRichTextBox_TextChanged">
                     <RichTextBox.ContextMenu>
                         <ContextMenu>
-                            <MenuItem Header="Жирный" Click="BoldMenuItem_Click" />
-                            <MenuItem Header="Курсив" Click="ItalicMenuItem_Click" />
-                            <MenuItem Header="Зачеркнутый" Click="StrikethroughMenuItem_Click" />
-                            <MenuItem Header="Выделенный" Click="HighlightMenuItem_Click" />
+                            <MenuItem Header="Жирный (Ctrl+B)" Click="BoldMenuItem_Click" />
+                            <MenuItem Header="Курсив (Ctrl+I)" Click="ItalicMenuItem_Click" />
+                            <MenuItem Header="Зачеркнутый (Ctrl+K)" Click="StrikethroughMenuItem_Click" />
+                            <MenuItem Header="Выделенный (Ctrl+H)" Click="HighlightMenuItem_Click" />
+                            <Separator />
+                            <MenuItem Header="Сохранить (Ctrl+S)" Click="SaveButton_Click" />
                         </ContextMenu>
                     </RichTextBox.ContextMenu>
                     <FlowDocument PagePadding="5">

@@ -1,4 +1,5 @@
-﻿using Microsoft.Web.WebView2.Core;
+﻿using Markdig;
+using Microsoft.Web.WebView2.Core;
 using Microsoft.Win32;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -38,9 +39,6 @@ namespace UruruNote.Views
 
         private bool _isLoading = false;
 
-        // Срабатывает при изменении текста в RichTextBox
-        // Срабатывает при изменении текста в RichTextBox
-        // Срабатывает при изменении текста в RichTextBox
         // Срабатывает при изменении текста в RichTextBox
         private string currentFilePath;
 
@@ -227,14 +225,19 @@ namespace UruruNote.Views
         {
             try
             {
-                var htmlContent = Markdig.Markdown.ToHtml(markdownText);
-                htmlContent = $"<head><meta charset=\"UTF-8\"></head>{htmlContent}"; // Добавляем метатег кодировки
-                return htmlContent;
+                // Создаем pipeline с нужными расширениями
+                var pipeline = new Markdig.MarkdownPipelineBuilder()
+                    .UseAdvancedExtensions() // Включаем все стандартные расширения
+                    .UseEmphasisExtras()     // Для поддержки выделенного текста
+                    .Build();
+
+                var htmlContent = Markdig.Markdown.ToHtml(markdownText, pipeline);
+                return $"<head><meta charset=\"UTF-8\"><style>mark {{ background-color: yellow; }}</style></head><body>{htmlContent}</body>";
             }
             catch (Exception ex)
             {
                 Debug.WriteLine($"Ошибка преобразования Markdown: {ex.Message}");
-                return string.Empty;
+                return $"<p>Ошибка преобразования: {ex.Message}</p>";
             }
         }
 
@@ -274,6 +277,7 @@ namespace UruruNote.Views
         public MarkdownViewer(FileItem file = null)
         {
             InitializeComponent();
+            DisableDefaultShortcuts();
             MarkdownPreview.CoreWebView2InitializationCompleted += MarkdownPreview_CoreWebView2InitializationCompleted;
 
             InitializeWebView2Async();
@@ -299,7 +303,7 @@ namespace UruruNote.Views
 
             MarkdownRichTextBox.Document.PageWidth = double.NaN;
             MarkdownRichTextBox.Document.PagePadding = new Thickness(0);
-            
+
             this.KeyDown += MarkdownViewer_KeyDown;
         }
 
@@ -443,75 +447,116 @@ namespace UruruNote.Views
                 markdownViewer.ApplyScale(scale);
             }
         }
+
         // Обработчик для "Жирного" текста
-        private void BoldMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            ApplyTextStyleToSelection("**");
-        }
+        private void BoldMenuItem_Click(object sender, RoutedEventArgs e) 
+            => ApplyTextStyleToSelection("**");
 
         // Обработчик для "Курсивного" текста
-        private void ItalicMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            ApplyTextStyleToSelection("_");
-        }
+        private void ItalicMenuItem_Click(object sender, RoutedEventArgs e) 
+            => ApplyTextStyleToSelection("_");
 
         // Обработчик для "Зачеркнутого" текста
-        private void StrikethroughMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            ApplyTextStyleToSelection("~~");
-        }
+        private void StrikethroughMenuItem_Click(object sender, RoutedEventArgs e) 
+            => ApplyTextStyleToSelection("~~");
 
         // Обработчик для "Выделенного" текста
-        private void HighlightMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            ApplyTextStyleToSelection("==");
-        }
+        private void HighlightMenuItem_Click(object sender, RoutedEventArgs e) 
+            => ApplyTextStyleToSelection("==");
 
         // Метод для применения стиля к выделенному тексту
         private void ApplyTextStyleToSelection(string markdownSyntax)
         {
-            // Получаем выделенный текст
             TextSelection selection = MarkdownRichTextBox.Selection;
-
             if (!selection.IsEmpty)
             {
-                // Применяем Markdown синтаксис
-                string selectedText = selection.Text;
-                string formattedText = markdownSyntax + selectedText + markdownSyntax;
+                string selectedText = selection.Text.Trim();
 
-                // Заменяем выделенный текст
-                TextRange range = new TextRange(selection.Start, selection.End);
-                range.Text = formattedText;
+                // Определяем, нужно ли добавлять или удалять форматирование
+                bool isAlreadyFormatted = selectedText.StartsWith(markdownSyntax) &&
+                                         selectedText.EndsWith(markdownSyntax);
+
+                // Для выделенного текста (==текст==) нужно проверить двойные символы
+                if (markdownSyntax == "==" && selectedText.Length >= 4)
+                {
+                    isAlreadyFormatted = selectedText.StartsWith("==") &&
+                                        selectedText.EndsWith("==");
+                }
+
+                if (isAlreadyFormatted)
+                {
+                    // Удаляем форматирование
+                    string unformattedText = selectedText.Substring(
+                        markdownSyntax.Length,
+                        selectedText.Length - 2 * markdownSyntax.Length
+                    );
+                    selection.Text = unformattedText;
+                }
+                else
+                {
+                    // Добавляем форматирование
+                    selection.Text = markdownSyntax + selectedText + markdownSyntax;
+
+                    // Перемещаем курсор после закрывающих символов
+                    MarkdownRichTextBox.CaretPosition = MarkdownRichTextBox.CaretPosition.GetPositionAtOffset(
+                        markdownSyntax.Length,
+                        LogicalDirection.Forward
+                    );
+                }
             }
         }
 
         // Обработчик для преобразования клавиши Tab в абзац (4 пробела)
         private void MarkdownRichTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
         {
+            // Обработка Tab
             if (e.Key == Key.Tab)
             {
-                // Получаем текущую позицию курсора в RichTextBox
-                TextSelection selection = MarkdownRichTextBox.Selection;
-
-                if (selection.IsEmpty)
-                {
-                    // Если ничего не выделено, вставляем 4 пробела на месте курсора
-                    var caretPosition = MarkdownRichTextBox.CaretPosition;
-
-                    // Вставляем 4 пробела в текущее положение курсора
-                    caretPosition.InsertTextInRun("    ");
-                }
-                else
-                {
-                    // Если текст выделен, добавляем 4 пробела в начало выделенного текста
-                    selection.Text = "    " + selection.Text;
-                }
-
-                // Останавливаем обработку клавиши Tab
+                HandleTabKey();
                 e.Handled = true;
+                return;
             }
 
+            // Проверяем Ctrl + ...
+            if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+            {
+                switch (e.Key)
+                {
+                    case Key.B:
+                        ApplyTextStyleToSelection("**");
+                        e.Handled = true;
+                        break;
+                    case Key.I:
+                        ApplyTextStyleToSelection("_");
+                        e.Handled = true;
+                        break;
+                    case Key.K: // Ctrl+K для зачеркнутого
+                        ApplyTextStyleToSelection("~~");
+                        e.Handled = true;
+                        break;
+                    case Key.H: // Ctrl+H для выделенного
+                        ApplyTextStyleToSelection("==");
+                        e.Handled = true;
+                        break;
+                    case Key.S:
+                        SaveFile();
+                        e.Handled = true;
+                        break;
+                }
+            }
+        }
 
+        private void HandleTabKey()
+        {
+            TextSelection selection = MarkdownRichTextBox.Selection;
+            if (selection.IsEmpty)
+            {
+                MarkdownRichTextBox.CaretPosition.InsertTextInRun("    ");
+            }
+            else
+            {
+                selection.Text = "    " + selection.Text;
+            }
         }
 
         private void MarkdownRichTextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -525,6 +570,30 @@ namespace UruruNote.Views
         }
 
         private double _fontSize;
+
+        private void DisableDefaultShortcuts()
+        {
+            // Отключаем стандартные команды редактирования
+            var commands = new[]
+            {
+        ApplicationCommands.Copy,
+        ApplicationCommands.Cut,
+        ApplicationCommands.Paste,
+        ApplicationCommands.Undo,
+        ApplicationCommands.Redo,
+        EditingCommands.ToggleBold,
+        EditingCommands.ToggleItalic,
+        EditingCommands.ToggleUnderline,
+        EditingCommands.IncreaseFontSize,
+        EditingCommands.DecreaseFontSize
+    };
+
+            foreach (var command in commands)
+            {
+                var cb = new CommandBinding(command, (sender, e) => { e.Handled = true; });
+                MarkdownRichTextBox.CommandBindings.Add(cb);
+            }
+        }
 
     }
 }
