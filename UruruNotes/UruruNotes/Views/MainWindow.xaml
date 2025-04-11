@@ -180,7 +180,7 @@
                             <ScrollViewer Grid.Row="0" Background="#FFF6F6F6" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Margin="3,0,3,3">
                                 <StackPanel>
                                     <!-- Первый TreeView для папок -->
-                                    <TreeView ItemsSource="{Binding Folders}" Margin="10,10,10,10"
+                                    <TreeView x:Name="FoldersTreeView" ItemsSource="{Binding Folders}" Margin="10,10,10,10"
                                             SelectedItemChanged="TreeView_SelectedItemChanged"
                                             PreviewMouseLeftButtonDown="TreeView_PreviewMouseLeftButtonDown"
                                             DragEnter="TreeView_DragEnter"
@@ -202,7 +202,7 @@
                                             </HierarchicalDataTemplate>
                                         </TreeView.ItemTemplate>
                                     </TreeView>
-                                    <TreeView ItemsSource="{Binding Files}" SelectedItemChanged="TreeView_SelectedItemChanged"
+                                    <TreeView x:Name="FilesTreeView" ItemsSource="{Binding Files}" SelectedItemChanged="TreeView_SelectedItemChanged"
                                                 Margin="10,10,10,10" PreviewMouseLeftButtonDown="TreeView_PreviewMouseLeftButtonDown"
                                                 DragEnter="TreeView_DragEnter"
                                                 Drop="TreeView_Drop"

@@ -945,10 +945,6 @@ namespace UruruNote.ViewsModels
         }
 
         // Логика удаления папки
-        // Логика удаления папки
-        // Логика удаления папки
-        // Логика удаления папки
-        // Логика удаления папки
         public void DeleteFolder(FolderItem folderItem)
         {
             if (folderItem != null)

@@ -12,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using UruruNotes.Models;
+using UruruNotes.Views;
 
 
 namespace UruruNote.Views
@@ -543,6 +544,17 @@ namespace UruruNote.Views
                         e.Handled = true;
                         break;
                 }
+            }
+        }
+
+        protected override void OnGotFocus(RoutedEventArgs e)
+        {
+            base.OnGotFocus(e);
+
+            if (_file != null)
+            {
+                var mainWindow = Window.GetWindow(this) as MainWindow;
+                mainWindow?.SelectFileInTree(_file);
             }
         }
 
