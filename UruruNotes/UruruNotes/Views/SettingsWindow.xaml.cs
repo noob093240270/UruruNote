@@ -213,7 +213,7 @@ namespace UruruNotes.ViewsModels
 
                 if (_previousFontSize != newSize)
                 {
-                    MessageBox.Show($"Установлен размер шрифта: {newSize}", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
+                    //MessageBox.Show($"Установлен размер шрифта: {newSize}", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
 
                     _previousFontSize = newSize;
                     _markdownViewer?.UpdateFontSize(newSize);
