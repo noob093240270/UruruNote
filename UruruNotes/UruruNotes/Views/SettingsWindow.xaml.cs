@@ -11,10 +11,11 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using UruruNote.Views;
 using UruruNote.ViewsModels;
+using UruruNote.Views;
 using System.Diagnostics;
 using System.Windows.Threading;
+
 
 namespace UruruNotes.ViewsModels
 {
@@ -31,6 +32,7 @@ namespace UruruNotes.ViewsModels
         private double? _previousScale;
         private MainViewModel _mainViewModel;
         private CalendarPage _calendarPage;
+        private ThemeOption _previousTheme;
         internal SettingsWindow(MainViewModel mainViewModel, MarkdownViewer markdownViewer = null, CalendarPage calendarPage = null)
         {
             InitializeComponent();
@@ -52,6 +54,8 @@ namespace UruruNotes.ViewsModels
                     ScaleComboBox.SelectionChanged -= ScaleComboBox_SelectionChanged;
                     ScaleComboBox.SelectionChanged += ScaleComboBox_SelectionChanged;
                     ScaleComboBox.SelectedItem = _mainViewModel.SelectedScaleOption;
+                    ThemeComboBox.SelectionChanged -= ThemeComboBox_SelectionChanged;
+                    ThemeComboBox.SelectionChanged += ThemeComboBox_SelectionChanged;
                     _mainViewModel.UpdateScale();
                     Dispatcher.Invoke(() =>
                     {
@@ -69,8 +73,46 @@ namespace UruruNotes.ViewsModels
             // Удаляем подписки
             FontSizeComboBox.SelectionChanged -= FontSizeComboBox_SelectionChanged;
             ScaleComboBox.SelectionChanged -= ScaleComboBox_SelectionChanged;
+            ThemeComboBox.SelectionChanged -= ThemeComboBox_SelectionChanged;
+        }
+        private void ThemeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var comboBox = sender as ComboBox;
+            if (comboBox == null || comboBox.SelectedItem == null || !_isInitializedF) return;
+
+            var selectedTheme = comboBox.SelectedItem as ThemeOption;
+            if (selectedTheme != null)
+            {
+                if (_previousTheme != null && _previousTheme != selectedTheme)
+                {
+                    UpdateTheme(selectedTheme);
+                }
+                else if (_previousTheme == null)
+                {
+                    _previousTheme = selectedTheme;
+                }
+            }
         }
 
+        private void UpdateTheme(ThemeOption newTheme)
+        {
+            if (_isUpdatingFontSize) return; // Используем _isUpdatingFontSize как общий флаг
+            try
+            {
+                _isUpdatingFontSize = true;
+
+                if (_previousTheme != newTheme)
+                {
+                    MessageBox.Show($"Установлена тема: {newTheme.DisplayName}", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
+                    _previousTheme = newTheme;
+                    _mainViewModel.SelectedTheme = newTheme;
+                }
+            }
+            finally
+            {
+                _isUpdatingFontSize = false;
+            }
+            }
         private void FontSizeComboBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             // Разрешаем только цифры при ручном вводе шрифта
