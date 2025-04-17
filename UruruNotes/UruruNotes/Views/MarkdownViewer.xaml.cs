@@ -137,9 +137,34 @@ namespace UruruNote.Views
                 if (File.Exists(filePath))
                 {
                     currentFilePath = filePath;
+
+                    // Загружаем текст
                     string markdownText = File.ReadAllText(filePath);
+
+                    // Чистим весь документ
                     MarkdownRichTextBox.Document.Blocks.Clear();
-                    MarkdownRichTextBox.AppendText(markdownText);
+
+                    // Создаём FlowDocument без лишних отступов
+                    FlowDocument doc = new FlowDocument();
+                    doc.PagePadding = new Thickness(0); // убираем внешние отступы документа
+                    doc.Blocks.Clear();
+
+                    // Разбиваем текст на строки и добавляем по абзацу
+                    foreach (string line in markdownText.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None))
+                    {
+                        var para = new Paragraph(new Run(line))
+                        {
+                            Margin = new Thickness(0), // убираем отступы у абзаца
+                            Padding = new Thickness(0),
+                            FontSize = MarkdownRichTextBox.FontSize,
+                            TextAlignment = TextAlignment.Left
+                        };
+                        doc.Blocks.Add(para);
+                    }
+
+                    MarkdownRichTextBox.Document = doc;
+
+                    // Обновляем HTML-просмотр
                     string htmlContent = ConvertMarkdownToHtml(markdownText);
                     if (MarkdownPreview != null)
                     {
@@ -157,14 +182,74 @@ namespace UruruNote.Views
             }
         }
 
+
+        private double _editingScrollViewerVerticalOffset = 0;
+
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (TabControl.SelectedIndex == 1) // Вкладка "Предпросмотр"
+            if (TabControl.SelectedItem is TabItem selectedTab)
             {
-                Debug.WriteLine("Переключились на вкладку 'Предпросмотр'");
-                UpdatePreview(); // Обновляем предпросмотр
+                if (selectedTab.Header.ToString() == "Предпросмотр")
+                {
+                    // Сохраняем позицию скролла (возможно, для WebView2, если он скроллируемый)
+                    // Здесь логика может отличаться в зависимости от того, как скроллируется WebView2
+                }
+                else if (selectedTab.Header.ToString() == "Редактирование")
+                {
+                    // Получаем RichTextBox
+                    RichTextBox textBox = FindVisualChild<RichTextBox>(selectedTab);
+                    if (textBox != null)
+                    {
+                        // Получаем ScrollViewer внутри RichTextBox
+                        ScrollViewer editingScrollViewer = FindVisualChild<ScrollViewer>(textBox);
+                        if (editingScrollViewer != null)
+                        {
+                            // Восстанавливаем вертикальную позицию скролла
+                            SetVerticalOffset(editingScrollViewer, _editingScrollViewerVerticalOffset);
+                            editingScrollViewer.ScrollToHorizontalOffset(0);
+                        }
+                    }
+                }
             }
         }
+
+        private double GetVerticalOffset(ScrollViewer scrollViewer)
+        {
+            if (scrollViewer != null)
+            {
+                return scrollViewer.VerticalOffset;
+            }
+            return 0;
+        }
+
+        private void SetVerticalOffset(ScrollViewer scrollViewer, double offset)
+        {
+            if (scrollViewer != null)
+            {
+                scrollViewer.ScrollToVerticalOffset(offset);
+            }
+        }
+
+        // Вспомогательный метод для поиска Visual Child определенного типа
+        private static T FindVisualChild<T>(DependencyObject parent) where T : DependencyObject
+        {
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
+            {
+                DependencyObject child = VisualTreeHelper.GetChild(parent, i);
+                if (child is T)
+                {
+                    return (T)child;
+                }
+                T grandchild = FindVisualChild<T>(child);
+                if (grandchild != null)
+                {
+                    return grandchild;
+                }
+            }
+            return null;
+        }
+
+
 
         private void MarkdownPreview_CoreWebView2InitializationCompleted(object sender, CoreWebView2InitializationCompletedEventArgs e)
         {
@@ -226,19 +311,27 @@ namespace UruruNote.Views
         {
             try
             {
+                if (string.IsNullOrEmpty(markdownText))
+                {
+                    return "<head><meta charset=\"UTF-8\"><style>mark { background-color: yellow; }</style></head><body></body>";
+                }
+
+                // Заменяем одиночные переводы строк на двойные перед преобразованием в HTML
+                string processedMarkdown = markdownText.Replace("\r\n", "\r\n\r\n").Replace("\n", "\n\n");
+
                 // Создаем pipeline с нужными расширениями
                 var pipeline = new Markdig.MarkdownPipelineBuilder()
                     .UseAdvancedExtensions() // Включаем все стандартные расширения
                     .UseEmphasisExtras()     // Для поддержки выделенного текста
                     .Build();
 
-                var htmlContent = Markdig.Markdown.ToHtml(markdownText, pipeline);
+                var htmlContent = Markdig.Markdown.ToHtml(processedMarkdown, pipeline);
                 return $"<head><meta charset=\"UTF-8\"><style>mark {{ background-color: yellow; }}</style></head><body>{htmlContent}</body>";
             }
             catch (Exception ex)
             {
                 Debug.WriteLine($"Ошибка преобразования Markdown: {ex.Message}");
-                return $"<p>Ошибка преобразования: {ex.Message}</p>";
+                return $"<head><meta charset=\"UTF-8\"><style>mark {{ background-color: yellow; }}</style></head><body><p>Ошибка преобразования: {ex.Message}</p></body>";
             }
         }
 
@@ -335,16 +428,14 @@ namespace UruruNote.Views
                     if (block is Paragraph paragraph)
                     {
                         TextRange textRange = new TextRange(paragraph.ContentStart, paragraph.ContentEnd);
-                        string paragraphText = textRange.Text.TrimEnd(); // Убираем лишние пробелы в конце строки
+                        string paragraphText = textRange.Text.TrimEnd();
 
-                        if (!string.IsNullOrWhiteSpace(paragraphText))
-                        {
-                            textToSave.AppendLine(paragraphText);
-                            textToSave.AppendLine(); // Оставляем ОДИН пустой ряд между абзацами
-                        }
+                        textToSave.AppendLine(paragraphText); // сохраняем одну строку на абзац
                     }
                 }
-                File.WriteAllText(filePath, textToSave.ToString().TrimEnd(), Encoding.UTF8); // Убираем лишние пробелы и пустые строки в конце
+
+                // Сохраняем, убрав лишние пустые строки в конце
+                File.WriteAllText(filePath, textToSave.ToString().TrimEnd(), Encoding.UTF8);
                 MessageBox.Show("Файл успешно сохранен.");
             }
             else
@@ -354,20 +445,18 @@ namespace UruruNote.Views
         }
 
 
+
         private void LoadFileContent(string filePath)
         {
             if (File.Exists(filePath))
             {
-                string fileContent = File.ReadAllText(filePath, Encoding.UTF8);
-                MarkdownText = fileContent;
                 MarkdownRichTextBox.Document.Blocks.Clear();
-
-                var paragraphs = fileContent.Split(new[] { "\r\n\r\n", "\n\n" }, StringSplitOptions.None);
-                foreach (var para in paragraphs)
+                using (var reader = new StreamReader(filePath, Encoding.UTF8))
                 {
-                    if (!string.IsNullOrWhiteSpace(para)) // Пропускаем пустые строки
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
                     {
-                        var paragraph = new Paragraph(new Run(para.Trim()))
+                        var paragraph = new Paragraph(new Run(line))
                         {
                             FontSize = MarkdownRichTextBox.FontSize,
                             TextAlignment = TextAlignment.Left
@@ -465,6 +554,36 @@ namespace UruruNote.Views
         private void HighlightMenuItem_Click(object sender, RoutedEventArgs e) 
             => ApplyTextStyleToSelection("==");
 
+        private void Header1MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            ApplyMarkdownHeader("# ");
+        }
+
+        private void Header2MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            ApplyMarkdownHeader("## ");
+        }
+
+        private void Header3MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            ApplyMarkdownHeader("### ");    
+        }
+
+        private void ApplyMarkdownHeader(string prefix)
+        {
+            if (MarkdownRichTextBox.Selection != null)
+            {
+                string selectedText = MarkdownRichTextBox.Selection.Text;
+                string newText = prefix + selectedText;
+                MarkdownRichTextBox.Selection.Text = newText;
+
+                // Перемещаем курсор в конец добавленного текста
+                TextPointer caretPosition = MarkdownRichTextBox.Selection.End.GetInsertionPosition(LogicalDirection.Forward);
+                MarkdownRichTextBox.CaretPosition = caretPosition;
+                MarkdownRichTextBox.Selection.Select(caretPosition, caretPosition);
+            }
+        }
+
         // Метод для применения стиля к выделенному тексту
         private void ApplyTextStyleToSelection(string markdownSyntax)
         {
@@ -510,7 +629,31 @@ namespace UruruNote.Views
         // Обработчик для преобразования клавиши Tab в абзац (4 пробела)
         private void MarkdownRichTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            // Обработка Tab
+            // Обработка Enter
+            if (e.Key == Key.Enter)
+            {
+                var caretPosition = MarkdownRichTextBox.CaretPosition;
+
+                // Проверяем, что CaretPosition не null и что она внутри текста
+                if (caretPosition != null && caretPosition.Paragraph != null)
+                {
+                    caretPosition.InsertTextInRun("\r\n");
+                    e.Handled = true; // Предотвращаем дальнейшую обработку Enter по умолчанию
+
+                    // Перемещаем каретку на следующее место
+                    MarkdownRichTextBox.CaretPosition = caretPosition.GetPositionAtOffset(1, LogicalDirection.Forward);
+                }
+                else
+                {
+                    // Если CaretPosition или Paragraph null, можно сделать дополнительную обработку (например, добавить новый абзац)
+                    MessageBox.Show("Ошибка: курсор не находится в тексте.");
+                }
+
+                return;
+            }
+
+
+            // Обработка Tab (остается без изменений)
             if (e.Key == Key.Tab)
             {
                 HandleTabKey();
@@ -518,7 +661,7 @@ namespace UruruNote.Views
                 return;
             }
 
-            // Проверяем Ctrl + ...
+            // Обработка Ctrl + ... (остается без изменений)
             if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
             {
                 switch (e.Key)
