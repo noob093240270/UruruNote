@@ -33,7 +33,6 @@
              MinWidth="300"
              AcceptsReturn="True"
              AcceptsTab="True"
-             Margin="10"
              PreviewKeyDown="MarkdownRichTextBox_PreviewKeyDown"
              CaretBrush="#FF235C9A"
              SelectionBrush="#FF235C9A"
