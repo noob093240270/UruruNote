@@ -419,42 +419,51 @@ namespace UruruNotes.Views
         private void PerformSearch(string query)
         {
             var viewModel = DataContext as MainViewModel;
+            if (viewModel == null) return;
 
-            var foundFile = viewModel.Files.FirstOrDefault(file => file.FileName.Contains(query, StringComparison.OrdinalIgnoreCase));
+            // Ищем сначала в корневой папке, потом в подпапках
+            var foundFiles = new List<FileItem>();
 
-            if (foundFile != null)
+            // 1. Поиск в корневых файлах
+            var rootFiles = viewModel.Files
+                .Where(file => file.FileName.Contains(query, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+            foundFiles.AddRange(rootFiles);
+
+            // 2. Рекурсивный поиск в папках
+            foreach (var folder in viewModel.Folders)
             {
-                OpenFile(foundFile); return;
+                SearchInFolder(folder, query, foundFiles);
             }
 
-            string rootDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "MyFolders");
-            if (!Directory.Exists(rootDirectory))
+            // 3. Сортировка по длине имени (самые короткие сначала)
+            var sortedFiles = foundFiles
+                .OrderBy(f => f.FileName.Length)
+                .ThenBy(f => f.FilePath.Length)
+                .ToList();
+
+            if (sortedFiles.Any())
             {
-                MessageBox.Show("Файл не найден.");
-                return;
-            }
-
-            var allFiles = Directory.GetFiles(rootDirectory, "*", SearchOption.AllDirectories)
-                            .Where(path => Path.GetFileName(path).Contains(query, StringComparison.OrdinalIgnoreCase))
-                            .ToList();
-
-            if (allFiles.Any())
-            {
-                string foundFilePath = allFiles.First();
-
-                var newFileItem = new FileItem
-                {
-                    FileName = Path.GetFileName(foundFilePath),
-                    FilePath = foundFilePath
-                };
-
-                OpenFile(newFileItem);
+                OpenFile(sortedFiles.First());
             }
             else
             {
-                MessageBox.Show("Файл не найден во всём каталоге.");
+                MessageBox.Show("Файл не найден.");
             }
+        }
 
+        // Рекурсивный поиск в папках
+        private void SearchInFolder(FolderItem folder, string query, List<FileItem> results)
+        {
+            // Добавляем файлы из текущей папки
+            results.AddRange(folder.Files
+                .Where(file => file.FileName.Contains(query, StringComparison.OrdinalIgnoreCase)));
+
+            // Рекурсивно проверяем подпапки
+            foreach (var subFolder in folder.SubFolders)
+            {
+                SearchInFolder(subFolder, query, results);
+            }
         }
 
         /// <summary>
