@@ -155,7 +155,7 @@ namespace UruruNote.ViewsModels
                     SettingsManager.SaveSettings(SelectedFontSize, value); // Сохраняем при каждом изменении
                     if (!_isInitializing)
                     {
-                        ShowScaleNotification(value);
+                        //ShowScaleNotification(value);
                         UpdateSelectedScaleOption();
                     }
                     ScaleDisplay = $"{value * 100:F0}%";
@@ -291,10 +291,7 @@ namespace UruruNote.ViewsModels
                 }
             }
         }
-        private void ShowScaleNotification(double scale)
-        {
-            MessageBox.Show($"Установлен масштаб: {scale * 100:F0}%", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
+
 
 
 
@@ -617,8 +614,6 @@ namespace UruruNote.ViewsModels
 
                 string filePath = Path.Combine(RootDirectory, fileName + ".md");
 
-                // Отладка: Показываем путь перед проверкой
-                MessageBox.Show($"Путь файла: {filePath}", "Отладка");
 
 
                 var markdownService = new MarkdownFileService();
@@ -636,8 +631,6 @@ namespace UruruNote.ViewsModels
                     });
                 });
 
-                // Уведомление пользователя
-                MessageBox.Show($"Файл успешно создан: {filePath}");
             };
 
             newFileWindow.ShowDialog();
@@ -674,7 +667,7 @@ namespace UruruNote.ViewsModels
                 FilePath = filePath
             });
 
-            MessageBox.Show($"Файл успешно создан: {filePath}");
+            //MessageBox.Show($"Файл успешно создан: {filePath}");
         }
 
 
@@ -721,7 +714,7 @@ namespace UruruNote.ViewsModels
             });
 
             // Уведомление пользователя
-            MessageBox.Show($"Файл успешно создан в папке: {selectedFolder.FilePath}");
+            //MessageBox.Show($"Файл успешно создан в папке: {selectedFolder.FilePath}");
         }
 
         private bool IsFileNameUnique(string fileName, FolderItem targetFolder = null)
@@ -914,11 +907,11 @@ namespace UruruNote.ViewsModels
         // Логика удаления файла
         public void DeleteFile(FileItem fileItem)
         {
-            MessageBox.Show("Метод DeleteFile вызван"); // Это должно появиться при попытке удалить файл
+            //MessageBox.Show("Метод DeleteFile вызван"); // Это должно появиться при попытке удалить файл
 
             if (fileItem != null)
             {
-                MessageBox.Show($"Удаление файла: {fileItem.FilePath}");
+                //MessageBox.Show($"Удаление файла: {fileItem.FilePath}");
 
                 Files.Remove(fileItem);
 
