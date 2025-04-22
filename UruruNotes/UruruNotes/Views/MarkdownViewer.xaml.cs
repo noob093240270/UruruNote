@@ -746,13 +746,12 @@ namespace UruruNote.Views
                 // Специальная проверка для выделения с двойными символами (например, "==")
                 if (markdownSyntax == "==" && selectedText.Length >= 4)
                 {
-                    isAlreadyFormatted = selectedText.StartsWith("==") &&
-                                        selectedText.EndsWith("==");
+                    isAlreadyFormatted = selectedText.StartsWith("==") && selectedText.EndsWith("==");
                 }
 
                 if (isAlreadyFormatted)
                 {
-                    // Удаляем форматирование
+                    // Убираем markdown-символы
                     string unformattedText = selectedText.Substring(
                         markdownSyntax.Length,
                         selectedText.Length - 2 * markdownSyntax.Length
