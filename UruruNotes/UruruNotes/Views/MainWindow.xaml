@@ -56,8 +56,8 @@
             </Grid.RowDefinitions>
 
             <!-- Панель инструментов -->
-            <Border Grid.ColumnSpan="2" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="3" Background="{DynamicResource BorderBrush}">
-                <Grid Background="{DynamicResource PanelBackground}">
+            <Border Grid.ColumnSpan="2" Style="{StaticResource TopPanelBorder}">
+                <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
                         <ColumnDefinition Width="Auto"/>
@@ -127,20 +127,20 @@
                                 <StackPanel>
                                     <!-- Первый TreeView для папок -->
                                     <TreeView ItemsSource="{Binding Folders}" Margin="10,10,10,10"
-                                              SelectedItemChanged="TreeView_SelectedItemChanged"
-                                              PreviewMouseLeftButtonDown="TreeView_PreviewMouseLeftButtonDown"
-                                              DragEnter="TreeView_DragEnter"
-                                              Drop="TreeView_Drop"
-                                              AllowDrop="True">
+          SelectedItemChanged="TreeView_SelectedItemChanged"
+          PreviewMouseLeftButtonDown="TreeView_PreviewMouseLeftButtonDown"
+          DragEnter="TreeView_DragEnter"
+          Drop="TreeView_Drop"
+          AllowDrop="True">
                                         <TreeView.ItemTemplate>
                                             <HierarchicalDataTemplate ItemsSource="{Binding CompositeSubItems}">
                                                 <StackPanel Orientation="Horizontal">
                                                     <TextBlock Text="{Binding FileName}" ToolTip="{Binding FilePath}">
                                                         <TextBlock.ContextMenu>
-                                                            <ContextMenu>
-                                                                <MenuItem Header="Добавить файл" Click="AddFileMenuItem_Click" />
-                                                                <MenuItem Header="Удалить папку" Click="DeleteFolderButton_Click" />
-                                                                <MenuItem Header="Перенести в..." Click="MoveToFolderMenuItem_Click" />
+                                                            <ContextMenu Style="{StaticResource FileContextMenuStyle}">
+                                                                <MenuItem Header="Добавить файл" Click="AddFileMenuItem_Click" Style="{StaticResource FileMenuItemStyle}"/>
+                                                                <MenuItem Header="Удалить папку" Click="DeleteFolderButton_Click" Style="{StaticResource FileMenuItemStyle}"/>
+                                                                <MenuItem Header="Перенести в..." Click="MoveToFolderMenuItem_Click" Style="{StaticResource FileMenuItemStyle}"/>
                                                             </ContextMenu>
                                                         </TextBlock.ContextMenu>
                                                     </TextBlock>
@@ -148,18 +148,20 @@
                                             </HierarchicalDataTemplate>
                                         </TreeView.ItemTemplate>
                                     </TreeView>
+
+                                    <!-- Второй TreeView для файлов -->
                                     <TreeView ItemsSource="{Binding Files}" SelectedItemChanged="TreeView_SelectedItemChanged"
-                                              Margin="10,10,10,10" PreviewMouseLeftButtonDown="TreeView_PreviewMouseLeftButtonDown"
-                                              DragEnter="TreeView_DragEnter"
-                                              Drop="TreeView_Drop"
-                                              AllowDrop="True">
+          Margin="10,10,10,10" PreviewMouseLeftButtonDown="TreeView_PreviewMouseLeftButtonDown"
+          DragEnter="TreeView_DragEnter"
+          Drop="TreeView_Drop"
+          AllowDrop="True">
                                         <TreeView.ItemTemplate>
                                             <HierarchicalDataTemplate ItemsSource="{Binding CompositeSubItems}">
                                                 <TextBlock Text="{Binding FileName}" ToolTip="{Binding FilePath}">
                                                     <TextBlock.ContextMenu>
-                                                        <ContextMenu>
-                                                            <MenuItem Header="Удалить файл" Click="DeleteFileButton_Click" CommandParameter="{Binding}" />
-                                                            <MenuItem Header="Перенести в..." Click="MoveToFolderMenuItem_Click" />
+                                                        <ContextMenu Style="{StaticResource FileContextMenuStyle}">
+                                                            <MenuItem Header="Удалить файл" Click="DeleteFileButton_Click" CommandParameter="{Binding}" Style="{StaticResource FileMenuItemStyle}"/>
+                                                            <MenuItem Header="Перенести в..." Click="MoveToFolderMenuItem_Click" Style="{StaticResource FileMenuItemStyle}"/>
                                                         </ContextMenu>
                                                     </TextBlock.ContextMenu>
                                                 </TextBlock>

@@ -155,7 +155,7 @@
                                FontSize="{Binding TitleFontSize}" 
                                FontWeight="Bold" 
                                Margin="{Binding MarginMiddle}" 
-                               Foreground="{DynamicResource TextForeground}"
+                               Foreground="{DynamicResource CalendarMonthForeground}"
                                FontFamily="{DynamicResource GlobalFont}"/>
                     <Button Content="⟩" 
                             Width="{Binding ButtonWidth}" 
@@ -232,7 +232,7 @@
                                     VerticalContentAlignment="Center"
                                     HorizontalContentAlignment="Center"
                                     Margin="{Binding DataContext.MarginButtons, RelativeSource={RelativeSource AncestorType=Window}}"
-                                    Foreground="{DynamicResource TextForeground}">
+                                   Foreground="{DynamicResource CalendarDayForeground}">
                                 <Button.Style>
                                     <Style TargetType="Button">
                                         <Setter Property="Background" Value="{DynamicResource WindowBackground}" />
@@ -240,20 +240,27 @@
                                             <DataTrigger Binding="{Binding IsCurrentMonth}" Value="True">
                                                 <Setter Property="Background" Value="{DynamicResource ControlBackground}" />
                                             </DataTrigger>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="{DynamicResource ButtonHoverBackground}" />
+                                            </Trigger>
                                         </Style.Triggers>
                                     </Style>
                                 </Button.Style>
                                 <Grid>
                                     <Grid.RowDefinitions>
+                                        
                                         <RowDefinition Height="*" />
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
+                                    
+                                    
+                                    
                                     <TextBlock Text="{Binding DisplayText}" 
                                                HorizontalAlignment="Center" 
                                                VerticalAlignment="Center" 
                                                Grid.Row="0" 
                                                FontSize="{Binding DataContext.DayFontSize, RelativeSource={RelativeSource AncestorType=Window}}"
-                                               Foreground="{DynamicResource TextForeground}"
+                                              Foreground="{DynamicResource CalendarDayForeground}"
                                                FontFamily="{DynamicResource GlobalFont}"/>
                                     <StackPanel Orientation="Horizontal" 
                                                 HorizontalAlignment="Center" 
@@ -361,7 +368,7 @@
                                  SelectionBrush="{DynamicResource TextBoxCaret}" 
                                  Background="{DynamicResource ControlBackground}"
                                  BorderBrush="{DynamicResource ControlBorder}"
-                                 Foreground="{DynamicResource TextForeground}"
+                                 Foreground="{DynamicResource InputText}"
                                  PreviewKeyDown="TextBox_PreviewKeyDown" 
                                  Loaded="TextBox_Loaded" />
                         <Button Content="Сохранить" 
@@ -394,7 +401,7 @@
                                  SelectionBrush="{DynamicResource TextBoxCaret}" 
                                  Background="{DynamicResource ControlBackground}"
                                  BorderBrush="{DynamicResource ControlBorder}"
-                                 Foreground="{DynamicResource TextForeground}"
+                                 Foreground="{DynamicResource  InputText}"
                                  PreviewKeyDown="TextBox_PreviewKeyDown" 
                                  Loaded="TextBox_Loaded" />
                         <TextBlock Text="Время напоминания:" 

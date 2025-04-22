@@ -9,7 +9,7 @@
              HorizontalAlignment="Stretch"
              VerticalAlignment="Stretch"
              Background="{DynamicResource WindowBackground}"
-             Foreground="{DynamicResource TextForeground}">
+             Foreground="{DynamicResource InputText}">
 
 
     <Grid>
@@ -24,9 +24,10 @@
                     Foreground="{DynamicResource TextForeground}">
             <TabControl.Resources>
                 <!-- Стиль для TabItem -->
+                <!-- Стиль для TabItem -->
                 <Style TargetType="TabItem">
-                    <Setter Property="Foreground" Value="{DynamicResource TextForeground}" />
-                    <Setter Property="Background" Value="{DynamicResource ControlBackground}" />
+                    <Setter Property="Foreground" Value="{DynamicResource PlaceholderForeground}" />
+                    <Setter Property="Background" Value="{DynamicResource PanelBackground}" />
                     <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
                     <Setter Property="Padding" Value="6,2" />
                     <Setter Property="FontFamily" Value="{DynamicResource GlobalFont}" />
@@ -49,8 +50,8 @@
                                 </Grid>
                                 <ControlTemplate.Triggers>
                                     <Trigger Property="IsSelected" Value="True">
-                                        <Setter TargetName="Border" Property="Background" Value="{DynamicResource ButtonBackground}" />
-                                        <Setter Property="Foreground" Value="{DynamicResource ButtonForeground}" />
+                                        <Setter TargetName="Border" Property="Background" Value="{DynamicResource ButtonActiveBackground}" />
+                                        <Setter Property="Foreground" Value="{DynamicResource ButtonActiveForeground}" />
                                     </Trigger>
                                     <Trigger Property="IsMouseOver" Value="True">
                                         <Setter TargetName="Border" Property="Background" Value="{DynamicResource ButtonBackground}" />
@@ -77,7 +78,7 @@
                              TextChanged="MarkdownRichTextBox_TextChanged"
                              Background="{DynamicResource ControlBackground}"
                              BorderBrush="{DynamicResource ControlBorder}"
-                             Foreground="{DynamicResource TextForeground}">
+                             Foreground="{DynamicResource InputText}">
                     <RichTextBox.ContextMenu>
                         <ContextMenu Background="{DynamicResource PanelBackground}"
                                      BorderBrush="{DynamicResource BorderBrush}"
@@ -130,16 +131,19 @@
             </TabItem>
         </TabControl>
 
-        <Button Grid.Row="1"
-                Content="Сохранить"
-                VerticalAlignment="Bottom"
-                HorizontalAlignment="Right"
-                Margin="10"
-                Click="SaveButton_Click"
-                Background="{DynamicResource ButtonBackground}"
-                BorderBrush="{DynamicResource ButtonBorder}"
-                Foreground="{DynamicResource ButtonForeground}"
-                FontFamily="{DynamicResource GlobalFont}"
-                FontSize="{DynamicResource GlobalFontSize}"/>
+        <Border Grid.Row="1" Style="{StaticResource BottomPanelBorder}">
+            <Grid>
+                <Button Content="Сохранить"
+                        VerticalAlignment="Bottom"
+                        HorizontalAlignment="Right"
+                        Margin="10"
+                        Click="SaveButton_Click"
+                        Background="{DynamicResource ButtonBackground}"
+                        BorderBrush="{DynamicResource ButtonBorder}"
+                        Foreground="{DynamicResource ButtonForeground}"
+                        FontFamily="{DynamicResource GlobalFont}"
+                        FontSize="{DynamicResource GlobalFontSize}"/>
+            </Grid>
+        </Border>
     </Grid>
 </UserControl>

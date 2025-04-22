@@ -31,8 +31,8 @@
         <!-- Настройки -->
         <StackPanel Grid.Row="1" VerticalAlignment="Top">
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                <TextBlock Text="Масштаб:" Width="120" VerticalAlignment="Center" Foreground="{DynamicResource TextForeground}"/>
-                <Button Content="-" Command="{Binding DecreaseScaleCommand}" Width="20" Height="21.9" ToolTip="Уменьшить масштаб"></Button>
+                <TextBlock Text="Масштаб:" Width="120" VerticalAlignment="Center" Foreground="{DynamicResource TextForeground}" />
+                <Button Content="-" Command="{Binding DecreaseScaleCommand}" Style="{StaticResource ScaleButtonStyle}" Width="20" Height="NaN" ToolTip="Уменьшить масштаб"/>
 
                 <ComboBox x:Name="ScaleComboBox" Width="159"
                           ItemsSource="{Binding ScaleOptions}"
@@ -41,15 +41,17 @@
                           Text="{Binding ScaleDisplay, Mode=TwoWay}"
                           SelectionChanged="ScaleComboBox_SelectionChanged"
                           PreviewTextInput="ScaleComboBox_PreviewTextInput"
-                          KeyDown="ScaleComboBox_KeyDown">
+                          KeyDown="ScaleComboBox_KeyDown"
+                          Background="{DynamicResource ControlBackground}">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding StringFormat={}{0:P0}}" 
-                                           Foreground="{DynamicResource TextForeground}" />
+                                           Foreground="{DynamicResource TextForeground}" 
+                                      />
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
-                <Button Content="+" Width="20" Height="21.9" Command="{Binding IncreaseScaleCommand}" ToolTip="Увеличить масштаб"></Button>
+                <Button Content="+" Width="20" Height="NaN" Command="{Binding IncreaseScaleCommand}" Style="{StaticResource ScaleButtonStyle}" ToolTip="Увеличить масштаб" RenderTransformOrigin="0.51,0.504"/>
             </StackPanel>
 
 
@@ -61,7 +63,8 @@
                           SelectedItem="{Binding SelectedTheme, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           IsEditable="False"
                           ToolTip="Выберите тему приложения"
-                          SelectionChanged="ThemeComboBox_SelectionChanged">
+                          SelectionChanged="ThemeComboBox_SelectionChanged"
+                          >
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding StringFormat={}{0:P0}}" 
@@ -84,8 +87,9 @@
                           IsTextSearchEnabled="False"
                           PreviewTextInput="FontSizeComboBox_PreviewTextInput" 
                           KeyDown="FontSizeComboBox_KeyDown" 
+                           Background="{DynamicResource ControlBackground}"
                            SelectionChanged="FontSizeComboBox_SelectionChanged">
-      
+
                 </ComboBox>
             </StackPanel>
         </StackPanel>
