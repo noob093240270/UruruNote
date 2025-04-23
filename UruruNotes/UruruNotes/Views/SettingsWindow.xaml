@@ -55,21 +55,7 @@
                 <ComboBox Width="200" ItemsSource="{Binding ThemeOptions}" SelectedItem="{Binding SelectedTheme}"/>
             </StackPanel>
 
-            <!-- Размер шрифта -->
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                <TextBlock Text="Размер шрифта:"  Width="120" VerticalAlignment="Center" />
-                <ComboBox x:Name="FontSizeComboBox" 
-                          Width="200"
-                          IsEditable="True"
-                          ItemsSource="{Binding FontSizeOptions}"
-                          SelectedItem="{Binding SelectedFontSize, UpdateSourceTrigger=PropertyChanged}"
-                          ToolTip="Выберите или введите размер шрифта"
-                          StaysOpenOnEdit="True"
-                          IsTextSearchEnabled="False"
-                          PreviewTextInput="FontSizeComboBox_PreviewTextInput" 
-                          KeyDown="FontSizeComboBox_KeyDown" 
-                           SelectionChanged="FontSizeComboBox_SelectionChanged"/>
-            </StackPanel>
+            
         </StackPanel>
     </Grid>
 </Window>

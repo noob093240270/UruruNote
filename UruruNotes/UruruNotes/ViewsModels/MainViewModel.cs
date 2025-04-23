@@ -18,6 +18,7 @@ using UruruNotes.Models;
 using UruruNotes.Views;
 using UruruNotes.ViewsModels;
 
+
 namespace UruruNote.ViewsModels
 {
     public class MainViewModel : INotifyPropertyChanged
@@ -494,7 +495,14 @@ namespace UruruNote.ViewsModels
             LoadFileStructure(); // Загружаем сразу и папки, и файлы в одной структуре
 
 
-
+            // Обработка глобального сохранения шрифта при изменении значения
+            PropertyChanged += (sender, e) =>
+            {
+                if (e.PropertyName == nameof(SelectedFontSize))
+                {
+                    SettingsManager.SaveSettings(SelectedFontSize, SelectedScaleOption);
+                }
+            };
         }
 
         #region CreateFileInFolder

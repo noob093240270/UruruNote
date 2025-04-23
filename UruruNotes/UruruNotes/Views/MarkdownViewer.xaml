@@ -6,9 +6,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
              mc:Ignorable="d">
-    <UserControl.Resources>
-        <sys:Double x:Key="NoteFontSize">15</sys:Double>
-    </UserControl.Resources>
+
 
     <Grid>
 
@@ -71,6 +69,8 @@
             </TabItem>
         </TabControl>
 
+
+
         <!-- Кнопка "Сохранить" -->
         <Button Grid.Row="1"
                 Content="Сохранить"
@@ -86,16 +86,15 @@
         <StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="10">
             <TextBlock Text="Размер шрифта:" VerticalAlignment="Bottom" HorizontalAlignment="Left" />
             <ComboBox x:Name="FontSizeComboBox"
-                      Width="100"
-                      IsEditable="True"
-                      ToolTip="Выберите или введите размер шрифта"
-                      StaysOpenOnEdit="True"
-                      IsTextSearchEnabled="False"
-                      PreviewTextInput="FontSizeComboBox_PreviewTextInput"
-                      KeyDown="FontSizeComboBox_KeyDown"
-                      SelectionChanged="FontSizeComboBox_SelectionChanged"
-                      SelectedItem="{Binding SelectedFontSize, UpdateSourceTrigger=PropertyChanged}">
-                <!-- Список доступных значений для размера шрифта -->
+          Width="100"
+          IsEditable="True"
+          ToolTip="Выберите или введите размер шрифта"
+          StaysOpenOnEdit="True"
+          IsTextSearchEnabled="False"
+          PreviewTextInput="FontSizeComboBox_PreviewTextInput"
+          KeyDown="FontSizeComboBox_KeyDown"
+          SelectionChanged="FontSizeComboBox_SelectionChanged"
+          SelectedItem="{Binding SelectedFontSize, UpdateSourceTrigger=PropertyChanged}">
                 <ComboBoxItem Content="10"/>
                 <ComboBoxItem Content="12"/>
                 <ComboBoxItem Content="14"/>
@@ -109,7 +108,9 @@
                 <ComboBoxItem Content="35"/>
             </ComboBox>
 
- 
+
+
+
         </StackPanel>
 
 
