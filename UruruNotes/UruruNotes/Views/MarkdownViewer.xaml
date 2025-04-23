@@ -28,10 +28,13 @@
 
 
                     <RichTextBox Name="MarkdownRichTextBox"
-             FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=UserControl}}"
+             VerticalScrollBarVisibility="Auto"
+             HorizontalScrollBarVisibility="Auto"
+             FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=OneWay}"
+             Margin="10"
+             MinWidth="300"
              AcceptsReturn="True"
              AcceptsTab="True"
-             Margin="10"
              PreviewKeyDown="MarkdownRichTextBox_PreviewKeyDown"
              CaretBrush="#FF235C9A"
              SelectionBrush="#FF235C9A"

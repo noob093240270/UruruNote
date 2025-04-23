@@ -36,7 +36,7 @@ namespace UruruNotes.ViewsModels
             InitializeComponent();
 
             DataContext = mainViewModel;
-            _markdownViewer = markdownViewer;
+            _markdownViewer = markdownViewer ?? new MarkdownViewer();
             _mainViewModel = mainViewModel;
             _calendarPage = calendarPage;
 
@@ -130,7 +130,18 @@ namespace UruruNotes.ViewsModels
             {
                 // Если значение корректное, применяем его
                 _mainViewModel.SelectedFontSize = size;
-                _markdownViewer.FontSize = size;
+
+                // Проверяем, что _markdownViewer существует
+                if (_markdownViewer != null)
+                {
+                    _markdownViewer.FontSize = size;
+                }
+                else
+                {
+                    // Логируем ошибку или выводим сообщение
+                    Debug.WriteLine("MarkdownViewer не инициализирован!");
+                }
+
                 UpdateFontSize(size);
             }
         }
@@ -213,7 +224,7 @@ namespace UruruNotes.ViewsModels
 
                 if (_previousFontSize != newSize)
                 {
-                    MessageBox.Show($"Установлен размер шрифта: {newSize}", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
+                    //MessageBox.Show($"Установлен размер шрифта: {newSize}", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
 
                     _previousFontSize = newSize;
                     _markdownViewer?.UpdateFontSize(newSize);
