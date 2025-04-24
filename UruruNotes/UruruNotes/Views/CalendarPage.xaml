@@ -232,7 +232,7 @@
                 <!-- Заголовок и кнопки -->
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="{Binding MarginTop}" Grid.Row="0">
                     <Button Content="⟨" Width="{Binding ButtonWidth}" Height="{Binding ButtonHeight}" Command="{Binding PreviousMonthCommand}" Background="White" BorderBrush="{x:Null}" Style="{StaticResource NoHoverButtonStyle}"/>
-                    <TextBlock Text="{Binding CurrentMonthYear}" FontSize="{Binding TitleFontSize}" FontWeight="Bold" Margin="{Binding MarginMiddle}" />
+                    <TextBlock Text="{Binding CurrentMonthYear}" FontSize="{Binding TitleFontSize}" FontWeight="Bold" Margin="{Binding MarginMiddle}" Foreground="{Binding ForeGroundFont}"/>
                     <Button Content="⟩" Width="{Binding ButtonWidth}" Height="{Binding ButtonHeight}" Command="{Binding NextMonthCommand}" Background="White" BorderBrush="{x:Null}" Style="{StaticResource NoHoverButtonStyle}"/>
                 </StackPanel>
 

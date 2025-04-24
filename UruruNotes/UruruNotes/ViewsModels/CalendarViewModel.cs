@@ -16,6 +16,8 @@ using System.IO;           // Из ветки
 using System.Windows;
 using Microsoft.Toolkit.Uwp.Notifications;
 using Microsoft.Win32.TaskScheduler;
+using System.Windows.Documents;
+using Newtonsoft.Json.Linq;
 
 namespace UruruNotes.ViewsModels
 {
@@ -214,6 +216,7 @@ namespace UruruNotes.ViewsModels
             }
         }
 
+
         private double _dayFontSize = 12;
         public double DayFontSize
         {
@@ -235,6 +238,8 @@ namespace UruruNotes.ViewsModels
                 OnPropertyChanged();
             }
         }
+
+        
 
         private double _noteFontSize = 14;
         public double NoteFontSize
@@ -434,6 +439,7 @@ namespace UruruNotes.ViewsModels
         {
             _currentDate = _currentDate.AddMonths(1);
             UpdateCalendar();
+
         }
 
         private void ShowTaskPanel(DayViewModel selectedDay)
@@ -523,7 +529,7 @@ namespace UruruNotes.ViewsModels
                     IsReminder = false
                 };
                 SaveNoteForDate(SelectedDate.Value, note);
-                MessageBox.Show("Заметка успешно сохранена!");
+                //MessageBox.Show("Заметка успешно сохранена!");
                 UpdateCalendar();
             }
             else
@@ -581,7 +587,7 @@ namespace UruruNotes.ViewsModels
                 // Планируем уведомление через планировщик задач
                 DateTime reminderDateTime = SelectedDate.Value.Date + SelectedReminderTime;
                 ScheduleReminderTask(reminderDateTime, NewTaskContentRemind);
-                MessageBox.Show("Напоминание успешно сохранено!");
+                //MessageBox.Show("Напоминание успешно сохранено!");
                 UpdateCalendar();
             }
             else
@@ -678,6 +684,20 @@ namespace UruruNotes.ViewsModels
 
             // Полный путь к файлу
             return Path.Combine(baseFolder, subFolder, fileName);
+        }
+        public string ForeGroundFont
+        {
+            get
+            {
+                if (_currentDate == DateTime.Today)
+                {
+                    return "Black";
+                }
+                else
+                {
+                    return "Gray";
+                }
+            }
         }
     }
 }
