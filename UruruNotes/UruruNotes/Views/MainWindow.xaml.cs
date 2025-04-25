@@ -327,12 +327,19 @@ namespace UruruNotes.Views
         {
             if (parent == null || itemToFind == null) return null;
 
+            // Принудительно генерируем контейнеры для видимых элементов
+            parent.UpdateLayout();
+
             foreach (var item in parent.Items)
             {
                 var container = parent.ItemContainerGenerator.ContainerFromItem(item) as TreeViewItem;
-                if (container == null) continue;
+                if (container == null)
+                {
+                    // Если контейнер не создан, пытаемся сгенерировать его
+                    container = parent.ItemContainerGenerator.ContainerFromIndex(parent.Items.IndexOf(item)) as TreeViewItem;
+                    if (container == null) continue;
+                }
 
-                // Подписываемся на события при первом обнаружении элемента
                 container.Expanded -= TreeViewItem_Expanded;
                 container.Expanded += TreeViewItem_Expanded;
                 container.Collapsed -= TreeViewItem_Collapsed;
@@ -340,21 +347,31 @@ namespace UruruNotes.Views
 
                 if (item == itemToFind)
                 {
-                    var parentItem = container.Parent as TreeViewItem;
-                    while (parentItem != null)
-                    {
-                        parentItem.IsExpanded = true;
-                        parentItem = parentItem.Parent as TreeViewItem;
-                    }
+                    // Разворачиваем всю цепочку родителей
+                    ExpandParentChain(container);
                     return container;
                 }
 
                 var found = FindTreeViewItem(container, itemToFind);
-                if (found != null) return found;
+                if (found != null)
+                {
+                    ExpandParentChain(container);
+                    return found;
+                }
             }
             return null;
         }
 
+        private void ExpandParentChain(TreeViewItem item)
+        {
+            var parent = ItemsControl.ItemsControlFromItemContainer(item) as TreeViewItem;
+            while (parent != null)
+            {
+                parent.IsExpanded = true;
+                parent.UpdateLayout(); // Важно для виртуализированных деревьев
+                parent = ItemsControl.ItemsControlFromItemContainer(parent) as TreeViewItem;
+            }
+        }
 
 
         private void SelectSingleFile(FileItem file)
@@ -409,7 +426,10 @@ namespace UruruNotes.Views
             var viewModel = DataContext as MainViewModel;
             if (viewModel == null) return;
 
-            // Ищем сначала в корневой папке, потом в подпапках
+            // Принудительно обновляем привязки TreeView
+            FoldersTreeView.Items.Refresh();
+            FilesTreeView.Items.Refresh();
+
             var foundFiles = new List<FileItem>();
 
             // 1. Поиск в корневых файлах
@@ -424,7 +444,7 @@ namespace UruruNotes.Views
                 SearchInFolder(folder, query, foundFiles);
             }
 
-            // 3. Сортировка по длине имени (самые короткие сначала)
+            // 3. Сортировка результатов
             var sortedFiles = foundFiles
                 .OrderBy(f => f.FileName.Length)
                 .ThenBy(f => f.FilePath.Length)
@@ -432,11 +452,114 @@ namespace UruruNotes.Views
 
             if (sortedFiles.Any())
             {
-                OpenFile(sortedFiles.First());
+                // Добавляем задержку для гарантированной генерации элементов
+                Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    OpenFileFromSearch(sortedFiles.First());
+                }), System.Windows.Threading.DispatcherPriority.Background);
             }
             else
             {
                 MessageBox.Show("Файл не найден.");
+            }
+        }
+
+        private void OpenFileFromSearch(FileItem file)
+        {
+            if (file == null) return;
+
+            try
+            {
+                _isProgrammaticSelection = true;
+                _lastSelectedFile = file;
+
+                // 1. Находим родительскую папку
+                var parentFolder = FindParentFolder(file);
+
+                // 2. Разворачиваем и выделяем
+                Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    if (parentFolder != null)
+                    {
+                        var folderItem = FindTreeViewItem(FoldersTreeView, parentFolder);
+                        if (folderItem != null)
+                        {
+                            folderItem.IsExpanded = true;
+                            folderItem.UpdateLayout();
+                        }
+                    }
+
+                    // Повторяем поиск после разворачивания
+                    var fileItem = FindTreeViewItem(FoldersTreeView, file) ??
+                                  FindTreeViewItem(FilesTreeView, file);
+
+                    if (fileItem != null)
+                    {
+                        fileItem.IsSelected = true;
+                        fileItem.BringIntoView();
+                        fileItem.Focus();
+                    }
+
+                    // 3. Открываем файл
+                    var markdownViewer = new MarkdownViewer(file);
+                    PageFrame.Content = markdownViewer;
+                    _lastOpenedFile = file;
+                }), System.Windows.Threading.DispatcherPriority.Background);
+            }
+            finally
+            {
+                _isProgrammaticSelection = false;
+            }
+        }
+
+        private FolderItem FindParentFolder(FileItem file)
+        {
+            var viewModel = DataContext as MainViewModel;
+            if (viewModel == null) return null;
+
+            // Проверяем корневые папки
+            foreach (var folder in viewModel.Folders)
+            {
+                var found = FindParentFolderRecursive(folder, file);
+                if (found != null) return found;
+            }
+            return null;
+        }
+
+        private FolderItem FindParentFolderRecursive(FolderItem folder, FileItem file)
+        {
+            // Проверяем файлы в текущей папке
+            if (folder.Files.Contains(file)) return folder;
+
+            // Рекурсивно проверяем подпапки
+            foreach (var subFolder in folder.SubFolders)
+            {
+                var found = FindParentFolderRecursive(subFolder, file);
+                if (found != null) return found;
+            }
+            return null;
+        }
+
+        private void ExpandParentFolders(FolderItem folder)
+        {
+            var treeViews = new[] { FoldersTreeView, FilesTreeView };
+
+            foreach (var treeView in treeViews)
+            {
+                if (treeView == null) continue;
+
+                var item = FindTreeViewItem(treeView, folder);
+                if (item != null)
+                {
+                    // Разворачиваем все родительские элементы
+                    var parent = ItemsControl.ItemsControlFromItemContainer(item) as TreeViewItem;
+                    while (parent != null)
+                    {
+                        parent.IsExpanded = true;
+                        parent = ItemsControl.ItemsControlFromItemContainer(parent) as TreeViewItem;
+                    }
+                    break;
+                }
             }
         }
 
@@ -489,6 +612,8 @@ namespace UruruNotes.Views
         private void RestoreSelection()
         {
             if (_lastSelectedFile == null) return;
+
+            Debug.WriteLine($"Восстанавливаем выделение для: {_lastSelectedFile.FileName}");
 
             // Используем Dispatcher для гарантированного выполнения в UI-потоке
             Dispatcher.BeginInvoke(new Action(() =>
