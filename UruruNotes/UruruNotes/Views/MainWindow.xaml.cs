@@ -299,6 +299,35 @@ namespace UruruNotes.Views
             UnselectAll(FilesTreeView);
         }
 
+        // Метод для выделения файла в дереве
+        public void SelectFileInTree(FileItem file)
+        {
+            if (file == null || file == _currentlyOpenedFile) return;
+
+            try
+            {
+                _isProgrammaticSelection = true;
+                _currentlyOpenedFile = file;
+
+                // Снимаем выделение со всех TreeView
+                UnselectAllTreeViews();
+
+                // Ищем и выделяем нужный файл
+                var itemToSelect = FindTreeViewItem(FoldersTreeView, file) ??
+                                 FindTreeViewItem(FilesTreeView, file);
+
+                if (itemToSelect != null)
+                {
+                    itemToSelect.IsSelected = true;
+                    itemToSelect.BringIntoView();
+                }
+            }
+            finally
+            {
+                _isProgrammaticSelection = false;
+            }
+        }
+
         /// <summary>
         /// Выделяет файл в дереве без вызова события SelectedItemChanged
         /// </summary>
