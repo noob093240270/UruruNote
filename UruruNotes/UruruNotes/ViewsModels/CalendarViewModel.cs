@@ -403,6 +403,7 @@ namespace UruruNotes.ViewsModels
             }
 
             OnPropertyChanged(nameof(CurrentMonthYear));
+            OnPropertyChanged(nameof(ForeGroundFont));
         }
 
         private void CheckForNoteAndReminder(DayViewModel dayViewModel)
@@ -689,14 +690,12 @@ namespace UruruNotes.ViewsModels
         {
             get
             {
-                if (_currentDate == DateTime.Today)
+                if (_currentDate.Equals(DateTime.Today))
                 {
                     return "Black";
                 }
-                else
-                {
-                    return "Gray";
-                }
+                return "Gray";
+                
             }
         }
     }
