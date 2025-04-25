@@ -16,7 +16,7 @@ namespace UruruNotes.Models
         public FolderItem ParentFolder { get; set; }  // Ссылка на родительскую папку
 
         // Метод для удаления файла
-        public void DeleteFile()
+        /*public void DeleteFile()
         {
             ParentFolder?.RemoveFile(this);  // Удаляем файл из родительской папки
             try
@@ -32,7 +32,7 @@ namespace UruruNotes.Models
                 // Логируем ошибку, если не удалось удалить файл
                 Console.WriteLine($"Ошибка при удалении файла: {ex.Message}");
             }
-        }
+        }*/
 
         public CompositeCollection CompositeSubItems
         {
