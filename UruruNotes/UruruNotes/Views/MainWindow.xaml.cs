@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
@@ -709,15 +710,40 @@ namespace UruruNotes.Views
 
         private void DeleteFileButton_Click(object sender, RoutedEventArgs e)
         {
-            // Получаем объект FileItem из CommandParameter
             var fileItem = (sender as MenuItem)?.CommandParameter as FileItem;
 
             if (fileItem != null)
             {
-                // Вызов метода удаления файла
                 if (DataContext is MainViewModel viewModel)
                 {
-                    viewModel.DeleteFile(fileItem); // Метод для удаления файла
+                    // Удаляем файл из коллекции папки
+                    var parentFolder = fileItem.ParentFolder;
+                    if (parentFolder != null)
+                    {
+                        parentFolder.Files.Remove(fileItem); // Удаляем файл из папки
+                    }
+
+                    // Вызов метода для удаления файла в модели данных
+                    viewModel.DeleteFile(fileItem); // Удаляем файл из основной коллекции
+
+                    // Перезагружаем данные
+                    viewModel.LoadFileStructure(); // Обновляем все данные, как при перезапуске
+
+                    // Принудительно обновляем UI
+                    Dispatcher.Invoke(() =>
+                    {
+                        // Обновляем коллекции в UI
+                        FoldersTreeView.ItemsSource = null;
+                        FilesTreeView.ItemsSource = null;
+
+                        // Устанавливаем новые источники данных
+                        FoldersTreeView.ItemsSource = viewModel.Folders;
+                        FilesTreeView.ItemsSource = viewModel.Files;
+
+                        // Принудительно обновляем отображение
+                        FoldersTreeView.Items.Refresh();
+                        FilesTreeView.Items.Refresh();
+                    });
                 }
             }
             else
@@ -725,6 +751,14 @@ namespace UruruNotes.Views
                 MessageBox.Show("Файл не найден");
             }
         }
+
+
+
+
+
+
+
+
 
 
         private Point _startPoint;

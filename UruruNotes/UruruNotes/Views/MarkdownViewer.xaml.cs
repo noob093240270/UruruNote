@@ -1,9 +1,11 @@
 ﻿using Markdig;
 using Microsoft.Web.WebView2.Core;
 using Microsoft.Win32;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -11,9 +13,11 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+using UruruNote.ViewsModels;
 using UruruNotes;
 using UruruNotes.Models;
 using UruruNotes.Views;
+
 
 
 namespace UruruNote.Views
@@ -394,6 +398,141 @@ namespace UruruNote.Views
             }
         }
 
+        // Пример ViewModel или кода UserControl
+        // Коллекция доступных размеров шрифта
+        private ObservableCollection<int> _fontSizeOptions;
+        public ObservableCollection<int> FontSizeOptions
+        {
+            get
+            {
+                if (_fontSizeOptions == null)
+                {
+                    _fontSizeOptions = new ObservableCollection<int> { 10, 12, 14, 16, 18, 20, 22, 24, 28, 30, 35 };
+                }
+                return _fontSizeOptions;
+            }
+        }
+
+        // Текущий выбранный размер шрифта
+        private int _selectedFontSize;
+
+        public int SelectedFontSize
+        {
+            get { return _selectedFontSize; }
+            set
+            {
+                if (_selectedFontSize != value)
+                {
+                    _selectedFontSize = value;
+                    UpdateFontSize(value); // Обновляем размер шрифта
+                                           // Сохраняем новый размер шрифта в настройки
+                    SettingsManager.SaveSettings(_selectedFontSize, SettingsManager.LoadScale());
+                }
+            }
+        }
+
+
+
+        private void ApplyFontSizeButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (double.TryParse(FontSizeComboBox.Text, out double fontSize))
+            {
+                MarkdownRichTextBox.FontSize = fontSize;
+            }
+            else
+            {
+                MessageBox.Show("Введите корректный размер шрифта.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+
+
+
+        private bool _isUpdatingFontSize = false;
+
+        // Обработчик для текстового ввода в поле выбора размера шрифта
+        private void FontSizeComboBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            // Разрешаем только цифры при ручном вводе шрифта
+            if (!char.IsDigit(e.Text, 0))
+            {
+                e.Handled = true;
+                return;
+            }
+
+            var comboBox = sender as ComboBox;
+            if (comboBox == null) return;
+
+            string currentText = comboBox.Text + e.Text;
+            if (currentText.Length > 2) // Ограничение по длине ввода
+            {
+                e.Handled = true;
+            }
+
+
+
+        }
+
+
+        // Обработка ввода размера шрифта при нажатии Enter
+        private void ProcessFontSizeInput(ComboBox comboBox)
+        {
+            string currentText = comboBox.Text;
+
+            // Проверяем, является ли ввод числом
+            if (!int.TryParse(currentText, out int size))
+            {
+                ShowErrorMessage("Пожалуйста, введите числовое значение.");
+                comboBox.Text = "";
+                return;
+            }
+
+            // Проверяем диапазон (от 10 до 35)
+            if (size < 10 || size > 35)
+            {
+                ShowErrorMessage("Размер шрифта должен быть в диапазоне от 10 до 35.");
+                comboBox.Text = "";
+            }
+            else
+            {
+                // Если значение корректное, применяем его
+                SelectedFontSize = size;
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+        // Отображение сообщения об ошибке
+        private void ShowErrorMessage(string message)
+        {
+            MessageBox.Show(message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         public MarkdownViewer(FileItem file = null)
         {
             InitializeComponent();
@@ -417,7 +556,17 @@ namespace UruruNote.Views
                 LoadFileContent(file.FilePath);
             }
 
-            // Синхронизация с глобальными настройками
+            // ⬇️ 1. Загружаем сохранённый шрифт
+            int savedFontSize = SettingsManager.LoadFontSize();
+            SelectedFontSize = savedFontSize;
+
+            // ⬇️ 2. Применяем его к редактору
+            UpdateFontSize(savedFontSize);
+
+            // ⬇️ 3. Устанавливаем значение в ComboBox
+            FontSizeComboBox.Text = savedFontSize.ToString();
+
+            // Синхронизация с глобальными настройками (если они есть)
             if (Application.Current.Resources.Contains("GlobalFontSize"))
             {
                 UpdateFontSize((double)Application.Current.Resources["GlobalFontSize"]);
@@ -431,35 +580,107 @@ namespace UruruNote.Views
             MarkdownRichTextBox.Document.PageWidth = double.NaN;
             MarkdownRichTextBox.Document.PagePadding = new Thickness(0);
 
+            this.KeyDown += MarkdownViewer_KeyDown;
+
             // Обработчики событий
             KeyDown += MarkdownViewer_KeyDown;
 
-            // Подписка на глобальные изменения шрифта
+            SelectedFontSize = SettingsManager.LoadFontSize();
             App.FontSizeChanged += OnGlobalFontSizeChanged;
 
             Unloaded += (s, e) =>
             {
-                // 1. Останавливаем таймер
                 _previewTimer.Stop();
-
-                // 2. Отписываемся от глобальных событий
                 App.FontSizeChanged -= OnGlobalFontSizeChanged;
             };
 
-            // Новый обработчик видимости
             IsVisibleChanged += (s, e) =>
             {
                 if (IsVisible)
                 {
-                    // Обновляем предпросмотр при повторном открытии
                     _ = UpdatePreviewAsync();
-
-                    // Синхронизируем настройки
                     UpdateFontSize((double)Application.Current.Resources["GlobalFontSize"]);
                     ApplyScale((double)Application.Current.Resources["GlobalScale"]);
                 }
             };
         }
+
+
+
+
+
+
+        // Обработчик события изменения выбранного шрифта
+        private void FontSizeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (FontSizeComboBox.SelectedItem is ComboBoxItem selectedItem)
+            {
+                if (int.TryParse(selectedItem.Content.ToString(), out int newFontSize))
+                {
+                    SelectedFontSize = newFontSize; // Устанавливаем новый размер шрифта
+                }
+            }
+
+
+            UpdateFontSize(SelectedFontSize);
+        }
+
+        // Обработчик для клавиши Enter в ComboBox
+        private void FontSizeComboBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                if (int.TryParse(FontSizeComboBox.Text, out int newFontSize))
+                {
+                    SelectedFontSize = newFontSize; // Устанавливаем новый размер шрифта
+                    UpdateFontSize(SelectedFontSize);
+                }
+            }
+        }
+
+        // Обновление размера шрифта на элементе управления (например, RichTextBox)
+        private int? _previousFontSize;
+        private bool _isInitializedF = false;
+        private MarkdownViewer _markdownViewer;
+        private MainViewModel _mainViewModel;
+        private void UpdateFontSize(int newSize)
+        {
+            MarkdownRichTextBox.FontSize = newSize;
+            if (_isUpdatingFontSize) return;
+
+            try
+            {
+                _isUpdatingFontSize = true;
+
+                if (_previousFontSize != newSize)
+                {
+
+                    _previousFontSize = newSize;
+                    _markdownViewer?.UpdateFontSize(newSize);  // Обновление шрифта в markdownViewer
+                }
+            }
+            finally
+            {
+                _isUpdatingFontSize = false;
+            }
+            // Обновляем глобальный размер шрифта
+            App.UpdateGlobalFontSize(newSize);
+
+
+        }
+
+
+
+
+        
+
+
+
+
+
+
+
+
 
         private void OnGlobalFontSizeChanged(object sender, EventArgs e)
         {
@@ -686,28 +907,28 @@ namespace UruruNote.Views
             }
         }
 
+
         // Метод для применения стиля к выделенному тексту
         private void ApplyTextStyleToSelection(string markdownSyntax)
         {
             TextSelection selection = MarkdownRichTextBox.Selection;
+
             if (!selection.IsEmpty)
             {
-                string selectedText = selection.Text.Trim();
+                string selectedText = selection.Text;
 
-                // Определяем, нужно ли добавлять или удалять форматирование
-                bool isAlreadyFormatted = selectedText.StartsWith(markdownSyntax) &&
-                                         selectedText.EndsWith(markdownSyntax);
+                // Проверка, есть ли уже обёртка нужным синтаксисом
+                bool isAlreadyFormatted = selectedText.StartsWith(markdownSyntax) && selectedText.EndsWith(markdownSyntax);
 
-                // Для выделенного текста (==текст==) нужно проверить двойные символы
+                // Специальная проверка для выделения с двойными символами (например, "==")
                 if (markdownSyntax == "==" && selectedText.Length >= 4)
                 {
-                    isAlreadyFormatted = selectedText.StartsWith("==") &&
-                                        selectedText.EndsWith("==");
+                    isAlreadyFormatted = selectedText.StartsWith("==") && selectedText.EndsWith("==");
                 }
 
                 if (isAlreadyFormatted)
                 {
-                    // Удаляем форматирование
+                    // Убираем markdown-символы
                     string unformattedText = selectedText.Substring(
                         markdownSyntax.Length,
                         selectedText.Length - 2 * markdownSyntax.Length
@@ -716,17 +937,19 @@ namespace UruruNote.Views
                 }
                 else
                 {
-                    // Добавляем форматирование
+                    // Добавляем markdown-символы вокруг выделенного текста
                     selection.Text = markdownSyntax + selectedText + markdownSyntax;
 
-                    // Перемещаем курсор после закрывающих символов
-                    MarkdownRichTextBox.CaretPosition = MarkdownRichTextBox.CaretPosition.GetPositionAtOffset(
-                        markdownSyntax.Length,
-                        LogicalDirection.Forward
-                    );
+                    // Смещаем курсор после конца отформатированного текста
+                    TextPointer newCaretPosition = selection.End.GetPositionAtOffset(markdownSyntax.Length);
+                    if (newCaretPosition != null)
+                    {
+                        MarkdownRichTextBox.CaretPosition = newCaretPosition;
+                    }
                 }
             }
         }
+
 
         // Обработчик для преобразования клавиши Tab в абзац (4 пробела)
         private void MarkdownRichTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
@@ -792,6 +1015,17 @@ namespace UruruNote.Views
             }
         }
 
+        protected override void OnGotFocus(RoutedEventArgs e)
+        {
+            base.OnGotFocus(e);
+
+            if (_file != null)
+            {
+                var mainWindow = Window.GetWindow(this) as MainWindow;
+                mainWindow?.SelectFileInTree(_file);
+            }
+        }
+
 
         private void HandleTabKey()
         {
@@ -841,6 +1075,7 @@ namespace UruruNote.Views
                 MarkdownRichTextBox.CommandBindings.Add(cb);
             }
         }
+
 
     }
 }
