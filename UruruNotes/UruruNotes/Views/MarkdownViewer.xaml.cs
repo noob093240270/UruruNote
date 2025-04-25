@@ -792,16 +792,6 @@ namespace UruruNote.Views
             }
         }
 
-        protected override void OnGotFocus(RoutedEventArgs e)
-        {
-            base.OnGotFocus(e);
-
-            if (_file != null)
-            {
-                var mainWindow = Window.GetWindow(this) as MainWindow;
-                mainWindow?.SelectFileInTree(_file);
-            }
-        }
 
         private void HandleTabKey()
         {
