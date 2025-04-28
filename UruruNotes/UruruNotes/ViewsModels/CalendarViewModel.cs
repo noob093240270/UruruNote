@@ -30,6 +30,9 @@ namespace UruruNotes.ViewsModels
         private DateTime _currentDate;
         private bool _isTaskPanelVisible;
         private double _scale = 1.0;
+        
+        // enum для типов вкладок
+        public enum ViewType { Notes, Reminders }
 
         public ObservableCollection<DayViewModel> Days { get; private set; }
         public string CurrentMonthYear => $"{_currentDate:MMMM yyyy}";
@@ -54,6 +57,26 @@ namespace UruruNotes.ViewsModels
                 OnPropertyChanged();
             }
         }
+
+        /// Свойство для отслеживания активной вкладки
+        private ViewType _currentView = ViewType.Notes;
+        public ViewType CurrentView
+        {
+            get => _currentView;
+            set
+            {
+                _currentView = value;
+                OnPropertyChanged();
+            }
+        }
+        public ICommand SwitchViewCommand { get; }
+
+        /// <summary>
+        /// Метод для переключения вкладок
+        /// </summary>
+        /// <param name="viewType"></param>
+        private void SwitchView(string viewType) =>
+            CurrentView = (ViewType)Enum.Parse(typeof(ViewType), viewType);
 
         private string _newTaskContent;
         public string NewTaskContent
@@ -328,6 +351,8 @@ namespace UruruNotes.ViewsModels
 
             SelectedHour = 8;
             SelectedMinute = 0;
+
+            SwitchViewCommand = new RelayCommand<string>(SwitchView);
 
             UpdateCalendar();
             UpdateScaledProperties();
