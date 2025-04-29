@@ -6,11 +6,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
              mc:Ignorable="d">
-    <UserControl.Resources>
-        <sys:Double x:Key="NoteFontSize">15</sys:Double>
-    </UserControl.Resources>
+
 
     <Grid>
+
 
 
         <TabControl Name="TabControl" Width="Auto" SelectionChanged="TabControl_SelectionChanged">
@@ -24,6 +23,7 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
+
 
                     <RichTextBox Name="MarkdownRichTextBox"
              VerticalScrollBarVisibility="Auto"
@@ -69,6 +69,8 @@
             </TabItem>
         </TabControl>
 
+
+
         <!-- Кнопка "Сохранить" -->
         <Button Grid.Row="1"
                 Content="Сохранить"
@@ -79,5 +81,41 @@
                 Background="White"
                 BorderBrush="#FF235C9A"
                 FontFamily="{DynamicResource GlobalFont}" />
+
+        <!-- Размер шрифта -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="10">
+            <TextBlock Text="Размер шрифта:" VerticalAlignment="Bottom" HorizontalAlignment="Left" />
+            <ComboBox x:Name="FontSizeComboBox"
+          Width="100"
+          IsEditable="True"
+          ToolTip="Выберите или введите размер шрифта"
+          StaysOpenOnEdit="True"
+          IsTextSearchEnabled="False"
+          PreviewTextInput="FontSizeComboBox_PreviewTextInput"
+          KeyDown="FontSizeComboBox_KeyDown"
+          SelectionChanged="FontSizeComboBox_SelectionChanged"
+          SelectedItem="{Binding SelectedFontSize, UpdateSourceTrigger=PropertyChanged}">
+                <ComboBoxItem Content="10"/>
+                <ComboBoxItem Content="12"/>
+                <ComboBoxItem Content="14"/>
+                <ComboBoxItem Content="16"/>
+                <ComboBoxItem Content="18"/>
+                <ComboBoxItem Content="20"/>
+                <ComboBoxItem Content="22"/>
+                <ComboBoxItem Content="24"/>
+                <ComboBoxItem Content="28"/>
+                <ComboBoxItem Content="30"/>
+                <ComboBoxItem Content="35"/>
+            </ComboBox>
+
+
+
+
+        </StackPanel>
+
+
+
+
+
     </Grid>
 </UserControl>

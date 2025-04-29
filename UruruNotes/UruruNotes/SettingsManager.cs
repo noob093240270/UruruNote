@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using System.Xml;
 using Formatting = Newtonsoft.Json.Formatting;
 using UruruNotes.Properties;
+using UruruNotes;
 
 namespace UruruNotes
 {
@@ -98,5 +99,7 @@ namespace UruruNotes
             }
             return new Settings { FontSize = 15, Scale = 1.0 }; // Значения по умолчанию
         }
+
+
     }
 }

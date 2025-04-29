@@ -11,6 +11,8 @@ using UruruNotes.Views;
 using System.Diagnostics;
 using Microsoft.Win32.TaskScheduler;
 
+
+
 namespace UruruNotes
 {
     /// <summary>
@@ -19,6 +21,8 @@ namespace UruruNotes
     public partial class App : Application
     {
         public static event EventHandler FontSizeChanged;
+
+
 
         /// <summary>
         /// Метод для обновления глобального размера шрифта
@@ -151,6 +155,7 @@ namespace UruruNotes
             }
         }
                 
+
     }
 }
 
