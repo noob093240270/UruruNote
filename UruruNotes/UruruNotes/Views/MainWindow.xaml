@@ -79,7 +79,6 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
     </Window.Resources>
     <Window.Triggers>
         <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="ButtonClose">
@@ -107,41 +106,41 @@
             <RowDefinition Height="30" />
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-            <!-- Панель инструментов -->
-            <Border Grid.ColumnSpan="2" Style="{StaticResource TopPanelBorder}">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <StackPanel Orientation="Horizontal">
-                        <Button x:Name="ButtonOpen" Width="23" Height="23" Margin="3,0" Click="ToggleVisibilityButton_Click" Focusable="False" BorderThickness="0"
+        <!-- Панель инструментов -->
+        <Border Grid.ColumnSpan="2" Style="{StaticResource TopPanelBorder}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="ButtonOpen" Width="23" Height="23" Margin="3,0" Click="ToggleVisibilityButton_Click" Focusable="False" BorderThickness="0"
                                 HorizontalAlignment="Left" Visibility="Collapsed">
-                            <Button.Background>
-                                <ImageBrush ImageSource="pack://application:,,,/UruruNotes;component/Resources/treeview.png" />
-                            </Button.Background>
-                        </Button>
-                        <Button x:Name="ButtonClose" Width="23" Height="23" Margin="3,0" Click="ToggleVisibilityButton_Click" Focusable="False" BorderThickness="0"
+                        <Button.Background>
+                            <ImageBrush ImageSource="pack://application:,,,/UruruNotes;component/Resources/treeview.png" />
+                        </Button.Background>
+                    </Button>
+                    <Button x:Name="ButtonClose" Width="23" Height="23" Margin="3,0" Click="ToggleVisibilityButton_Click" Focusable="False" BorderThickness="0"
                                 HorizontalAlignment="Left">
-                            <Button.Background>
-                                <ImageBrush ImageSource="pack://application:,,,/UruruNotes;component/Resources/treeview.png" />
-                            </Button.Background>
-                        </Button>
-                        <Button x:Name="Сalendar" Width="23" Height="23" Margin="5,0" Command="{Binding OpenCalendarCommand}">
-                            <Button.BorderBrush>
-                                <ImageBrush/>
-                            </Button.BorderBrush>
-                            <Button.Background>
-                                <ImageBrush ImageSource="pack://application:,,,/UruruNotes;component/Resources/calendar.png" />
-                            </Button.Background>
-                        </Button>
-                        <Image Width="23" Height="23" Margin="5,0" Focusable="False" Source="pack://application:,,,/UruruNotes;component/Resources/magnifier.png"/>
-                        <TextBox x:Name="SearchTextBox" Width="180" Height="20" Margin="10,0,0,0" KeyDown="SearchTextBox_KeyDown" VerticalAlignment="Center" Style="{DynamicResource SearchTextBoxStyle}" />
-                    </StackPanel>
-                    <Image Source="pack://application:,,,/UruruNotes;component/Resources/settingsbutton.png" 
+                        <Button.Background>
+                            <ImageBrush ImageSource="pack://application:,,,/UruruNotes;component/Resources/treeview.png" />
+                        </Button.Background>
+                    </Button>
+                    <Button x:Name="Сalendar" Width="23" Height="23" Margin="5,0" Command="{Binding OpenCalendarCommand}">
+                        <Button.BorderBrush>
+                            <ImageBrush/>
+                        </Button.BorderBrush>
+                        <Button.Background>
+                            <ImageBrush ImageSource="pack://application:,,,/UruruNotes;component/Resources/calendar.png" />
+                        </Button.Background>
+                    </Button>
+                    <Image Width="23" Height="23" Margin="5,0" Focusable="False" Source="pack://application:,,,/UruruNotes;component/Resources/magnifier.png"/>
+                    <TextBox x:Name="SearchTextBox" Width="180" Height="20" Margin="10,0,0,0" KeyDown="SearchTextBox_KeyDown" VerticalAlignment="Center" Style="{DynamicResource SearchTextBoxStyle}" />
+                </StackPanel>
+                <Image Source="pack://application:,,,/UruruNotes;component/Resources/settingsbutton.png" 
                            Cursor="Hand" HorizontalAlignment="Right" ToolTip="Настройки" MouseUp="SettingsIcon_MouseUp" Grid.Column="1" VerticalAlignment="Top"/>
-                </Grid>
-            </Border>
+            </Grid>
+        </Border>
 
         <!-- Основная область -->
         <Grid Grid.Row="1" x:Name="MainGrid" Grid.ColumnSpan="2">
@@ -161,86 +160,85 @@
                     <WebBrowser Name="MarkdownPreview" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed"/>
                 </Grid>
             </Grid>
-                <!-- Левое меню -->
-                <Grid Grid.Column="0" Background="{DynamicResource MenuBackground}" x:Name="TreeViewGrid">
-                    <materialDesign:Card x:Name="LeftMenu" Width="200" UniformCornerRadius="0" VerticalAlignment="Stretch"
+            <!-- Левое меню -->
+            <Grid Grid.Column="0" Background="{DynamicResource MenuBackground}" x:Name="TreeViewGrid">
+                <materialDesign:Card x:Name="LeftMenu" Width="200" UniformCornerRadius="0" VerticalAlignment="Stretch"
                                         Background="{DynamicResource MenuBackground}">
-                        <Grid>
-                            <Grid.Background>
-                                <SolidColorBrush Color="{DynamicResource BorderBrushColor}" Opacity="1"/>
-                            </Grid.Background>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*" MinHeight="100"/>
-                                <RowDefinition Height="auto" />
-                            </Grid.RowDefinitions>
-                            <ScrollViewer Grid.Row="0" Background="{DynamicResource PanelBackground}" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Margin="3,0,3,3">
-                                <StackPanel>
-                                    <!-- Первый TreeView для папок -->
-                                    <TreeView ItemsSource="{Binding Folders}" Margin="10,10,10,10"
+                    <Grid>
+                        <Grid.Background>
+                            <SolidColorBrush Color="{DynamicResource BorderBrushColor}" Opacity="1"/>
+                        </Grid.Background>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" MinHeight="100"/>
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
+                        <ScrollViewer Grid.Row="0" Background="{DynamicResource PanelBackground}" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Margin="3,0,3,3">
+                            <StackPanel>
+                                <!-- Первый TreeView для папок -->
+                                <TreeView ItemsSource="{Binding Folders}" Margin="10,10,10,10"
                                           SelectedItemChanged="TreeView_SelectedItemChanged"
                                           PreviewMouseLeftButtonDown="TreeView_PreviewMouseLeftButtonDown"
                                           DragEnter="TreeView_DragEnter"
                                           Drop="TreeView_Drop"
                                           AllowDrop="True" Background="{DynamicResource MenuBackground}" BorderThickness="0">
-                                        <TreeView.ItemTemplate>
-                                            <HierarchicalDataTemplate ItemsSource="{Binding CompositeSubItems}">
-                                                <StackPanel Orientation="Horizontal" >
-                                                    <TextBlock Text="{Binding FileName}" ToolTip="{Binding FilePath}" Background="{DynamicResource MenuBackground}" >
-                                                        <TextBlock.ContextMenu>
-                                                            <ContextMenu Style="{StaticResource FileContextMenuStyle}">
-                                                                <MenuItem Header="Добавить файл" Click="AddFileMenuItem_Click" Style="{StaticResource FileMenuItemStyle}"/>
-                                                                <MenuItem Header="Удалить папку" Click="DeleteFolderButton_Click" CommandParameter="{Binding}" Style="{StaticResource FileMenuItemStyle}"/>
-                                                                <MenuItem Header="Перенести в..." Click="MoveToFolderMenuItem_Click" Style="{StaticResource FileMenuItemStyle}"/>
-                                                            </ContextMenu>
-                                                        </TextBlock.ContextMenu>
-                                                    </TextBlock>
-                                                </StackPanel>
-                                            </HierarchicalDataTemplate>
-                                        </TreeView.ItemTemplate>
-                                    </TreeView>
-
-                                    <!-- Второй TreeView для файлов -->
-                                    <TreeView x:Name="FilesTreeView" ItemsSource="{Binding Files}" SelectedItemChanged="TreeView_SelectedItemChanged"
-                                          Margin="10,10,10,10" PreviewMouseLeftButtonDown="TreeView_PreviewMouseLeftButtonDown"
-                                          DragEnter="TreeView_DragEnter"
-                                          Drop="TreeView_Drop"
-                                          AllowDrop="True" Background="{DynamicResource MenuBackground}" BorderThickness="0">
-                                        <TreeView.ItemTemplate>
-                                            <HierarchicalDataTemplate ItemsSource="{Binding CompositeSubItems}">
-                                                <TextBlock Text="{Binding FileName}" ToolTip="{Binding FilePath}"  Background="{DynamicResource MenuBackground}">
+                                    <TreeView.ItemTemplate>
+                                        <HierarchicalDataTemplate ItemsSource="{Binding CompositeSubItems}">
+                                            <StackPanel Orientation="Horizontal" >
+                                                <TextBlock Text="{Binding FileName}" ToolTip="{Binding FilePath}" Background="{DynamicResource MenuBackground}" >
                                                     <TextBlock.ContextMenu>
                                                         <ContextMenu Style="{StaticResource FileContextMenuStyle}">
-                                                            <MenuItem Header="Удалить файл" Click="DeleteFileButton_Click" CommandParameter="{Binding}" Style="{StaticResource FileMenuItemStyle}"/>
+                                                            <MenuItem Header="Добавить файл" Click="AddFileMenuItem_Click" Style="{StaticResource FileMenuItemStyle}"/>
+                                                            <MenuItem Header="Удалить папку" Click="DeleteFolderButton_Click" CommandParameter="{Binding}" Style="{StaticResource FileMenuItemStyle}"/>
                                                             <MenuItem Header="Перенести в..." Click="MoveToFolderMenuItem_Click" Style="{StaticResource FileMenuItemStyle}"/>
                                                         </ContextMenu>
                                                     </TextBlock.ContextMenu>
                                                 </TextBlock>
-                                            </HierarchicalDataTemplate>
-                                        </TreeView.ItemTemplate>
-                                    </TreeView>
-                                </StackPanel>
-                            </ScrollViewer>
-                            <Grid Grid.Row="1" Margin="0,1,0,3">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition />
-                                    <ColumnDefinition />
-                                </Grid.ColumnDefinitions>
-                                <StackPanel Grid.Column="0" HorizontalAlignment="Center">
-                                    <Button Content="Новый файл" Click="CreateNewFileButton_Click" Padding="3" Width="90"
-                                           Style="{StaticResource FolderFileButtonStyle}"/>
-                                </StackPanel>
-                                <StackPanel Grid.Column="1" HorizontalAlignment="Center">
-                                    <Button Click="CreateNewFolderButton_Click" Padding="3" Content="Новая папка" 
-                                            Width="90" Style="{StaticResource FolderFileButtonStyle}"/>
-                                </StackPanel>
-                            </Grid>
-                        </Grid>
-                    </materialDesign:Card>
-                </Grid>
+                                            </StackPanel>
+                                        </HierarchicalDataTemplate>
+                                    </TreeView.ItemTemplate>
+                                </TreeView>
 
-                <!-- Основная область для страниц -->
-                <Frame x:Name="PageFrame" NavigationUIVisibility="Hidden" Grid.Column="1" Background="{DynamicResource WindowBackground}" Navigated="PageFrame_Navigated" Grid.ColumnSpan="2"/>
+                                <!-- Второй TreeView для файлов -->
+                                <TreeView x:Name="FilesTreeView" ItemsSource="{Binding Files}" SelectedItemChanged="TreeView_SelectedItemChanged"
+                                          Margin="10,10,10,10" PreviewMouseLeftButtonDown="TreeView_PreviewMouseLeftButtonDown"
+                                          DragEnter="TreeView_DragEnter"
+                                          Drop="TreeView_Drop"
+                                          AllowDrop="True" Background="{DynamicResource MenuBackground}" BorderThickness="0">
+                                    <TreeView.ItemTemplate>
+                                        <HierarchicalDataTemplate ItemsSource="{Binding CompositeSubItems}">
+                                            <TextBlock Text="{Binding FileName}" ToolTip="{Binding FilePath}"  Background="{DynamicResource MenuBackground}">
+                                                <TextBlock.ContextMenu>
+                                                    <ContextMenu Style="{StaticResource FileContextMenuStyle}">
+                                                        <MenuItem Header="Удалить файл" Click="DeleteFileButton_Click" CommandParameter="{Binding}" Style="{StaticResource FileMenuItemStyle}"/>
+                                                        <MenuItem Header="Перенести в..." Click="MoveToFolderMenuItem_Click" Style="{StaticResource FileMenuItemStyle}"/>
+                                                    </ContextMenu>
+                                                </TextBlock.ContextMenu>
+                                            </TextBlock>
+                                        </HierarchicalDataTemplate>
+                                    </TreeView.ItemTemplate>
+                                </TreeView>
+                            </StackPanel>
+                        </ScrollViewer>
+                        <Grid Grid.Row="1" Margin="0,1,0,3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" HorizontalAlignment="Center">
+                                <Button Content="Новый файл" Click="CreateNewFileButton_Click" Padding="3" Width="90"
+                                           Style="{StaticResource FolderFileButtonStyle}"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" HorizontalAlignment="Center">
+                                <Button Click="CreateNewFolderButton_Click" Padding="3" Content="Новая папка" 
+                                            Width="90" Style="{StaticResource FolderFileButtonStyle}"/>
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
+                </materialDesign:Card>
             </Grid>
+
+            <!-- Основная область для страниц -->
+            <Frame x:Name="PageFrame" NavigationUIVisibility="Hidden" Grid.Column="1" Background="{DynamicResource WindowBackground}" Navigated="PageFrame_Navigated" Grid.ColumnSpan="2"/>
         </Grid>
     </Grid>
 </Window>
