@@ -26,6 +26,60 @@
                              From="0" To="200" 
                              Duration="0:0:0.5" />
         </Storyboard>
+
+        <Style x:Key="StyledButton" TargetType="Button">
+            <Setter Property="Padding" Value="6,3"/>
+            <Setter Property="Width" Value="130"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="#5C6D93"/>
+            <Setter Property="Background" Value="#F8F9FC"/>
+            <Setter Property="BorderBrush" Value="#C5CDE6"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#E3EAF8"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="#B0BADF"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#D6E0F5"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="#A1AAD3"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="MenuButtons" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="OverridesDefaultStyle" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
     </Window.Resources>
     <Window.Triggers>
         <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="ButtonClose">
@@ -39,22 +93,20 @@
         <SolidColorBrush Color="{DynamicResource TextForegroundColor}" Opacity="0.2"/>
     </Window.Foreground>
 
-    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-        <Grid>
-            <Grid.LayoutTransform>
-                <ScaleTransform ScaleX="{Binding Scale}" ScaleY="{Binding Scale}" />
-            </Grid.LayoutTransform>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <!-- Для TreeViewGrid -->
-                <ColumnDefinition Width="*"/>
-                <!-- Для PageFrame -->
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="30" />
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-
+    <Grid>
+        <Grid.LayoutTransform>
+            <ScaleTransform ScaleX="{Binding Scale}" ScaleY="{Binding Scale}" />
+        </Grid.LayoutTransform>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <!-- Для TreeViewGrid -->
+            <ColumnDefinition Width="*"/>
+            <!-- Для PageFrame -->
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30" />
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
             <!-- Панель инструментов -->
             <Border Grid.ColumnSpan="2" Style="{StaticResource TopPanelBorder}">
                 <Grid>
@@ -91,26 +143,24 @@
                 </Grid>
             </Border>
 
-            <!-- Основная область -->
-            <Grid Grid.Row="1" x:Name="MainGrid" Grid.ColumnSpan="2">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" MaxWidth="300" />
-                    <ColumnDefinition Width="181*" />
-                    <ColumnDefinition Width="19*"/>
-                </Grid.ColumnDefinitions>
+        <!-- Основная область -->
+        <Grid Grid.Row="1" x:Name="MainGrid" Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" MaxWidth="300" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
 
-                <!-- Правая область -->
-                <Grid Grid.Column="1" Grid.ColumnSpan="2">
-                    <!-- Панель с режимом редактирования и предпросмотра -->
-                    <Grid x:Name="EditorAndPreviewContainer">
-                        <!-- Режим редактирования (RichTextBox) -->
+            <!-- Правая область -->
+            <Grid Grid.Column="1">
+                <!-- Панель с режимом редактирования и предпросмотра -->
+                <Grid x:Name="EditorAndPreviewContainer">
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                         <RichTextBox Name="MarkdownRichTextBox" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Visible" />
+                    </ScrollViewer>
 
-                        <!-- Режим предпросмотра (WebBrowser) -->
-                        <WebBrowser Name="MarkdownPreview" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed"/>
-                    </Grid>
+                    <WebBrowser Name="MarkdownPreview" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed"/>
                 </Grid>
-
+            </Grid>
                 <!-- Левое меню -->
                 <Grid Grid.Column="0" Background="{DynamicResource MenuBackground}" x:Name="TreeViewGrid">
                     <materialDesign:Card x:Name="LeftMenu" Width="200" UniformCornerRadius="0" VerticalAlignment="Stretch"
@@ -139,7 +189,7 @@
                                                         <TextBlock.ContextMenu>
                                                             <ContextMenu Style="{StaticResource FileContextMenuStyle}">
                                                                 <MenuItem Header="Добавить файл" Click="AddFileMenuItem_Click" Style="{StaticResource FileMenuItemStyle}"/>
-                                                                <MenuItem Header="Удалить папку" Click="DeleteFolderButton_Click" Style="{StaticResource FileMenuItemStyle}"/>
+                                                                <MenuItem Header="Удалить папку" Click="DeleteFolderButton_Click" CommandParameter="{Binding}" Style="{StaticResource FileMenuItemStyle}"/>
                                                                 <MenuItem Header="Перенести в..." Click="MoveToFolderMenuItem_Click" Style="{StaticResource FileMenuItemStyle}"/>
                                                             </ContextMenu>
                                                         </TextBlock.ContextMenu>
@@ -150,7 +200,7 @@
                                     </TreeView>
 
                                     <!-- Второй TreeView для файлов -->
-                                    <TreeView ItemsSource="{Binding Files}" SelectedItemChanged="TreeView_SelectedItemChanged"
+                                    <TreeView x:Name="FilesTreeView" ItemsSource="{Binding Files}" SelectedItemChanged="TreeView_SelectedItemChanged"
                                           Margin="10,10,10,10" PreviewMouseLeftButtonDown="TreeView_PreviewMouseLeftButtonDown"
                                           DragEnter="TreeView_DragEnter"
                                           Drop="TreeView_Drop"
@@ -192,5 +242,5 @@
                 <Frame x:Name="PageFrame" NavigationUIVisibility="Hidden" Grid.Column="1" Background="{DynamicResource WindowBackground}" Navigated="PageFrame_Navigated" Grid.ColumnSpan="2"/>
             </Grid>
         </Grid>
-    </ScrollViewer>
+    </Grid>
 </Window>

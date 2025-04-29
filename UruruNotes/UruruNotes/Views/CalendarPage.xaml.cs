@@ -110,24 +110,19 @@ namespace UruruNotes
         {
             if (_isPanelVisible)
             {
-
                 BeginStoryboard((Storyboard)FindResource("ClosingRightMenu"));
                 ToggleButtonClose.Visibility = Visibility.Collapsed;
                 ToggleButtonOpen.Visibility = Visibility.Visible;
-                
-                //TaskPanelColumn.Width = new GridLength(0); // Закрываем шторку
             }
             else
             {
+                // Принудительно устанавливаем ширину перед анимацией
+                TaskPanel.Width = 400;
                 BeginStoryboard((Storyboard)FindResource("OpeningRightMenu"));
                 ToggleButtonClose.Visibility = Visibility.Visible;
                 ToggleButtonOpen.Visibility = Visibility.Collapsed;
-                
-                
-                //TaskPanelColumn.Width = GridLength.Auto; // Открываем шторку
             }
-
-            _isPanelVisible = !_isPanelVisible; // Меняем состояние
+            _isPanelVisible = !_isPanelVisible;
         }
 
         private void TextBox_Loaded(object sender, RoutedEventArgs e)

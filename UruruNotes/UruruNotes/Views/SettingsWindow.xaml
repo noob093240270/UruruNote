@@ -72,26 +72,7 @@
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
-            </StackPanel>
-
-            <!-- Размер шрифта -->
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                <TextBlock Text="Размер шрифта:"  Width="120" VerticalAlignment="Center" Foreground="{DynamicResource TextForeground}"/>
-                <ComboBox x:Name="FontSizeComboBox" 
-                          Width="200"
-                          IsEditable="True"
-                          ItemsSource="{Binding FontSizeOptions}"
-                          SelectedItem="{Binding SelectedFontSize, UpdateSourceTrigger=PropertyChanged}"
-                          ToolTip="Выберите или введите размер шрифта"
-                          StaysOpenOnEdit="True"
-                          IsTextSearchEnabled="False"
-                          PreviewTextInput="FontSizeComboBox_PreviewTextInput" 
-                          KeyDown="FontSizeComboBox_KeyDown" 
-                           Background="{DynamicResource ControlBackground}"
-                           SelectionChanged="FontSizeComboBox_SelectionChanged">
-
-                </ComboBox>
-            </StackPanel>
+            </StackPanel>    
         </StackPanel>
     </Grid>
 </Window>

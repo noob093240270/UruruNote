@@ -10,14 +10,7 @@
              VerticalAlignment="Stretch"
              Background="{DynamicResource WindowBackground}"
              Foreground="{DynamicResource InputText}">
-
-
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-
         <TabControl Name="TabControl" Grid.Row="0" SelectionChanged="TabControl_SelectionChanged"
                     Background="{DynamicResource PanelBackground}"
                     BorderBrush="{DynamicResource BorderBrush}"
@@ -103,6 +96,12 @@
                             <MenuItem Header="Выделенный" Click="HighlightMenuItem_Click"
                                       Background="{DynamicResource ControlBackground}"
                                       Foreground="{DynamicResource TextForeground}" />
+                            <Separator />
+                                <MenuItem Header="Заголовок 1" Click="Header1MenuItem_Click" />
+                                <MenuItem Header="Заголовок 2" Click="Header2MenuItem_Click" />
+                                <MenuItem Header="Заголовок 3" Click="Header3MenuItem_Click" />
+                            <Separator />
+                            <MenuItem Header="Сохранить (Ctrl+S)" Click="SaveButton_Click" />
                         </ContextMenu>
                     </RichTextBox.ContextMenu>
                     <FlowDocument PagePadding="5">
@@ -138,7 +137,7 @@
                 </Grid>
             </TabItem>
         </TabControl>
-
+        
         <Border Grid.Row="1" Style="{StaticResource BottomPanelBorder}">
             <Grid>
                 <Button Content="Сохранить"
@@ -153,5 +152,31 @@
                         FontSize="{DynamicResource GlobalFontSize}"/>
             </Grid>
         </Border>
+        <!-- Размер шрифта -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="10">
+            <TextBlock Text="Размер шрифта:" VerticalAlignment="Bottom" HorizontalAlignment="Left" />
+            <ComboBox x:Name="FontSizeComboBox"
+          Width="100"
+          IsEditable="True"
+          ToolTip="Выберите или введите размер шрифта"
+          StaysOpenOnEdit="True"
+          IsTextSearchEnabled="False"
+          PreviewTextInput="FontSizeComboBox_PreviewTextInput"
+          KeyDown="FontSizeComboBox_KeyDown"
+          SelectionChanged="FontSizeComboBox_SelectionChanged"
+          SelectedItem="{Binding SelectedFontSize, UpdateSourceTrigger=PropertyChanged}">
+                <ComboBoxItem Content="10"/>
+                <ComboBoxItem Content="12"/>
+                <ComboBoxItem Content="14"/>
+                <ComboBoxItem Content="16"/>
+                <ComboBoxItem Content="18"/>
+                <ComboBoxItem Content="20"/>
+                <ComboBoxItem Content="22"/>
+                <ComboBoxItem Content="24"/>
+                <ComboBoxItem Content="28"/>
+                <ComboBoxItem Content="30"/>
+                <ComboBoxItem Content="35"/>
+            </ComboBox>
+        </StackPanel>
     </Grid>
 </UserControl>

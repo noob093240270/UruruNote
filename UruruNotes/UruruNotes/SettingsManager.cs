@@ -9,6 +9,7 @@ using System.Xml;
 using Formatting = Newtonsoft.Json.Formatting;
 using UruruNotes.Properties;
 using System.Diagnostics;
+using UruruNotes;
 
 namespace UruruNotes
 {
@@ -120,5 +121,7 @@ namespace UruruNotes
             // Возвращаем настройки по умолчанию, если файл не существует или произошла ошибка
             return new Settings();
         }
+
+
     }
 }

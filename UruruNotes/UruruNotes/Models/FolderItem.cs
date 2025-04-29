@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,14 +18,29 @@ namespace UruruNotes.Models
         public ObservableCollection<FolderItem> SubFolders { get; set; } = new ObservableCollection<FolderItem>();
         public ObservableCollection<FileItem> Files { get; set; } = new ObservableCollection<FileItem>();
 
-        // Метод для удаления файла из коллекции
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+
+        // Удаление файла из коллекции
         public void RemoveFile(FileItem fileItem)
         {
             if (fileItem != null && Files.Contains(fileItem))
             {
-                Files.Remove(fileItem);  // Удаляем файл из коллекции
+                Files.Remove(fileItem);
+
+                // Обновление всех связанных свойств
+                OnPropertyChanged(nameof(Files));
+                OnPropertyChanged(nameof(CompositeSubItems)); // ⚠️ это критично
             }
         }
+
+
+
 
         public bool IsFolderNameUnique(string folderName)
         {
@@ -36,6 +52,10 @@ namespace UruruNotes.Models
             return !Files.Any(f => f.FileName.Equals(folderName, StringComparison.OrdinalIgnoreCase)) &&
                    !SubFolders.Any(f => f.FileName.Equals(folderName, StringComparison.OrdinalIgnoreCase));
         }
+
+
+        //public ObservableCollection<object> CompositeSubItems { get; set; } = new ObservableCollection<object>();
+
 
         public CompositeCollection CompositeSubItems
         {
@@ -49,6 +69,17 @@ namespace UruruNotes.Models
                 return composite;
             }
         }
+
+        public void RebuildComposite()
+        {
+            CompositeSubItems.Clear();
+            foreach (var folder in SubFolders)
+                CompositeSubItems.Add(folder);
+
+            foreach (var file in Files)
+                CompositeSubItems.Add(file);
+        }
+
     }
 
 
