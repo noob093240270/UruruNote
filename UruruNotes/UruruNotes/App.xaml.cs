@@ -11,6 +11,8 @@ using UruruNotes.Views;
 using System.Diagnostics;
 using Microsoft.Win32.TaskScheduler;
 
+
+
 namespace UruruNotes
 {
     /// <summary>
@@ -18,7 +20,10 @@ namespace UruruNotes
     /// </summary>
     public partial class App : Application
     {
-         
+        public static event EventHandler FontSizeChanged;
+
+
+
         /// <summary>
         /// Метод для обновления глобального размера шрифта
         /// </summary>
@@ -33,6 +38,8 @@ namespace UruruNotes
             {
                 Application.Current.Resources.Add("GlobalFontSize", fontSize);
             }
+
+            FontSizeChanged?.Invoke(null, EventArgs.Empty); // Добавляем уведомление
         }
 
         /// <summary>
@@ -147,6 +154,7 @@ namespace UruruNotes
                 Debug.WriteLine("Окно 'Детали напоминания' уже открыто, уведомление не показывается.");
             }
         }
+                
 
     }
 }

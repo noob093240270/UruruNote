@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using GalaSoft.MvvmLight.Command;
@@ -16,6 +17,7 @@ using UruruNotes;
 using UruruNotes.Models;
 using UruruNotes.Views;
 using UruruNotes.ViewsModels;
+
 
 namespace UruruNote.ViewsModels
 {
@@ -155,7 +157,7 @@ namespace UruruNote.ViewsModels
                     SettingsManager.SaveSettings(SelectedFontSize, value); // Сохраняем при каждом изменении
                     if (!_isInitializing)
                     {
-                        ShowScaleNotification(value);
+                        //ShowScaleNotification(value);
                         UpdateSelectedScaleOption();
                     }
                     ScaleDisplay = $"{value * 100:F0}%";
@@ -291,10 +293,7 @@ namespace UruruNote.ViewsModels
                 }
             }
         }
-        private void ShowScaleNotification(double scale)
-        {
-            MessageBox.Show($"Установлен масштаб: {scale * 100:F0}%", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
+
 
 
 
@@ -435,6 +434,7 @@ namespace UruruNote.ViewsModels
        
         public MainViewModel()
         {
+
             FontSizeOptions = new ObservableCollection<int>(Enumerable.Range(10, 26));
             ScaleOptions = new ObservableCollection<double> { 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0 };
             var settings = SettingsManager.LoadSettings();
@@ -495,7 +495,14 @@ namespace UruruNote.ViewsModels
             LoadFileStructure(); // Загружаем сразу и папки, и файлы в одной структуре
 
 
-
+            // Обработка глобального сохранения шрифта при изменении значения
+            PropertyChanged += (sender, e) =>
+            {
+                if (e.PropertyName == nameof(SelectedFontSize))
+                {
+                    SettingsManager.SaveSettings(SelectedFontSize, SelectedScaleOption);
+                }
+            };
         }
 
         #region CreateFileInFolder
@@ -617,8 +624,6 @@ namespace UruruNote.ViewsModels
 
                 string filePath = Path.Combine(RootDirectory, fileName + ".md");
 
-                // Отладка: Показываем путь перед проверкой
-                MessageBox.Show($"Путь файла: {filePath}", "Отладка");
 
 
                 var markdownService = new MarkdownFileService();
@@ -636,8 +641,6 @@ namespace UruruNote.ViewsModels
                     });
                 });
 
-                // Уведомление пользователя
-                MessageBox.Show($"Файл успешно создан: {filePath}");
             };
 
             newFileWindow.ShowDialog();
@@ -674,7 +677,7 @@ namespace UruruNote.ViewsModels
                 FilePath = filePath
             });
 
-            MessageBox.Show($"Файл успешно создан: {filePath}");
+            //MessageBox.Show($"Файл успешно создан: {filePath}");
         }
 
 
@@ -721,7 +724,7 @@ namespace UruruNote.ViewsModels
             });
 
             // Уведомление пользователя
-            MessageBox.Show($"Файл успешно создан в папке: {selectedFolder.FilePath}");
+            //MessageBox.Show($"Файл успешно создан в папке: {selectedFolder.FilePath}");
         }
 
         private bool IsFileNameUnique(string fileName, FolderItem targetFolder = null)
@@ -803,7 +806,7 @@ namespace UruruNote.ViewsModels
         public ICommand LoadFilesCommand { get; }
 
 
-        private void LoadFileStructure()
+        public void LoadFileStructure()
         {
             Folders.Clear(); // Очищаем перед добавлением
             Files.Clear();   // Очищаем перед добавлением
@@ -914,13 +917,18 @@ namespace UruruNote.ViewsModels
         // Логика удаления файла
         public void DeleteFile(FileItem fileItem)
         {
-            MessageBox.Show("Метод DeleteFile вызван"); // Это должно появиться при попытке удалить файл
+            //MessageBox.Show("Метод DeleteFile вызван"); // Это должно появиться при попытке удалить файл
 
             if (fileItem != null)
             {
-                MessageBox.Show($"Удаление файла: {fileItem.FilePath}");
+                //MessageBox.Show($"Удаление файла: {fileItem.FilePath}");
 
-                Files.Remove(fileItem);
+                // Удаляем файл из родительской коллекции
+                var parentFolder = fileItem.ParentFolder;
+                if (parentFolder != null)
+                {
+                    parentFolder.RemoveFile(fileItem);
+                }
 
                 // Удаляем файл с диска
                 if (File.Exists(fileItem.FilePath))
@@ -940,14 +948,33 @@ namespace UruruNote.ViewsModels
                     MessageBox.Show("Файл не существует на диске.");
                 }
 
+                // Обновляем UI
+                if (parentFolder != null)
+                {
+                    // Обновляем ObservableCollection вручную
+                    parentFolder.Files.Remove(fileItem);  // Убираем удалённый файл из коллекции
+                    CollectionViewSource.GetDefaultView(parentFolder.Files)?.Refresh();  // Принудительное обновление
+                }
+
+                if (parentFolder != null)
+                {
+                    parentFolder.RemoveFile(fileItem);
+
+                    // Принудительно обновим папку целиком
+                    parentFolder.OnPropertyChanged(nameof(FolderItem.Files));
+                    parentFolder.OnPropertyChanged(nameof(FolderItem.SubFolders));
+                    parentFolder.OnPropertyChanged(nameof(FolderItem.CompositeSubItems));
+                }
+
+
+                // Уведомляем о изменениях коллекции (если необходимо)
                 OnPropertyChanged(nameof(Files));
+                OnPropertyChanged(nameof(Folders));
             }
         }
 
-        // Логика удаления папки
-        // Логика удаления папки
-        // Логика удаления папки
-        // Логика удаления папки
+
+
         // Логика удаления папки
         public void DeleteFolder(FolderItem folderItem)
         {
