@@ -20,10 +20,6 @@ namespace UruruNotes
     /// </summary>
     public partial class App : Application
     {
-        public static event EventHandler FontSizeChanged;
-
-
-
         /// <summary>
         /// Метод для обновления глобального размера шрифта
         /// </summary>
@@ -54,43 +50,123 @@ namespace UruruNotes
                 window.LayoutTransform = scaleTransform;
             }
         }
+        /// <summary>
+        /// Метод для применения темы
+        /// </summary>
+        /// <param name="isDarkMode">Флаг тёмной темы</param>
+        public static void ApplyTheme(bool isDarkMode)
+        {
+            try
+            {
+                // Создаём новый словарь для темы
+                var themeDictionary = new ResourceDictionary
+                {
+                    Source = new Uri($"/Themes/{(isDarkMode ? "DarkTheme.xaml" : "LightTheme.xaml")}", UriKind.Relative)
+                };
 
+                // Удаляем текущую тему из ресурсов приложения
+                var currentTheme = Application.Current.Resources.MergedDictionaries
+                    .FirstOrDefault(d => d.Source != null &&
+                        (d.Source.OriginalString == "/Themes/LightTheme.xaml" ||
+                         d.Source.OriginalString == "/Themes/DarkTheme.xaml"));
+                if (currentTheme != null)
+                {
+                    Application.Current.Resources.MergedDictionaries.Remove(currentTheme);
+                }
+
+                // Создаём словарь для глобальных ресурсов
+                var globalResources = new ResourceDictionary();
+                globalResources.Add("GlobalFont", new FontFamily("Segoe UI"));
+                globalResources.Add("GlobalFontSize", 15.0);
+                globalResources.Add("NoteFontSize", 15.0);
+                globalResources.Add("GlobalScale", 1.0);
+
+                // Стиль для иконок (MaterialDesignThemes.Wpf.PackIcon)
+                var iconStyle = new Style(typeof(MaterialDesignThemes.Wpf.PackIcon))
+                {
+                    Setters =
+                    {
+                        new Setter(MaterialDesignThemes.Wpf.PackIcon.ForegroundProperty, new DynamicResourceExtension("IconColor"))
+                    }
+                };
+                globalResources.Add(typeof(MaterialDesignThemes.Wpf.PackIcon), iconStyle); // Исправлено: используем typeof вместо StyleKey
+
+                // Очищаем текущие ресурсы приложения и добавляем новые
+                Application.Current.Resources.MergedDictionaries.Clear();
+                Application.Current.Resources.MergedDictionaries.Add(themeDictionary);
+                Application.Current.Resources.MergedDictionaries.Add(globalResources);
+
+                // Обновляем ресурсы для всех открытых окон
+                foreach (Window window in Application.Current.Windows)
+                {
+                    window.Resources.MergedDictionaries.Clear();
+                    window.Resources.MergedDictionaries.Add(themeDictionary);
+                    window.Resources.MergedDictionaries.Add(globalResources);
+                }
+
+                CurrentTheme = isDarkMode;
+                Debug.WriteLine($"Применена тема: {(isDarkMode ? "Тёмная" : "Светлая")}");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Ошибка при применении темы: {ex.Message}");
+                Debug.WriteLine($"Стек вызовов: {ex.StackTrace}");
+            }
+        }
+        /// <summary>
+        /// Событие запуска приложения
+        /// </summary>
         /// <summary>
         /// Событие запуска приложения
         /// </summary>
         protected override void OnStartup(StartupEventArgs e)
         {
-            base.OnStartup(e);
-
-            // Логирование аргументов
-            Debug.WriteLine($"Аргументы командной строки: {string.Join(", ", e.Args)}");
-
-            // Обработка аргументов командной строки
-            if (e.Args.Length > 0)
+            try
             {
-                // Если аргумент содержит "ToastActivated", это нажатие на уведомление
-                if (e.Args[0] == "-ToastActivated")
-                {
-                    Debug.WriteLine("Нажатие на уведомление: открываем окно с деталями напоминания");
+                base.OnStartup(e);
 
-                    // Открываем окно с деталями напоминания
-                    OpenReminderDetails(DateTime.Now); // Здесь можно передать конкретную дату, если она есть в аргументах
-                    return; // Не завершаем приложение
+                // Логирование аргументов
+                Debug.WriteLine($"Аргументы командной строки: {string.Join(", ", e.Args)}");
+
+                // Обработка аргументов командной строки
+                if (e.Args.Length > 0)
+                {
+                    // Если аргумент содержит "ToastActivated", это нажатие на уведомление
+                    if (e.Args[0] == "-ToastActivated")
+                    {
+                        Debug.WriteLine("Нажатие на уведомление: открываем окно с деталями напоминания");
+
+                        // Открываем окно с деталями напоминания
+                        OpenReminderDetails(DateTime.Now); // Здесь можно передать конкретную дату, если она есть в аргументах
+                        return; // Не завершаем приложение
+                    }
+
+                    // Если это просто уведомление, показываем его
+                    string message = e.Args[0];
+                    Debug.WriteLine($"Показ уведомления: {message}");
+                    ShowToastNotification("Напоминание", message);
+
+                    // Не завершаем приложение, если это не нажатие на уведомление
+                    return;
                 }
 
-                // Если это просто уведомление, показываем его
-                string message = e.Args[0];
-                Debug.WriteLine($"Показ уведомления: {message}");
-                ShowToastNotification("Напоминание", message);
+                // Загрузка сохраненных настроек
+                var settings = SettingsManager.LoadSettings();
+                UpdateGlobalFontSize(settings.FontSize);
+                UpdateGlobalScale(settings.Scale);
+                ApplyTheme(settings.DarkMode);
 
-                // Не завершаем приложение, если это не нажатие на уведомление
-                return;
+                // Создаём и показываем главное окно
+                var mainWindow = new MainWindow();
+                mainWindow.Show();
             }
-
-            // Загрузка сохраненных настроек
-            var settings = SettingsManager.LoadSettings();
-            UpdateGlobalFontSize(settings.FontSize);
-            UpdateGlobalScale(settings.Scale);
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Критическая ошибка при запуске приложения: {ex.Message}");
+                Debug.WriteLine($"Стек вызовов: {ex.StackTrace}");
+                MessageBox.Show($"Произошла ошибка при запуске приложения: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                Shutdown(1);
+            }
         }
 
         public static bool IsReminderWindowOpen { get; set; } = false;
@@ -154,8 +230,7 @@ namespace UruruNotes
                 Debug.WriteLine("Окно 'Детали напоминания' уже открыто, уведомление не показывается.");
             }
         }
-                
-
+        public static bool CurrentTheme { get; set; } = false;
     }
 }
 

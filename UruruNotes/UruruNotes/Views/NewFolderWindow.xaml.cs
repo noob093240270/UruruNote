@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Windows;
 using UruruNote.Models;
+using UruruNote.ViewsModels;
 using UruruNotes.Models;
 
 namespace UruruNotes.Views
@@ -10,9 +11,13 @@ namespace UruruNotes.Views
     {
         public string FolderName { get; private set; }
 
-        public NewFolderWindow()
+        private readonly MainViewModel _viewModel;
+
+        public NewFolderWindow(MainViewModel viewModel)
         {
             InitializeComponent();
+            _viewModel = viewModel;
+            DataContext = _viewModel;
         }
 
         private void CreateButton_Click(object sender, RoutedEventArgs e)

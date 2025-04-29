@@ -353,10 +353,16 @@ namespace UruruNote.Views
                     .UseAdvancedExtensions()
                     .UseEmphasisExtras()
                     .Build();
+                var textForegroundBrush = (SolidColorBrush)FindResource("TextForeground");
+                var textForegroundColor = textForegroundBrush.Color;
+                string textColorHex = $"#{textForegroundColor.R:X2}{textForegroundColor.G:X2}{textForegroundColor.B:X2}";
 
+                // Извлекаем цвет фона ControlBackground
+                var controlBackgroundBrush = (SolidColorBrush)FindResource("ControlBackground");
+                var controlBackgroundColor = controlBackgroundBrush.Color;
+                string backgroundColorHex = $"#{controlBackgroundColor.R:X2}{controlBackgroundColor.G:X2}{controlBackgroundColor.B:X2}";
                 var htmlContent = Markdig.Markdown.ToHtml(processedMarkdown, pipeline);
                 return $"<head><meta charset=\"UTF-8\"><style>mark {{ background-color: yellow; }}</style></head><body>{htmlContent}</body>";
-
             }
             catch (Exception ex)
             {

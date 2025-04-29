@@ -2,6 +2,7 @@
 using System.IO;
 using System.Windows;
 using UruruNote.Models;
+using UruruNote.ViewsModels;
 
 namespace UruruNotes.Views
 {
@@ -13,11 +14,14 @@ namespace UruruNotes.Views
 
         // Событие для уведомления об успешном создании файла
         public event Action<string> FileCreated;
+        private readonly MainViewModel _viewModel;
 
 
-        public NewFileWindow()
+        public NewFileWindow(MainViewModel viewModel)
         {
             InitializeComponent();
+            _viewModel = viewModel;
+            DataContext = _viewModel; // Устанавливаем DataContext вручную
         }
 
         private void CreateButton_Click(object sender, RoutedEventArgs e)
