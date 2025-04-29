@@ -5,12 +5,13 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
-             mc:Ignorable="d"
-             HorizontalAlignment="Stretch"
-             VerticalAlignment="Stretch"
-             Background="{DynamicResource WindowBackground}"
-             Foreground="{DynamicResource InputText}">
+             mc:Ignorable="d">
+
+
     <Grid>
+
+
+
         <TabControl Name="TabControl" Width="Auto" SelectionChanged="TabControl_SelectionChanged">
             <TabItem Header="Редактирование">
                 <Grid>
@@ -55,6 +56,7 @@
                     </RichTextBox>
                 </Grid>
             </TabItem>
+
             <TabItem Header="Предпросмотр">
                 <Grid>
                     <wv2:WebView2 Name="MarkdownPreview"
@@ -63,48 +65,22 @@
               Width="Auto"
               Height="Auto"/>
                     <Button Grid.Row="1" Content="Загрузить тестовый текст" Click="LoadTestHtmlButton_Click"/>
-
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <ScrollViewer VerticalScrollBarVisibility="Auto" 
-                                  HorizontalScrollBarVisibility="Auto" 
-                                  Margin="1" 
-                                  VerticalAlignment="Stretch" 
-                                  HorizontalAlignment="Stretch"
-                                  >
-                        <!-- Добавляем белый фон -->
-                        <wv2:WebView2 Name="MarkdownPreview" Width="Auto" Visibility="Visible"/>
-                    </ScrollViewer>
-                    <Button Grid.Row="1" 
-                            Content="Загрузить тестовый текст" 
-                            Click="LoadTestHtmlButton_Click"
-                            Margin="10"
-                            Background="{DynamicResource ButtonBackground}"
-                            BorderBrush="{DynamicResource ButtonBorder}"
-                            Foreground="{DynamicResource ButtonForeground}"
-                            FontFamily="{DynamicResource GlobalFont}"
-                            FontSize="{DynamicResource GlobalFontSize}"/>
                 </Grid>
             </TabItem>
         </TabControl>
 
+
+
         <!-- Кнопка "Сохранить" -->
-        <Border Grid.Row="1" Style="{StaticResource BottomPanelBorder}">
-            <Grid>
-                <Button Content="Сохранить"
-                        VerticalAlignment="Bottom"
-                        HorizontalAlignment="Right"
-                        Margin="10"
-                        Click="SaveButton_Click"
-                        Background="{DynamicResource ButtonBackground}"
-                        BorderBrush="{DynamicResource ButtonBorder}"
-                        Foreground="{DynamicResource ButtonForeground}"
-                        FontFamily="{DynamicResource GlobalFont}"
-                        FontSize="{DynamicResource GlobalFontSize}"/>
-            </Grid>
-        </Border>
+        <Button Grid.Row="1"
+                Content="Сохранить"
+                VerticalAlignment="Bottom"
+                HorizontalAlignment="Right"
+                Margin="10"
+                Click="SaveButton_Click"
+                Background="White"
+                BorderBrush="#FF235C9A"
+                FontFamily="{DynamicResource GlobalFont}" />
 
         <!-- Размер шрифта -->
         <StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="10">
@@ -131,6 +107,15 @@
                 <ComboBoxItem Content="30"/>
                 <ComboBoxItem Content="35"/>
             </ComboBox>
+
+
+
+
         </StackPanel>
+
+
+
+
+
     </Grid>
 </UserControl>

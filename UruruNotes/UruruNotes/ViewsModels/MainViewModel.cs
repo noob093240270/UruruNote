@@ -87,7 +87,6 @@ namespace UruruNote.ViewsModels
                         Debug.WriteLine($"SelectedFontSize изменён на: {value}");
                         OnPropertyChanged(nameof(SelectedFontSize));
                         ApplyFont();
-
                         App.UpdateGlobalFontSize(value);
                         SettingsManager.SaveSettings(value, Scale); // Сохраняем всегда
                         if (!_isUpdatingFontSize)
@@ -155,7 +154,7 @@ namespace UruruNote.ViewsModels
                     Debug.WriteLine($"Scale изменён на: {value}");
                     OnPropertyChanged(nameof(Scale));
                     UpdateScale();
-                    SettingsManager.SaveSettings(SelectedFontSize, value, IsDarkModeEnabled); // Сохраняем при каждом изменении
+                    SettingsManager.SaveSettings(SelectedFontSize, value); // Сохраняем при каждом изменении
                     if (!_isInitializing)
                     {
                         //ShowScaleNotification(value);
@@ -294,54 +293,9 @@ namespace UruruNote.ViewsModels
                 }
             }
         }
-        private void ShowScaleNotification(double scale)
-        {
-            MessageBox.Show($"Установлен масштаб: {scale * 100:F0}%", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
-        /// <summary>
-        /// темная тема, поддержка
-        /// </summary>
-        private bool _isDarkModeEnabled;
-        public bool IsDarkModeEnabled
-        {
-            get => _isDarkModeEnabled;
-            set
-            {
-                if (_isDarkModeEnabled != value)
-                {
-                    _isDarkModeEnabled = value;
-                    OnPropertyChanged(nameof(IsDarkModeEnabled));
-                    App.ApplyTheme(value);
-                    SettingsManager.SaveSettings(SelectedFontSize, Scale, value);
-                }
-            }
-        }
-        // Свойства для выбора темы
-        private ObservableCollection<ThemeOption> _themeOptions;
-        public ObservableCollection<ThemeOption> ThemeOptions
-        {
-            get => _themeOptions;
-            set
-            {
-                _themeOptions = value;
-                OnPropertyChanged(nameof(ThemeOptions));
-            }
-        }
 
-        private ThemeOption _selectedTheme;
-        public ThemeOption SelectedTheme
-        {
-            get => _selectedTheme;
-            set
-            {
-                _selectedTheme = value;
-                if (value != null)
-                {
-                    IsDarkModeEnabled = value.IsDarkMode;
-                }
-                OnPropertyChanged(nameof(SelectedTheme));
-            }
-        }
+
+
 
 
         /*private bool _isDarkModeEanbled;
@@ -480,7 +434,7 @@ namespace UruruNote.ViewsModels
        
         public MainViewModel()
         {
-            Files = new ObservableCollection<FileItem>();
+
             FontSizeOptions = new ObservableCollection<int>(Enumerable.Range(10, 26));
             ScaleOptions = new ObservableCollection<double> { 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0 };
             var settings = SettingsManager.LoadSettings();
@@ -497,18 +451,6 @@ namespace UruruNote.ViewsModels
             Scale = settings.Scale;
             SelectedScaleOption = settings.Scale;
             _isInitializing = false;
-
-            // Инициализация тем
-            ThemeOptions = new ObservableCollection<ThemeOption>
-            {
-                new ThemeOption { DisplayName = "Светлая", IsDarkMode = false },
-                new ThemeOption { DisplayName = "Тёмная", IsDarkMode = true }
-            };
-            _isDarkModeEnabled = settings.DarkMode;
-            SelectedTheme = ThemeOptions.FirstOrDefault(t => t.IsDarkMode == _isDarkModeEnabled) ?? ThemeOptions[0];
-            App.ApplyTheme(_isDarkModeEnabled);
-            OnPropertyChanged(nameof(IsDarkModeEnabled));
-
 
             // Явно вызываем уведомления для начальной синхронизации
             OnPropertyChanged(nameof(Scale));
@@ -574,7 +516,7 @@ namespace UruruNote.ViewsModels
 
         public void CreateFolder()
         {
-            var newFolderWindow = new NewFolderWindow(this);
+            var newFolderWindow = new NewFolderWindow();
 
             // Если диалог с названием папки был подтвержден
             if (newFolderWindow.ShowDialog() == true)
@@ -670,7 +612,7 @@ namespace UruruNote.ViewsModels
 
         public void CreateNewMarkdownFile()
         {
-            var newFileWindow = new NewFileWindow(this);
+            var newFileWindow = new NewFileWindow();
 
             newFileWindow.FileCreated += (fileName) =>
             {
@@ -755,7 +697,7 @@ namespace UruruNote.ViewsModels
             }
 
             // Открываем окно для ввода имени файла
-            var newFileWindow = new NewFileWindow(this);
+            var newFileWindow = new NewFileWindow();
             if (newFileWindow.ShowDialog() != true)
             {
                 return;
@@ -1294,7 +1236,6 @@ namespace UruruNote.ViewsModels
                 MessageBox.Show($"Ошибка при перемещении файла: {ex.Message}");
             }
         }
-       
 
     }
 }

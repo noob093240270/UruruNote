@@ -11,8 +11,7 @@
         mc:Ignorable="d" 
         MinHeight="550" MinWidth="850"
         Title="CalendarPage" Icon="/Views/calendar.png"
-        SizeToContent="WidthAndHeight"
-        Background="{DynamicResource WindowBackground}">
+        SizeToContent="WidthAndHeight">
     <Window.Resources>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <converters:BoolToBrushConverter x:Key="BoolToBrushConverter" />
@@ -127,6 +126,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
         <Style x:Key="CustomComboBoxStyle" TargetType="ComboBox">
             <Setter Property="Background" Value="White"/>
             <Setter Property="BorderBrush" Value="Gray"/>
@@ -199,6 +199,7 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+
     </Window.Resources>
 
     <Window.Triggers>
@@ -236,49 +237,14 @@
                 </StackPanel>
 
                 <!-- Дни недели -->
-                <UniformGrid Rows="1" Columns="7" Margin="0,10,32,10" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                    <TextBlock Text="Пн" 
-                               TextAlignment="Center" 
-                               FontWeight="Bold" 
-                               FontSize="{Binding DayFontSize}"
-                               Foreground="{DynamicResource TextForeground}"
-                               FontFamily="{DynamicResource GlobalFont}"/>
-                    <TextBlock Text="Вт" 
-                               TextAlignment="Center" 
-                               FontWeight="Bold" 
-                               FontSize="{Binding DayFontSize}"
-                               Foreground="{DynamicResource TextForeground}"
-                               FontFamily="{DynamicResource GlobalFont}"/>
-                    <TextBlock Text="Ср" 
-                               TextAlignment="Center" 
-                               FontWeight="Bold" 
-                               FontSize="{Binding DayFontSize}"
-                               Foreground="{DynamicResource TextForeground}"
-                               FontFamily="{DynamicResource GlobalFont}"/>
-                    <TextBlock Text="Чт" 
-                               TextAlignment="Center" 
-                               FontWeight="Bold" 
-                               FontSize="{Binding DayFontSize}"
-                               Foreground="{DynamicResource TextForeground}"
-                               FontFamily="{DynamicResource GlobalFont}"/>
-                    <TextBlock Text="Пт" 
-                               TextAlignment="Center" 
-                               FontWeight="Bold" 
-                               FontSize="{Binding DayFontSize}"
-                               Foreground="{DynamicResource TextForeground}"
-                               FontFamily="{DynamicResource GlobalFont}"/>
-                    <TextBlock Text="Сб" 
-                               TextAlignment="Center" 
-                               FontWeight="Bold" 
-                               Foreground="Red" 
-                               FontSize="{Binding DayFontSize}"
-                               FontFamily="{DynamicResource GlobalFont}"/>
-                    <TextBlock Text="Вс" 
-                               TextAlignment="Center" 
-                               FontWeight="Bold" 
-                               Foreground="Red" 
-                               FontSize="{Binding DayFontSize}"
-                               FontFamily="{DynamicResource GlobalFont}"/>
+                <UniformGrid Rows="1" Columns="7" Margin="10" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                    <TextBlock Text="Пн" TextAlignment="Center" FontWeight="Bold" FontSize="{Binding DayFontSize}"/>
+                    <TextBlock Text="Вт" TextAlignment="Center" FontWeight="Bold" FontSize="{Binding DayFontSize}"/>
+                    <TextBlock Text="Ср" TextAlignment="Center" FontWeight="Bold" FontSize="{Binding DayFontSize}"/>
+                    <TextBlock Text="Чт" TextAlignment="Center" FontWeight="Bold" FontSize="{Binding DayFontSize}"/>
+                    <TextBlock Text="Пт" TextAlignment="Center" FontWeight="Bold" FontSize="{Binding DayFontSize}"/>
+                    <TextBlock Text="Сб" TextAlignment="Center" FontWeight="Bold" Foreground="Red" FontSize="{Binding DayFontSize}"/>
+                    <TextBlock Text="Вс" TextAlignment="Center" FontWeight="Bold" Foreground="Red" FontSize="{Binding DayFontSize}"/>
                 </UniformGrid>
 
                 <!-- Календарь -->
@@ -293,57 +259,28 @@
                             <Button Command="{Binding DataContext.OpenTaskAreaCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
                                     CommandParameter="{Binding}" 
                                     Padding="0"
-                                    BorderBrush="Transparent" 
-                                    BorderThickness="0"
+                                    Background="{Binding IsCurrentMonth, Converter={StaticResource BoolToBrushConverter}}"
+                                    BorderBrush="Transparent" BorderThickness="0"
                                     HorizontalAlignment="Stretch"
                                     VerticalAlignment="Stretch"
                                     VerticalContentAlignment="Center"
                                     HorizontalContentAlignment="Center"
-                                    Margin="{Binding DataContext.MarginButtons, RelativeSource={RelativeSource AncestorType=Window}}"
-                                   Foreground="{DynamicResource CalendarDayForeground}">
-                                <Button.Style>
-                                    <Style TargetType="Button">
-                                        <Setter Property="Background" Value="{DynamicResource WindowBackground}" />
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsCurrentMonth}" Value="True">
-                                                <Setter Property="Background" Value="{DynamicResource ControlBackground}" />
-                                            </DataTrigger>
-                                            <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter Property="Background" Value="{DynamicResource ButtonHoverBackground}" />
-                                            </Trigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Button.Style>
+                                    Margin="{Binding DataContext.MarginButtons, RelativeSource={RelativeSource AncestorType=Window}}">
                                 <Grid>
                                     <Grid.RowDefinitions>
-                                        
                                         <RowDefinition Height="*" />
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
-                                    
-                                    
-                                    
                                     <TextBlock Text="{Binding DisplayText}" 
-                                               HorizontalAlignment="Center" 
-                                               VerticalAlignment="Center" 
-                                               Grid.Row="0" 
-                                               FontSize="{Binding DataContext.DayFontSize, RelativeSource={RelativeSource AncestorType=Window}}"
-                                              Foreground="{DynamicResource CalendarDayForeground}"
-                                               FontFamily="{DynamicResource GlobalFont}"/>
+                                               HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                               Grid.Row="0" FontSize="{Binding DataContext.DayFontSize, RelativeSource={RelativeSource AncestorType=Window}}"/>
                                     <StackPanel Orientation="Horizontal" 
-                                                HorizontalAlignment="Center" 
-                                                VerticalAlignment="Center" 
-                                                Grid.Row="1">
-                                        <Ellipse Width="6" 
-                                                 Height="6" 
-                                                 Fill="Red" 
-                                                 VerticalAlignment="Center"
+                                                HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                                Grid.Row="1" >
+                                        <Ellipse Width="6" Height="6" Fill="Red" VerticalAlignment="Center"
                                                  Visibility="{Binding HasNote, Converter={StaticResource BoolToVisibilityConverter}}" />
-                                        <TextBlock Text="{Binding ReminderTime}" 
-                                                   VerticalAlignment="Center" 
-                                                   Foreground="Red" 
-                                                   FontSize="{Binding DataContext.DayFontSize, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                   FontFamily="{DynamicResource GlobalFont}"/>
+                                        <TextBlock Text="{Binding ReminderTime}" VerticalAlignment="Center" 
+                                                   Foreground="Red" FontSize="{Binding DataContext.DayFontSize, RelativeSource={RelativeSource AncestorType=Window}}" />
                                     </StackPanel>
                                 </Grid>
                             </Button>
@@ -353,8 +290,7 @@
             </Grid>
 
             <!-- Панель задач -->
-            <Border Grid.Column="1" 
-                    Width="Auto" 
+            <Border Grid.Column="1" Width="Auto" 
                     Visibility="{Binding IsTaskPanelVisible, Converter={StaticResource BoolToVisibilityConverter}}" 
                     Margin="10">
                 <Grid Margin="-39,0,0,0">
@@ -362,141 +298,90 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition x:Name="TaskPanelColumn" Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <Button x:Name="ToggleButtonOpen" 
-                            Grid.Column="0"
-                            Width="20" 
-                            Height="50"
-                            HorizontalAlignment="Right"
-                            VerticalAlignment="Bottom"
-                            Background="Transparent"
-                            Click="TogglePanel_Click"
-                            BorderThickness="0"
+                    <Button x:Name="ToggleButtonOpen" Grid.Column="0"
+                            Width="20" Height="50"
+                             HorizontalAlignment="Right"
+                             VerticalAlignment="Bottom"
+                             Background="Transparent"
+                             Click="TogglePanel_Click"
+                             BorderThickness="0"
                             Visibility="Collapsed">
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
                                 <Grid>
                                     <!-- Прямоугольник-закладка -->
                                     <Rectangle x:Name="BookmarkRectangle"
-                                               Width="20" 
-                                               Height="50"
-                                               Fill="{DynamicResource ButtonBackground}" 
-                                               StrokeThickness="1"
-                                               Stroke="{DynamicResource BorderBrush}"
-                                               HorizontalAlignment="Right"
-                                               VerticalAlignment="Center" />
+                            Width="20" Height="50"
+                            Fill="LightGray" 
+                            StrokeThickness="1"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center" />
                                 </Grid>
                             </ControlTemplate>
                         </Button.Template>
                     </Button>
-                    <Button x:Name="ToggleButtonClose" 
-                            Grid.Column="0"
-                            Width="20" 
-                            Height="50"
-                            HorizontalAlignment="Right"
-                            VerticalAlignment="Bottom"
-                            Background="Transparent"
-                            Click="TogglePanel_Click"
-                            BorderThickness="0">
+                    <Button x:Name="ToggleButtonClose" Grid.Column="0"
+                            Width="20" Height="50"
+                             HorizontalAlignment="Right"
+                             VerticalAlignment="Bottom"
+                             Background="Transparent"
+                             Click="TogglePanel_Click"
+                             BorderThickness="0" 
+                            >
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
                                 <Grid>
                                     <!-- Прямоугольник-закладка -->
                                     <Rectangle x:Name="BookmarkRectangle"
-                                               Width="20" 
-                                               Height="50"
-                                               Fill="{DynamicResource ButtonBackground}" 
-                                               StrokeThickness="1"
-                                               Stroke="{DynamicResource BorderBrush}"
-                                               HorizontalAlignment="Right"
-                                               VerticalAlignment="Center" />
+                                    Width="20" Height="50"
+                                    Fill="LightGray" 
+                                    StrokeThickness="1"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Center" />
                                 </Grid>
                             </ControlTemplate>
                         </Button.Template>
                     </Button>
-                    <StackPanel x:Name="TaskPanel" 
-                                Grid.Column="1" 
-                                Background="{DynamicResource PanelBackground}" 
-                                Width="Auto">
-                        <TextBlock Text="Создать заметку" 
-                                   FontSize="{Binding NoteTitleFontSize}" 
-                                   FontWeight="Bold" 
-                                   Margin="10"
-                                   Foreground="{DynamicResource TextForeground}"
-                                   FontFamily="{DynamicResource GlobalFont}"/>
-                        <TextBox 
-                                 Text="{Binding NewTaskContent}" 
-                                 AcceptsReturn="True" 
-                                 TextWrapping="Wrap" 
-                                 AcceptsTab="True" 
-                                 VerticalScrollBarVisibility="Auto" 
-                                 MaxWidth="278" 
-                                 Height="{Binding TextBoxHeight}" 
-                                 Margin="10" 
-                                 FontSize="{Binding NoteFontSize}" 
-                                 CaretBrush="{DynamicResource TextBoxCaret}" 
-                                 SelectionBrush="{DynamicResource TextBoxCaret}" 
-                                 Background="{DynamicResource ControlBackground}"
-                                 BorderBrush="{DynamicResource ControlBorder}"
-                                 Foreground="{DynamicResource InputText}"
-                                 PreviewKeyDown="TextBox_PreviewKeyDown" 
-                                 Loaded="TextBox_Loaded" />
-                        <Button Content="Сохранить" 
-                                Command="{Binding SaveNoteCommand}" 
-                                MinWidth="80" 
-                                MinHeight="25" 
-                                Margin="10,10,10,10" 
-                                HorizontalAlignment="Left" 
-                                Background="{DynamicResource ButtonBackground}" 
-                                BorderBrush="{DynamicResource ButtonBorder}"
-                                Foreground="{DynamicResource ButtonForeground}" 
-                                FontSize="{Binding NoteFontSize}"/>
+                    <StackPanel x:Name="TaskPanel" Grid.Column="1" Background="LightGray" Width="{StaticResource PanelWidth}">
+                        <!-- Заметка -->
+                        <TextBlock Text="Создать заметку" FontSize="{Binding NoteTitleFontSize}" FontWeight="Bold" Margin="10" HorizontalAlignment="Stretch"/>
+                              <TextBox TextWrapping="Wrap" Text="{Binding NewTaskContent}" 
+               AcceptsReturn="True" AcceptsTab="True" 
+               VerticalScrollBarVisibility="Auto"  
+               HorizontalAlignment="Stretch"
+               Height="{Binding TextBoxHeight}" Margin="10" 
+               MaxWidth="{Binding ActualWidth, ElementName=TaskPanel, 
+Converter={StaticResource SubtractMarginConverter}, 
+ConverterParameter=20}"
+               FontSize="{Binding NoteFontSize}" 
+               CaretBrush="#FF235C9A" SelectionBrush="#FF235C9A" 
+               PreviewKeyDown="TextBox_PreviewKeyDown" Loaded="TextBox_Loaded" />
+                        <Button Content="Сохранить" Command="{Binding SaveNoteCommand}" 
+                                MinWidth="80" MinHeight="25" 
+                                Margin="20,5,5,10" HorizontalAlignment="Left" 
+                                Background="White" BorderBrush="#FF235C9A" FontSize="{Binding NoteFontSize}" Style="{StaticResource StyledButton}"/>
 
-                        <TextBlock Text="Создать напоминание" 
-                                   FontSize="{Binding NoteTitleFontSize}" 
-                                   FontWeight="Bold" 
-                                   Margin="10"
-                                   Foreground="{DynamicResource TextForeground}"
-                                   FontFamily="{DynamicResource GlobalFont}"/>
-                        <TextBox TextWrapping="Wrap" 
-                                 Text="{Binding NewTaskContentRemind}" 
-                                 AcceptsReturn="True" 
-                                 AcceptsTab="True" 
-                                 VerticalScrollBarVisibility="Auto" 
-                                 MaxWidth="278" 
-                                 Height="{Binding TextBoxHeight}" 
-                                 Margin="10" 
-                                 FontSize="{Binding NoteFontSize}" 
-                                 CaretBrush="{DynamicResource TextBoxCaret}" 
-                                 SelectionBrush="{DynamicResource TextBoxCaret}" 
-                                 Background="{DynamicResource ControlBackground}"
-                                 BorderBrush="{DynamicResource ControlBorder}"
-                                 Foreground="{DynamicResource  InputText}"
-                                 PreviewKeyDown="TextBox_PreviewKeyDown" 
-                                 Loaded="TextBox_Loaded" />
-                        <TextBlock Text="Время напоминания:" 
-                                   FontSize="{Binding NoteFontSize}" 
-                                   Height="Auto" 
-                                   Width="Auto" 
-                                   Margin="10" 
-                                   HorizontalAlignment="Center" 
-                                   Foreground="{DynamicResource TextForeground}"
-                                   FontFamily="{DynamicResource GlobalFont}"/>
+                        <!-- Напоминание -->
+                        <TextBlock Text="Создать напоминание" FontSize="{Binding NoteTitleFontSize}" FontWeight="Bold" Margin="10" HorizontalAlignment="Stretch"/>
+                              <TextBox TextWrapping="Wrap" Text="{Binding NewTaskContentRemind}" 
+               AcceptsReturn="True" AcceptsTab="True" 
+               VerticalScrollBarVisibility="Auto" 
+               HorizontalAlignment="Stretch"  
+               Height="{Binding TextBoxHeight}" Margin="10" 
+               MaxWidth="{Binding ActualWidth, ElementName=TaskPanel, 
+Converter={StaticResource SubtractMarginConverter}, 
+ConverterParameter=20}"
+               FontSize="{Binding NoteFontSize}" 
+               CaretBrush="#FF235C9A" SelectionBrush="#FF235C9A" 
+               PreviewKeyDown="TextBox_PreviewKeyDown" Loaded="TextBox_Loaded" />
+                        <Button Content="Сохранить" Command="{Binding SaveReminderCommand}" 
+                                MinWidth="80" MinHeight="25" Margin="20,5,5,10"
+                                Background="White" BorderBrush="#FF235C9A" FontSize="{Binding NoteFontSize}" Style="{StaticResource StyledButton}" HorizontalAlignment="Left" />
+                        <TextBlock Text="Время напоминания:" FontSize="{Binding NoteFontSize}" Height="Auto" Width="Auto" Margin="20,0,0,0" HorizontalAlignment="Left" />
                         <StackPanel Orientation="Horizontal" Margin="10,5,10,10">
-                            <Button Content="Сохранить" 
-                                    Command="{Binding SaveReminderCommand}" 
-                                    MinWidth="80" 
-                                    MinHeight="25" 
-                                    Background="{DynamicResource ButtonBackground}" 
-                                    BorderBrush="{DynamicResource ButtonBorder}"
-                                    Foreground="{DynamicResource ButtonForeground}" 
-                                    FontSize="{Binding NoteFontSize}"/>
-                            <ComboBox x:Name="HourPicker" 
-                                      SelectedItem="{Binding SelectedHour}" 
-                                      Width="60" 
-                                      VerticalAlignment="Center" 
-                                      Margin="5,0,5,0" 
-                                      FontSize="{Binding NoteFontSize}"
-                                      Style="{StaticResource ThemedComboBoxStyle}">
+                            <ComboBox x:Name="HourPicker" SelectedItem="{Binding SelectedHour}" 
+                                      Width="100" VerticalAlignment="Center" Margin="5,0,5,0" 
+                                      FontSize="{Binding NoteFontSize}" Style="{StaticResource CustomComboBoxStyle}">
                                 <ComboBox.ItemsSource>
                                     <x:Array Type="{x:Type sys:Int32}">
                                         <sys:Int32>0</sys:Int32>
@@ -526,13 +411,11 @@
                                     </x:Array>
                                 </ComboBox.ItemsSource>
                             </ComboBox>
-                            <ComboBox x:Name="MinutePicker" 
-                                      SelectedItem="{Binding SelectedMinute}" 
-                                      Width="60" 
-                                      VerticalAlignment="Center" 
-                                      Margin="0,0,10,0" 
-                                      FontSize="{Binding NoteFontSize}"
-                                      Style="{StaticResource ThemedComboBoxStyle}">
+
+                            <ComboBox x:Name="MinutePicker" SelectedItem="{Binding SelectedMinute}" 
+
+                                      Width="100" VerticalAlignment="Center" Margin="0,0,10,0" 
+                                      FontSize="{Binding NoteFontSize}" Style="{StaticResource CustomComboBoxStyle}">
                                 <ComboBox.ItemsSource>
                                     <x:Array Type="{x:Type sys:Int32}">
                                         <sys:Int32>0</sys:Int32>

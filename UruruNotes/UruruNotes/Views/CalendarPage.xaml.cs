@@ -144,24 +144,20 @@ namespace UruruNotes
                 int caretIndex = textBox.CaretIndex;
                 string[] lines = textBox.Text.Split('\n');
 
-                if (lines.Length > 0 && !string.IsNullOrEmpty(lines[0]))
+                // Запрещаем удаление заголовка
+                if ((e.Key == Key.Back || e.Key == Key.Delete) && caretIndex <= lines[0].Length)
                 {
-                    // Запрещаем удаление заголовка
-                    if ((e.Key == Key.Back || e.Key == Key.Delete) && caretIndex <= lines[0].Length)
-                    {
-                        e.Handled = true;
-                        return;
-                    }
+                    e.Handled = true;
+                    return;
+                }
 
-                    // Запрещаем изменение заголовка
-                    if (caretIndex <= lines[0].Length && e.Key != Key.Right && e.Key != Key.Left)
-                    {
-                        e.Handled = true;
-                    }
+                // Запрещаем изменение заголовка
+                if (caretIndex <= lines[0].Length && e.Key != Key.Right && e.Key != Key.Left)
+                {
+                    e.Handled = true;
                 }
             }
         }
-
 
         //private bool _isPanelVisible = true;
 

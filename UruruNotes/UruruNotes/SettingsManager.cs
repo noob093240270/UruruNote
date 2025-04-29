@@ -9,7 +9,6 @@ using System.Xml;
 using Formatting = Newtonsoft.Json.Formatting;
 using UruruNotes.Properties;
 using UruruNotes;
-using System.Diagnostics;
 
 namespace UruruNotes
 {
@@ -20,35 +19,22 @@ namespace UruruNotes
         {
             public int FontSize { get; set; }
             public double Scale { get; set; }
-            public bool DarkMode { get; set; } = false;
         }
-        public static void SaveSettings(int fontSize, double scale, bool darkMode)
+        public static void SaveSettings(int fontSize, double scale)
         {
             try
             {
                 var settings = new Settings
                 {
-                    FontSize = Math.Clamp(fontSize, 10, 35),
-                    Scale = Math.Clamp(scale, 0.5, 2.0),
-                    DarkMode = darkMode
+                    FontSize = fontSize,
+                    Scale = scale
                 };
-
-                // Убедимся, что директория существует
-                string directory = Path.GetDirectoryName(SettingsFilePath);
-                if (!Directory.Exists(directory))
-                {
-                    Directory.CreateDirectory(directory);
-                }
-
-                // Сохраняем настройки в JSON
                 string json = JsonConvert.SerializeObject(settings, Formatting.Indented);
                 File.WriteAllText(SettingsFilePath, json);
-                Debug.WriteLine("Настройки успешно сохранены.");
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Ошибка при сохранении настроек: {ex.Message}");
-                Debug.WriteLine($"Стек вызовов: {ex.StackTrace}");
+                Console.WriteLine($"Ошибка при сохранении настроек: {ex.Message}");
             }
         }
 
@@ -89,10 +75,8 @@ namespace UruruNotes
             }
             return 1.0; // Значение по умолчанию
         }
-        /// <summary>
-        ///  // Метод для загрузки всех настроек сразу (опционально)
-        /// </summary>
-        /// <returns></returns>
+
+        // Метод для загрузки всех настроек сразу (опционально)
         public static Settings LoadSettings()
         {
             try
@@ -101,25 +85,19 @@ namespace UruruNotes
                 {
                     string json = File.ReadAllText(SettingsFilePath);
                     var settings = JsonConvert.DeserializeObject<Settings>(json);
-                    if (settings == null)
+                    var loadedSettings = new Settings
                     {
-                        return new Settings();
-                    }
-
-                    // Применяем ограничения к значениям
-                    settings.FontSize = Math.Clamp(settings.FontSize, 10, 35);
-                    settings.Scale = Math.Clamp(settings.Scale, 0.5, 2.0);
-                    return settings;
+                        FontSize = Math.Clamp(settings?.FontSize ?? 15, 10, 35),
+                        Scale = Math.Clamp(settings?.Scale ?? 1.0, 0.5, 2.0)
+                    };
+                    return loadedSettings;
                 }
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Ошибка при загрузке настроек: {ex.Message}");
-                Debug.WriteLine($"Стек вызовов: {ex.StackTrace}");
+                Console.WriteLine($"Ошибка при загрузке настроек: {ex.Message}");
             }
-
-            // Возвращаем настройки по умолчанию, если файл не существует или произошла ошибка
-            return new Settings();
+            return new Settings { FontSize = 15, Scale = 1.0 }; // Значения по умолчанию
         }
 
 

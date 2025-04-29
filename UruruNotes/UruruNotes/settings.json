@@ -1,6 +1,4 @@
 ﻿{
-    "FontSize": 15,
-    "Scale": 1.0,
-    "DarkMode": false
-
+    "SelectedFontSize": 15,
+    "Scale": 1.0
 }

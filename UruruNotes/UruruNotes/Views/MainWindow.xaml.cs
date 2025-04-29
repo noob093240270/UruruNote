@@ -57,7 +57,6 @@ namespace UruruNotes.Views
             _viewModel.PropertyChanged += ViewModel_PropertyChanged;
 
             UpdateWindowSize(_viewModel.Scale); // Устанавливаем начальные размеры окна с учётом масштаба
-            App.ApplyTheme(App.CurrentTheme);
         }
 
         private void MainWindow_Closing(object sender, CancelEventArgs e)
@@ -181,10 +180,8 @@ namespace UruruNotes.Views
         /// </summary>
         private void CreateNewFileButton_Click(object sender, RoutedEventArgs e)
         {
-            bool currentTheme = App.CurrentTheme;
-            var viewModel = DataContext as MainViewModel;
+            var viewModel = DataContext as MainViewModel; // Получаем доступ к ViewModel
             viewModel?.CreateNewMarkdownFileCommand.Execute(null);
-            App.ApplyTheme(currentTheme);
         }
 
         /// <summary>
@@ -192,26 +189,15 @@ namespace UruruNotes.Views
         /// </summary>
         private void CreateNewFolderButton_Click(object sender, RoutedEventArgs e)
         {
-            Debug.WriteLine($"Перед созданием папки, текущая тема: {(App.CurrentTheme ? "Тёмная" : "Светлая")}");
-            bool currentTheme = App.CurrentTheme;
             var viewModel = DataContext as MainViewModel;
             viewModel?.CreateFolderCommand.Execute(null);
-            Dispatcher.InvokeAsync(() =>
-            {
-                Debug.WriteLine($"После создания папки, перед восстановлением темы: {(App.CurrentTheme ? "Тёмная" : "Светлая")}");
-                App.ApplyTheme(currentTheme);
-                Debug.WriteLine($"Тема восстановлена после создания папки: {(currentTheme ? "Тёмная" : "Светлая")}");
-            }, System.Windows.Threading.DispatcherPriority.Background);
         }
-        
 
         /// <summary>
         /// Обработчик для добавления файла в папку ПКМ
         /// </summary>
         private void AddFileMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            Debug.WriteLine($"Перед добавлением файла, текущая тема: {(App.CurrentTheme ? "Тёмная" : "Светлая")}");
-            bool currentTheme = App.CurrentTheme;
             if ((sender as MenuItem)?.DataContext is FolderItem selectedFolder)
             {
                 if (DataContext is MainViewModel viewModel)
@@ -219,12 +205,6 @@ namespace UruruNotes.Views
                     viewModel.AddFileCommand.Execute(selectedFolder);
                 }
             }
-            Dispatcher.InvokeAsync(() =>
-            {
-                Debug.WriteLine($"После добавления файла, перед восстановлением темы: {(App.CurrentTheme ? "Тёмная" : "Светлая")}");
-                App.ApplyTheme(currentTheme);
-                Debug.WriteLine($"Тема восстановлена после добавления файла: {(currentTheme ? "Тёмная" : "Светлая")}");
-            }, System.Windows.Threading.DispatcherPriority.Background);
         }
 
         private MarkdownViewer _currentMarkdownViewer; // Ссылка на текущее открытое окно
@@ -748,7 +728,6 @@ namespace UruruNotes.Views
         }
         private void DeleteFolderButton_Click(object sender, RoutedEventArgs e)
         {
-            bool currentTheme = App.CurrentTheme;
             if ((sender as MenuItem)?.DataContext is FolderItem folderItem)
             {
                 if (DataContext is MainViewModel viewModel)
@@ -756,15 +735,10 @@ namespace UruruNotes.Views
                     viewModel.DeleteFolder(folderItem); // вызов метода для удаления папки
                 }
             }
-            App.ApplyTheme(currentTheme);
         }
 
         private void DeleteFileButton_Click(object sender, RoutedEventArgs e)
         {
-
-            bool currentTheme = App.CurrentTheme;
-            // Получаем объект FileItem из CommandParameter
-
             var fileItem = (sender as MenuItem)?.CommandParameter as FileItem;
 
             if (fileItem != null)
@@ -805,7 +779,6 @@ namespace UruruNotes.Views
             {
                 MessageBox.Show("Файл не найден");
             }
-            App.ApplyTheme(currentTheme);
         }
 
 
@@ -890,7 +863,6 @@ namespace UruruNotes.Views
 
         private void MoveToFolderMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            bool currentTheme = App.CurrentTheme;
             var menuItem = sender as MenuItem;
             if (menuItem?.DataContext is FileItem fileItem)
             {
@@ -900,7 +872,6 @@ namespace UruruNotes.Views
             {
                 ShowMoveToFolderDialog(folderItem);
             }
-            App.ApplyTheme(currentTheme);
         }
 
         private void ShowMoveToFolderDialog(object itemToMove)

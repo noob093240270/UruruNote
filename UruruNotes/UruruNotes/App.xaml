@@ -13,6 +13,7 @@
             </ResourceDictionary.MergedDictionaries>
 
             <!-- Глобальный шрифт -->
+
             <FontFamily x:Key="GlobalFont">Segoe UI</FontFamily>
 
             <!-- Размер шрифта -->
