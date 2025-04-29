@@ -4,7 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
-        xmlns:local="clr-namespace:UruruNotes.Models" xmlns:viewsmodels="clr-namespace:UruruNote.ViewsModels" d:DataContext="{d:DesignInstance Type=viewsmodels:MainViewModel}"
+        xmlns:local="clr-namespace:UruruNotes.Models" 
+        xmlns:viewsmodels="clr-namespace:UruruNote.ViewsModels" 
         mc:Ignorable="d"
         SizeToContent="WidthAndHeight"
         Title="UruruNote" MinWidth="400" MinHeight="300" Background="#FFEBEBEB" Icon="/Views/logo3.ico">
@@ -113,8 +114,7 @@
                     <ColumnDefinition/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal">
-                    <!-- Кнопка для разворачивания -->
+                <StackPanel Orientation="Horizontal">
                     <Button x:Name="ButtonOpen" Width="23" Height="23" Margin="3,0" Click="ToggleVisibilityButton_Click" Focusable="False" BorderThickness="0"
                         HorizontalAlignment="Left" Visibility="Collapsed" Style="{StaticResource MenuButtons}">
                         <Button.Background>
@@ -140,92 +140,6 @@
                 </StackPanel>
                 <Image Source="pack://application:,,,/UruruNotes;component/Resources/settingsbutton.png" 
                    Cursor="Hand" HorizontalAlignment="Right" ToolTip="Настройки" MouseUp="SettingsIcon_MouseUp" Grid.Column="1" VerticalAlignment="Top"/>
-                <!-- Правая область -->
-                <Grid Grid.Column="1">
-                    <!-- Панель с режимом редактирования и предпросмотра -->
-                    <Grid x:Name="EditorAndPreviewContainer">
-                        <!-- Режим редактирования (RichTextBox) -->
-                        <RichTextBox Name="MarkdownRichTextBox" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Visible" />
-
-                        <!-- Режим предпросмотра (WebBrowser) -->
-                        <WebBrowser Name="MarkdownPreview" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed"/>
-                    </Grid>
-                </Grid>
-
-                <!-- Левое меню -->
-                <Grid Grid.Column="0" Background="#FFEBEBEB" x:Name="TreeViewGrid">
-                    <materialDesign:Card x:Name="LeftMenu" Width="200" UniformCornerRadius="0" VerticalAlignment="Stretch">
-                        <materialDesign:Card.Background>
-                            <SolidColorBrush Color="#FFEBEBEB" Opacity="0"/>
-                        </materialDesign:Card.Background>
-                        <Grid>
-                            <Grid.Background>
-                                <SolidColorBrush Color="#FFCCCCCC" Opacity="1"/>
-                            </Grid.Background>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*" MinHeight="100"/>
-                                <RowDefinition Height="auto" />
-                            </Grid.RowDefinitions>
-                            <ScrollViewer Grid.Row="0" Background="#FFF6F6F6" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Margin="3,0,3,3">
-                                <StackPanel>
-                                    <!-- Первый TreeView для папок -->
-                                    <TreeView ItemsSource="{Binding Folders}" Margin="10,10,10,10"
-SelectedItemChanged="TreeView_SelectedItemChanged"
-PreviewMouseLeftButtonDown="TreeView_PreviewMouseLeftButtonDown"
-DragEnter="TreeView_DragEnter"
-Drop="TreeView_Drop"
-AllowDrop="True">
-                                        <TreeView.ItemTemplate>
-                                            <HierarchicalDataTemplate ItemsSource="{Binding CompositeSubItems}">
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="{Binding FileName}" ToolTip="{Binding FilePath}">
-                                                        <TextBlock.ContextMenu>
-                                                            <ContextMenu>
-                                                                <MenuItem Header="Добавить файл" Click="AddFileMenuItem_Click" />
-                                                                <MenuItem Header="Удалить папку" Click="DeleteFolderButton_Click" />
-                                                                <MenuItem Header="Перенести в..." Click="MoveToFolderMenuItem_Click" />
-                                                            </ContextMenu>
-                                                        </TextBlock.ContextMenu>
-                                                    </TextBlock>
-                                                </StackPanel>
-                                            </HierarchicalDataTemplate>
-                                        </TreeView.ItemTemplate>
-                                    </TreeView>
-                                    <TreeView ItemsSource="{Binding Files}" SelectedItemChanged="TreeView_SelectedItemChanged"
-Margin="10,10,10,10" PreviewMouseLeftButtonDown="TreeView_PreviewMouseLeftButtonDown"
-DragEnter="TreeView_DragEnter"
-Drop="TreeView_Drop"
-AllowDrop="True">
-                                        <TreeView.ItemTemplate>
-                                            <HierarchicalDataTemplate ItemsSource="{Binding CompositeSubItems}">
-                                                <TextBlock Text="{Binding FileName}" ToolTip="{Binding FilePath}">
-                                                    <TextBlock.ContextMenu>
-                                                        <ContextMenu>
-                                                            <MenuItem Header="Удалить файл" Click="DeleteFileButton_Click" CommandParameter="{Binding}" />
-                                                            <MenuItem Header="Перенести в..." Click="MoveToFolderMenuItem_Click" />
-                                                        </ContextMenu>
-                                                    </TextBlock.ContextMenu>
-                                                </TextBlock>
-                                            </HierarchicalDataTemplate>
-                                        </TreeView.ItemTemplate>
-                                    </TreeView>
-                                </StackPanel>
-                            </ScrollViewer>
-                            <Grid Grid.Row="1" Margin="0,1,0,3">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition />
-                                    <ColumnDefinition />
-                                </Grid.ColumnDefinitions>
-                                <StackPanel Grid.Column="0" HorizontalAlignment="Center">
-                                    <Button Content="Новый файл" Click="CreateNewFileButton_Click" Padding="3" Width="90" BorderBrush="#FF235C9A" Background="#FFF6F6F6"/>
-                                </StackPanel>
-                                <StackPanel Grid.Column="1" HorizontalAlignment="Center">
-                                    <Button Click="CreateNewFolderButton_Click" Padding="3" Content="Новая папка" Background="#FFF6F6F6" FontWeight="Normal" Width="92" BorderBrush="#FF235C9A"/>
-                                </StackPanel>
-                            </Grid>
-                        </Grid>
-                    </materialDesign:Card>
-                </Grid>
             </Grid>
         </Border>
 
@@ -326,9 +240,12 @@ AllowDrop="True">
                     </ScrollViewer>
                 </materialDesign:Card>
             </Grid>
+
             <!-- Основная область для страниц -->
             <Frame x:Name="PageFrame" NavigationUIVisibility="Hidden" Grid.Column="1" Background="#FFEBEBEB" 
                HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Navigated="PageFrame_Navigated"/>
         </Grid>
+
+
     </Grid>
 </Window>
