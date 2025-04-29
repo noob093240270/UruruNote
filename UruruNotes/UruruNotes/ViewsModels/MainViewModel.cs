@@ -88,7 +88,7 @@ namespace UruruNote.ViewsModels
                         OnPropertyChanged(nameof(SelectedFontSize));
                         ApplyFont();
                         App.UpdateGlobalFontSize(value);
-                        SettingsManager.SaveSettings(value, Scale); // Сохраняем всегда
+                        SettingsManager.SaveSettings(value, Scale, IsNotificationsEnabled); // Сохраняем всегда
                         if (!_isUpdatingFontSize)
                         {
                             Debug.WriteLine($"FontSize notification: {value}");
@@ -154,7 +154,7 @@ namespace UruruNote.ViewsModels
                     Debug.WriteLine($"Scale изменён на: {value}");
                     OnPropertyChanged(nameof(Scale));
                     UpdateScale();
-                    SettingsManager.SaveSettings(SelectedFontSize, value); // Сохраняем при каждом изменении
+                    SettingsManager.SaveSettings(SelectedFontSize, value, IsNotificationsEnabled); // Сохраняем при каждом изменении
                     if (!_isInitializing)
                     {
                         //ShowScaleNotification(value);
@@ -162,6 +162,20 @@ namespace UruruNote.ViewsModels
                     }
                     ScaleDisplay = $"{value * 100:F0}%";
                     _previousScale = value;
+                }
+            }
+        }
+        private bool _isNotificationsEnabled;
+        public bool IsNotificationsEnabled
+        {
+            get => _isNotificationsEnabled;
+            set
+            {
+                if (_isNotificationsEnabled != value)
+                {
+                    _isNotificationsEnabled = value;
+                    OnPropertyChanged();
+                    SettingsManager.SaveSettings(SelectedFontSize, Scale, value);
                 }
             }
         }
@@ -451,6 +465,7 @@ namespace UruruNote.ViewsModels
             Scale = settings.Scale;
             SelectedScaleOption = settings.Scale;
             _isInitializing = false;
+            IsNotificationsEnabled = settings.IsNotificationsEnabled ?? false;
 
             // Явно вызываем уведомления для начальной синхронизации
             OnPropertyChanged(nameof(Scale));
@@ -500,7 +515,7 @@ namespace UruruNote.ViewsModels
             {
                 if (e.PropertyName == nameof(SelectedFontSize))
                 {
-                    SettingsManager.SaveSettings(SelectedFontSize, SelectedScaleOption);
+                    SettingsManager.SaveSettings(SelectedFontSize, SelectedScaleOption, IsNotificationsEnabled);
                 }
             };
         }

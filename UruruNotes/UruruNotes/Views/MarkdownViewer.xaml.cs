@@ -22,8 +22,14 @@ using UruruNotes.Views;
 
 namespace UruruNote.Views
 {
-    public partial class MarkdownViewer : UserControl
+    public partial class MarkdownViewer : UserControl, INotifyPropertyChanged
     {
+        // Реализуем INotifyPropertyChanged
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
 
         private FileItem _file;
         // Зависимое свойство для FontSize
@@ -425,8 +431,17 @@ namespace UruruNote.Views
                 {
                     _selectedFontSize = value;
                     UpdateFontSize(value); // Обновляем размер шрифта
-                                           // Сохраняем новый размер шрифта в настройки
-                    SettingsManager.SaveSettings(_selectedFontSize, SettingsManager.LoadScale());
+                    // Получаем MainViewModel из DataContext
+                    if (DataContext is MainViewModel mainViewModel)
+                    {
+                        SettingsManager.SaveSettings(_selectedFontSize, SettingsManager.LoadScale(), mainViewModel.IsNotificationsEnabled);
+                    }
+                    else
+                    {
+                        // Если DataContext не MainViewModel, используем значение по умолчанию
+                        SettingsManager.SaveSettings(_selectedFontSize, SettingsManager.LoadScale(), false);
+                    }
+                    OnPropertyChanged(nameof(SelectedFontSize)); // Уведомляем об изменении
                 }
             }
         }

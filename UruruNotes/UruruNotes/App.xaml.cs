@@ -19,15 +19,18 @@ namespace UruruNotes
     /// Interaction logic for App.xaml
     /// </summary>
     public partial class App : Application
+
     {
         public static event EventHandler FontSizeChanged;
 
 
+        private MainViewModel _mainViewModel;
 
         /// <summary>
         /// Метод для обновления глобального размера шрифта
         /// </summary>
         /// <param name="fontSize">Размер шрифта</param>
+        /// 
         public static void UpdateGlobalFontSize(double fontSize)
         {
             if (Application.Current.Resources.Contains("GlobalFontSize"))
@@ -78,16 +81,30 @@ namespace UruruNotes
                     return; // Не завершаем приложение
                 }
 
-                // Если это просто уведомление, показываем его
-                string message = e.Args[0];
-                Debug.WriteLine($"Показ уведомления: {message}");
-                ShowToastNotification("Напоминание", message);
-
-                // Не завершаем приложение, если это не нажатие на уведомление
+                // Проверяем IsNotificationsEnabled перед показом уведомления
+                if (_mainViewModel.IsNotificationsEnabled)
+                {
+                    string message = e.Args[0];
+                    Debug.WriteLine($"Показ уведомления: {message}");
+                    ShowToastNotification("Напоминание", message);
+                }
+                else
+                {
+                    Debug.WriteLine("Уведомления отключены, уведомление не показано.");
+                }
                 return;
+            }
+            foreach (Window window in Application.Current.Windows)
+            {
+                if (window is MainWindow mainWindow)
+                {
+                    mainWindow.DataContext = _mainViewModel;
+                    break;
+                }
             }
 
             // Загрузка сохраненных настроек
+            _mainViewModel = new MainViewModel();
             var settings = SettingsManager.LoadSettings();
             UpdateGlobalFontSize(settings.FontSize);
             UpdateGlobalScale(settings.Scale);
@@ -139,10 +156,15 @@ namespace UruruNotes
 
         private void ShowToastNotification(string title, string message)
         {
-            // Проверяем, открыто ли окно "Детали напоминания"
+            // Проверяем, включены ли уведомления
+            if (!_mainViewModel.IsNotificationsEnabled)
+            {
+                Debug.WriteLine("Уведомления отключены, уведомление не показано.");
+                return;
+            }
+
             if (!IsReminderWindowOpen)
             {
-                // Показываем уведомление
                 new ToastContentBuilder()
                     .AddText(title)
                     .AddText(message)
@@ -154,7 +176,7 @@ namespace UruruNotes
                 Debug.WriteLine("Окно 'Детали напоминания' уже открыто, уведомление не показывается.");
             }
         }
-                
+
 
     }
 }

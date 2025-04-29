@@ -19,15 +19,18 @@ namespace UruruNotes
         {
             public int FontSize { get; set; }
             public double Scale { get; set; }
+
+            public bool? IsNotificationsEnabled { get; set; }
         }
-        public static void SaveSettings(int fontSize, double scale)
+        public static void SaveSettings(int fontSize, double scale, bool isNotificationsEnabled)
         {
             try
             {
                 var settings = new Settings
                 {
                     FontSize = fontSize,
-                    Scale = scale
+                    Scale = scale,
+                     IsNotificationsEnabled = isNotificationsEnabled
                 };
                 string json = JsonConvert.SerializeObject(settings, Formatting.Indented);
                 File.WriteAllText(SettingsFilePath, json);
@@ -88,7 +91,8 @@ namespace UruruNotes
                     var loadedSettings = new Settings
                     {
                         FontSize = Math.Clamp(settings?.FontSize ?? 15, 10, 35),
-                        Scale = Math.Clamp(settings?.Scale ?? 1.0, 0.5, 2.0)
+                        Scale = Math.Clamp(settings?.Scale ?? 1.0, 0.5, 2.0),
+                        IsNotificationsEnabled = settings?.IsNotificationsEnabled ?? false
                     };
                     return loadedSettings;
                 }
@@ -97,7 +101,7 @@ namespace UruruNotes
             {
                 Console.WriteLine($"Ошибка при загрузке настроек: {ex.Message}");
             }
-            return new Settings { FontSize = 15, Scale = 1.0 }; // Значения по умолчанию
+            return new Settings { FontSize = 15, Scale = 1.0, IsNotificationsEnabled = false }; // Значения по умолчанию
         }
 
 

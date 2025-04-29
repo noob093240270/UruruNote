@@ -18,11 +18,14 @@ using Microsoft.Toolkit.Uwp.Notifications;
 using Microsoft.Win32.TaskScheduler;
 using System.Windows.Documents;
 using Newtonsoft.Json.Linq;
+using UruruNote.ViewsModels;
 
 namespace UruruNotes.ViewsModels
 {
     public class CalendarViewModel : INotifyPropertyChanged
     {
+        private readonly MainViewModel _mainViewModel;
+
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
@@ -313,11 +316,11 @@ namespace UruruNotes.ViewsModels
         public ObservableCollection<int> Hours { get; set; }
         public ObservableCollection<int> Minutes { get; set; }
 
-        public CalendarViewModel()
+        public CalendarViewModel(MainViewModel mainViewModel)
         {
             _currentDate = DateTime.Today;
             EnsureFoldersExist();
-
+            _mainViewModel = mainViewModel ?? throw new ArgumentNullException(nameof(mainViewModel));
             Days = new ObservableCollection<DayViewModel>();
             Notes = new ObservableCollection<Note>();
 
@@ -580,15 +583,18 @@ namespace UruruNotes.ViewsModels
                 // Сохраняем напоминание в файл
                 SaveReminderForDate(SelectedDate.Value, reminder);
 
-                /* Планируем уведомление на указанное время
+                // Планируем задачу только если уведомления включены
                 DateTime reminderDateTime = SelectedDate.Value.Date + SelectedReminderTime;
-                ScheduleReminderNotification(reminderDateTime, NewTaskContentRemind);
+                if (_mainViewModel.IsNotificationsEnabled)
+                {
+                    ScheduleReminderTask(reminderDateTime, NewTaskContentRemind);
+                    Debug.WriteLine("Задача запланирована, так как уведомления включены.");
+                }
+                else
+                {
+                    Debug.WriteLine("Уведомления отключены, задача не запланирована.");
+                }
 
-                MessageBox.Show("Напоминание успешно сохранено!");*/
-                // Планируем уведомление через планировщик задач
-                DateTime reminderDateTime = SelectedDate.Value.Date + SelectedReminderTime;
-                ScheduleReminderTask(reminderDateTime, NewTaskContentRemind);
-                //MessageBox.Show("Напоминание успешно сохранено!");
                 UpdateCalendar();
             }
             else
@@ -596,6 +602,7 @@ namespace UruruNotes.ViewsModels
                 MessageBox.Show("Ошибка: не все данные для напоминания заполнены.");
             }
         }
+
 
 
         // Метод для показа уведомления
@@ -611,6 +618,13 @@ namespace UruruNotes.ViewsModels
 
         private void ScheduleReminderTask(DateTime reminderTime, string message)
         {
+            // Проверяем, включены ли уведомления
+            if (!_mainViewModel.IsNotificationsEnabled)
+            {
+                Debug.WriteLine("Уведомления отключены, задача не запланирована.");
+                return;
+            }
+
             try
             {
                 using (TaskService ts = new TaskService())
@@ -619,15 +633,13 @@ namespace UruruNotes.ViewsModels
                     td.RegistrationInfo.Description = "UruruNotes Reminder";
                     td.Triggers.Add(new TimeTrigger(reminderTime));
 
-                    // Убедимся, что задача не повторяется
                     td.Settings.AllowDemandStart = false;
                     td.Settings.DisallowStartIfOnBatteries = false;
                     td.Settings.StopIfGoingOnBatteries = false;
                     td.Settings.AllowHardTerminate = true;
 
-                    // Указываем путь к .exe файлу
                     string appPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
-                    string exePath = appPath.Replace(".dll", ".exe"); // Заменяем .dll на .exe
+                    string exePath = appPath.Replace(".dll", ".exe");
 
                     td.Actions.Add(new ExecAction(exePath, $"\"{message}\"", null));
 
@@ -643,6 +655,7 @@ namespace UruruNotes.ViewsModels
                 MessageBox.Show($"Ошибка при создании задачи в планировщике: {ex.Message}");
             }
         }
+
 
         private void SaveNoteForDate(DateTime date, Note note)
         {
