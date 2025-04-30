@@ -12,7 +12,7 @@
         MinHeight="550" MinWidth="850"
         Title="CalendarPage" Icon="/Views/calendar.png"
         SizeToContent="WidthAndHeight"
-    HorizontalContentAlignment="Stretch">
+        HorizontalContentAlignment="Stretch"> 
     <Window.Resources>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <converters:BoolToBrushConverter x:Key="BoolToBrushConverter" />
@@ -215,8 +215,7 @@
             <BeginStoryboard Storyboard="{StaticResource OpeningRightMenu}" />
         </EventTrigger>
     </Window.Triggers>
-
-    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+    
         <Grid x:Name="ContentGrid" LayoutTransform="{Binding ScaleTransform}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" MinWidth="400" x:Name="CalendarColumn"/>
@@ -298,11 +297,11 @@
             </StackPanel>
 
             <!-- Поле редактирования и создания заметок/напоминаний -->
-            <Grid Grid.Column="0" Visibility="{Binding IsEditorVisible, Converter={StaticResource BoolToVisibilityConverter}}">
+        <Grid Grid.Column="0" Visibility="{Binding IsEditorVisible, Converter={StaticResource BoolToVisibilityConverter}}"  VerticalAlignment="Stretch">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>   <!-- Кнопка "Назад" -->
+                <RowDefinition Height="*"/>      <!-- Основное содержимое -->
+            </Grid.RowDefinitions>
 
                 <!-- Кнопка "Назад" -->
                 <Button Content="← Назад к календарю" 
@@ -314,45 +313,45 @@
                   VerticalScrollBarVisibility="Auto"
                   HorizontalScrollBarVisibility="Disabled"
                   HorizontalAlignment="Stretch">
+                    
                     <StackPanel Grid.Row="1" Margin="10"
                 MaxWidth="{Binding ActualWidth, 
                     RelativeSource={RelativeSource AncestorType=ScrollViewer}, 
                     Converter={StaticResource SubtractMarginConverter}, 
                     ConverterParameter=40}">
-                        <TextBlock Text="{Binding CurrentView, Converter={StaticResource ViewToTextConverter}}" 
-               FontSize="{Binding NoteTitleFontSize}" />
+                        
 
                         <!-- Секция заметок -->
                         <StackPanel Visibility="{Binding CurrentView, Converter={StaticResource ViewToVisibilityConverter}, ConverterParameter=Notes}">
                             <TextBlock Text="Создать заметку" FontSize="{Binding NoteTitleFontSize}" FontWeight="Bold" Margin="10" HorizontalAlignment="Stretch"/>
                             <TextBox TextWrapping="Wrap" Text="{Binding NewTaskContent}" 
-               AcceptsReturn="True" AcceptsTab="True" 
-              VerticalScrollBarVisibility="Auto"
-         HorizontalScrollBarVisibility="Disabled"
-          MinHeight="150" HorizontalAlignment="Stretch"
-               Margin="10"                
-               FontSize="{Binding NoteFontSize}" 
-               CaretBrush="#FF235C9A" SelectionBrush="#FF235C9A" 
-               PreviewKeyDown="TextBox_PreviewKeyDown" Loaded="TextBox_Loaded" />
-                            <Button Content="Сохранить" Command="{Binding SaveNoteCommand}" 
+                            AcceptsReturn="True" AcceptsTab="True" 
+                            VerticalScrollBarVisibility="Auto"
+                             HorizontalScrollBarVisibility="Disabled"
+                             HorizontalAlignment="Stretch"  MinHeight="150" MaxHeight="300"
+                           Margin="10"                
+                           FontSize="{Binding NoteFontSize}" 
+                           CaretBrush="#FF235C9A" SelectionBrush="#FF235C9A" 
+                           PreviewKeyDown="TextBox_PreviewKeyDown" Loaded="TextBox_Loaded" />
+                                <Button Content="Сохранить" Command="{Binding SaveNoteCommand}" 
                                 MinWidth="80" MinHeight="25" 
                                 Margin="20,5,5,10" HorizontalAlignment="Left" 
                                 Background="White" BorderBrush="#FF235C9A" FontSize="{Binding NoteFontSize}" Style="{StaticResource StyledButton}"/>
-
                         </StackPanel>
 
                         <!-- Секция напоминаний -->
                         <StackPanel Visibility="{Binding CurrentView, Converter={StaticResource ViewToVisibilityConverter}, ConverterParameter=Reminders}">
                             <TextBlock Text="Создать напоминание" FontSize="{Binding NoteTitleFontSize}" FontWeight="Bold" Margin="10" HorizontalAlignment="Stretch"/>
-                            <TextBox TextWrapping="Wrap" Text="{Binding NewTaskContentRemind}" 
-               AcceptsReturn="True" AcceptsTab="True" 
-              HorizontalScrollBarVisibility="Disabled"
-              VerticalScrollBarVisibility="Auto"
-             MinHeight="150" HorizontalAlignment="Stretch"
-                        FontSize="{Binding NoteFontSize}" 
-               CaretBrush="#FF235C9A" SelectionBrush="#FF235C9A" 
-               PreviewKeyDown="TextBox_PreviewKeyDown" Loaded="TextBox_Loaded" />
-                            <Button Content="Сохранить" Command="{Binding SaveReminderCommand}" 
+                                <TextBox TextWrapping="Wrap" Text="{Binding NewTaskContentRemind}" 
+                                AcceptsReturn="True" AcceptsTab="True" 
+                                 VerticalScrollBarVisibility="Auto"
+                                  HorizontalScrollBarVisibility="Disabled"
+                                  MinHeight="150" MaxHeight="300" HorizontalAlignment="Stretch"
+                                Margin="10"  
+                            FontSize="{Binding NoteFontSize}" 
+                               CaretBrush="#FF235C9A" SelectionBrush="#FF235C9A" 
+                               PreviewKeyDown="TextBox_PreviewKeyDown" Loaded="TextBox_Loaded" />
+                                <Button Content="Сохранить" Command="{Binding SaveReminderCommand}" 
                                 MinWidth="80" MinHeight="25" Margin="20,5,5,10"
                                 Background="White" BorderBrush="#FF235C9A" FontSize="{Binding NoteFontSize}" Style="{StaticResource StyledButton}" HorizontalAlignment="Left" />
                             <TextBlock Text="Время напоминания:" FontSize="{Binding NoteFontSize}" Height="Auto" Width="Auto" Margin="20,0,0,0" HorizontalAlignment="Left" />
@@ -694,8 +693,7 @@ ConverterParameter=20}"
                         </StackPanel>-->
                         
                     </StackPanel>
-                </Grid>
+                </Grid>                
             </Border>
         </Grid>
-    </ScrollViewer>
 </Window>
