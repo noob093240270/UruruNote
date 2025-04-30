@@ -106,6 +106,28 @@ namespace UruruNotes.ViewsModels
             }
         }
 
+        private bool _isEditorVisible;
+        public bool IsEditorVisible
+        {
+            get => _isEditorVisible;
+            set
+            {
+                _isEditorVisible = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(IsCalendarVisible));
+            }
+        }
+
+        public bool IsCalendarVisible => !_isEditorVisible;
+
+        public ICommand CreateNewNoteCommand { get; }
+        public ICommand BackToCalendarCommand { get; }
+
+        /// <summary>
+        /// Команда для сохранения в зависимости от текущего вида
+        /// </summary>
+        public ICommand SaveCommand { get; }
+
         private DateTime? _selectedDate;
         public DateTime? SelectedDate
         {
@@ -345,6 +367,8 @@ namespace UruruNotes.ViewsModels
             OpenTaskAreaCommand = new RelayCommand<DayViewModel>(OpenTaskArea);
             SaveNoteCommand = new RelayCommand(SaveNote);
             SaveReminderCommand = new RelayCommand(SaveReminder);
+            CreateNewNoteCommand = new RelayCommand(() => IsEditorVisible = true);
+            BackToCalendarCommand = new RelayCommand(() => IsEditorVisible = false);
 
             Hours = new ObservableCollection<int>(Enumerable.Range(0, 24));
             Minutes = new ObservableCollection<int>(Enumerable.Range(0, 60).Where(m => m % 5 == 0)); // Шаг 5 минут
@@ -353,6 +377,11 @@ namespace UruruNotes.ViewsModels
             SelectedMinute = 0;
 
             SwitchViewCommand = new RelayCommand<string>(SwitchView);
+            SaveCommand = new RelayCommand(() =>
+            {
+                if (CurrentView == ViewType.Notes) SaveNote();
+                else SaveReminder();
+            });
 
             UpdateCalendar();
             UpdateScaledProperties();
@@ -476,8 +505,17 @@ namespace UruruNotes.ViewsModels
             {
                 SelectedDate = selectedDay.Date;
                 IsTaskPanelVisible = true; // Показываем панель задач
-                // Загружаем данные для выбранного дня
-                LoadNotesForDate(selectedDay.Date.Value);
+                IsEditorVisible = true; // Открываем редактор
+
+                // Загружаем данные в зависимости от текущего вида
+                if (CurrentView == ViewType.Notes)
+                {
+                    LoadNoteForDate(selectedDay.Date.Value);
+                }
+                else
+                {
+                    LoadReminderForDate(selectedDay.Date.Value);
+                }
 
                 if (string.IsNullOrEmpty(NewTaskContent))
                 {
@@ -502,11 +540,9 @@ namespace UruruNotes.ViewsModels
             if (!Directory.Exists(remindersFolder)) Directory.CreateDirectory(remindersFolder);
         }
 
-        private void LoadNotesForDate(DateTime date)
+        private void LoadNoteForDate(DateTime date)
         {
             string noteFilePath = GetNotesFilePath(date, false);
-            string reminderFilePath = GetNotesFilePath(date, true);
-
             if (File.Exists(noteFilePath))
             {
                 NewTaskContent = File.ReadAllText(noteFilePath);
@@ -515,7 +551,11 @@ namespace UruruNotes.ViewsModels
             {
                 NewTaskContent = $"# Создание задачи на {date:dd MMMM yyyy}\n";
             }
+        }
 
+        private void LoadReminderForDate(DateTime date)
+        {
+            string reminderFilePath = GetNotesFilePath(date, true);
             if (File.Exists(reminderFilePath))
             {
                 string reminderContent = File.ReadAllText(reminderFilePath);
