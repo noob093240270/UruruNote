@@ -87,12 +87,11 @@ namespace UruruNote.ViewsModels
                         Debug.WriteLine($"SelectedFontSize изменён на: {value}");
                         OnPropertyChanged(nameof(SelectedFontSize));
                         ApplyFont();
-                        /*
+                        
                         SettingsManager.SaveSettings(value, Scale, IsDarkModeEnabled); // Сохраняем всегда
                         if (_previousFontSize.HasValue && _previousFontSize != value)
-                        */
-                        App.UpdateGlobalFontSize(value);
-                        SettingsManager.SaveSettings(value, Scale); // Сохраняем всегда
+                        
+                        
                         if (!_isUpdatingFontSize)
 
                         {
@@ -564,7 +563,7 @@ namespace UruruNote.ViewsModels
             {
                 if (e.PropertyName == nameof(SelectedFontSize))
                 {
-                    SettingsManager.SaveSettings(SelectedFontSize, SelectedScaleOption);
+                    SettingsManager.SaveSettings(SelectedFontSize, SelectedScaleOption, _isDarkModeEnabled);
                 }
             };
         }

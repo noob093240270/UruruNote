@@ -24,6 +24,7 @@ namespace UruruNotes
         /// Метод для обновления глобального размера шрифта
         /// </summary>
         /// <param name="fontSize">Размер шрифта</param>
+        public static event EventHandler FontSizeChanged;
         public static void UpdateGlobalFontSize(double fontSize)
         {
             if (Application.Current.Resources.Contains("GlobalFontSize"))
@@ -34,8 +35,6 @@ namespace UruruNotes
             {
                 Application.Current.Resources.Add("GlobalFontSize", fontSize);
             }
-
-            FontSizeChanged?.Invoke(null, EventArgs.Empty); // Добавляем уведомление
         }
 
         /// <summary>

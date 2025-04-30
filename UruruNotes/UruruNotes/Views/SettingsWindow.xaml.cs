@@ -57,7 +57,6 @@ namespace UruruNotes.ViewsModels
                     ThemeComboBox.SelectionChanged -= ThemeComboBox_SelectionChanged;
                     ThemeComboBox.SelectionChanged += ThemeComboBox_SelectionChanged;
                     _mainViewModel.UpdateScale();
-                    _mainViewModel.ApplyFont();
                     Dispatcher.Invoke(() =>
                     {
                         ScaleComboBox.SelectedItem = _mainViewModel.SelectedScaleOption;
@@ -67,18 +66,11 @@ namespace UruruNotes.ViewsModels
             };
 
         }
-        /*
+        
         protected override void OnClosed(EventArgs e)
         {
             base.OnClosed(e);
-
-            // Удаляем подписки
-            
         
-        
-        
-        
-        ComboBox.SelectionChanged -= FontSizeComboBox_SelectionChanged;
             ScaleComboBox.SelectionChanged -= ScaleComboBox_SelectionChanged;
             ThemeComboBox.SelectionChanged -= ThemeComboBox_SelectionChanged;
         }
@@ -213,7 +205,7 @@ namespace UruruNotes.ViewsModels
                     _mainViewModel.SelectedFontSize = size;
                 }
             }
-        }*/
+        }
 
         // Обработка ввода масштаба
         private void ScaleComboBox_PreviewTextInput(object sender, TextCompositionEventArgs e)

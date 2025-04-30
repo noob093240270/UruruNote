@@ -51,6 +51,34 @@ namespace UruruNotes
                 Debug.WriteLine($"Стек вызовов: {ex.StackTrace}");
             }
         }
+        public static void SaveSettings(int fontSize, double scale)
+        {
+            try
+            {
+                var settings = new Settings
+                {
+                    FontSize = Math.Clamp(fontSize, 10, 35),
+                    Scale = Math.Clamp(scale, 0.5, 2.0),
+                };
+
+                // Убедимся, что директория существует
+                string directory = Path.GetDirectoryName(SettingsFilePath);
+                if (!Directory.Exists(directory))
+                {
+                    Directory.CreateDirectory(directory);
+                }
+
+                // Сохраняем настройки в JSON
+                string json = JsonConvert.SerializeObject(settings, Formatting.Indented);
+                File.WriteAllText(SettingsFilePath, json);
+                Debug.WriteLine("Настройки успешно сохранены.");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Ошибка при сохранении настроек: {ex.Message}");
+                Debug.WriteLine($"Стек вызовов: {ex.StackTrace}");
+            }
+        }
 
         // Метод для загрузки размера шрифта
         public static int LoadFontSize()

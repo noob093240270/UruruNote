@@ -175,7 +175,7 @@
                         <ScrollViewer Grid.Row="0" Background="{DynamicResource PanelBackground}" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Margin="3,0,3,3">
                             <StackPanel>
                                 <!-- Первый TreeView для папок -->
-                                <TreeView ItemsSource="{Binding Folders}" Margin="10,10,10,10"
+                                <TreeView x:Name="FoldersTreeView" ItemsSource="{Binding Folders}" Margin="10,10,10,10"
                                           SelectedItemChanged="TreeView_SelectedItemChanged"
                                           PreviewMouseLeftButtonDown="TreeView_PreviewMouseLeftButtonDown"
                                           DragEnter="TreeView_DragEnter"

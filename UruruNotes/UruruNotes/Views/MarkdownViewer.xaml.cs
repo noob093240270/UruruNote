@@ -441,6 +441,7 @@ namespace UruruNote.Views
                     _selectedFontSize = value;
                     UpdateFontSize(value); // Обновляем размер шрифта
                                            // Сохраняем новый размер шрифта в настройки
+                    
                     SettingsManager.SaveSettings(_selectedFontSize, SettingsManager.LoadScale());
                 }
             }
