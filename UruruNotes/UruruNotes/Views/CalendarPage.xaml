@@ -208,6 +208,12 @@
             </Style.Triggers>
         </Style>
 
+        <Style TargetType="TreeViewItem">
+            <Setter Property="Foreground" Value="#333"/>
+            <Setter Property="FontSize" Value="{Binding NoteFontSize}"/>
+            <Setter Property="Margin" Value="2"/>
+        </Style>
+
     </Window.Resources>
 
     <Window.Triggers>
@@ -280,16 +286,29 @@
                                         <RowDefinition Height="*" />
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
+
+                                    <!-- Число дня -->
                                     <TextBlock Text="{Binding DisplayText}" 
                                                HorizontalAlignment="Center" VerticalAlignment="Center" 
                                                Grid.Row="0" FontSize="{Binding DataContext.DayFontSize, RelativeSource={RelativeSource AncestorType=Window}}"/>
+
+                                    <!-- Блок с красной точкой и временем -->
                                     <StackPanel Orientation="Horizontal" 
-                                                HorizontalAlignment="Center" VerticalAlignment="Center" 
-                                                Grid.Row="1" >
-                                        <Ellipse Width="6" Height="6" Fill="Red" VerticalAlignment="Center"
-                                                 Visibility="{Binding HasNote, Converter={StaticResource BoolToVisibilityConverter}}" />
-                                        <TextBlock Text="{Binding ReminderTime}" VerticalAlignment="Center" 
-                                                   Foreground="Red" FontSize="{Binding DataContext.DayFontSize, RelativeSource={RelativeSource AncestorType=Window}}" />
+                                               HorizontalAlignment="Center" 
+                                               VerticalAlignment="Center" 
+                                               Grid.Row="1">
+                                        <Ellipse Width="6" 
+                                             Height="6" 
+                                             Fill="Red" 
+                                             VerticalAlignment="Center"
+                                             Visibility="{Binding HasNote, Converter={StaticResource BoolToVisibilityConverter}}"/>
+
+                                        <!-- Отображаем ближайшее время -->
+                                        <TextBlock Text="{Binding NearestReminder}" 
+                                                   Margin="5,0"
+                                                   Foreground="Red" 
+                                                   FontSize="{Binding DataContext.DayFontSize, 
+                                                           RelativeSource={RelativeSource AncestorType=Window}}"/>
                                     </StackPanel>
                                 </Grid>
                             </Button>
@@ -347,7 +366,7 @@
                            FontSize="{Binding NoteFontSize}" 
                            CaretBrush="#FF235C9A" SelectionBrush="#FF235C9A" 
                            PreviewKeyDown="TextBox_PreviewKeyDown" Loaded="TextBox_Loaded" />
-                            <Button Grid.Row="2" Content="Сохранить" Command="{Binding SaveNoteCommand}" 
+                            <Button Grid.Row="2" Content="Сохранить" Command="{Binding SaveNoteCommand}" CommandParameter="{Binding SelectedNote}"
                                 MinWidth="80" MinHeight="25" 
                                 Margin="20,5,5,10" HorizontalAlignment="Left" 
                                 Background="White" BorderBrush="#FF235C9A" FontSize="{Binding NoteFontSize}" Style="{StaticResource StyledButton}"/>
@@ -510,7 +529,7 @@
 
                         <Button Content="Напоминания" 
             Command="{Binding SwitchViewCommand}" 
-            CommandParameter="Reminders"
+            CommandParameter="Reminders" 
             Style="{StaticResource StyledButton}"
             Margin="5,0"
             Background="{Binding CurrentView, Converter={StaticResource ViewToBrushConverter}, ConverterParameter=Reminders}"/>
@@ -522,205 +541,33 @@
                     </StackPanel>
 
                     <!-- Секция заметок -->
-                    <!--
-                        <StackPanel Visibility="{Binding CurrentView, Converter={StaticResource ViewToVisibilityConverter}, ConverterParameter=Notes}">
-                        <TextBlock Text="Создать заметку" FontSize="{Binding NoteTitleFontSize}" FontWeight="Bold" Margin="10" HorizontalAlignment="Stretch"/>
-                        <TextBox TextWrapping="Wrap" Text="{Binding NewTaskContent}" 
-               AcceptsReturn="True" AcceptsTab="True" 
-               VerticalScrollBarVisibility="Auto"  
-               HorizontalAlignment="Stretch"
-               Height="{Binding TextBoxHeight}" Margin="10" 
-               MaxWidth="{Binding ActualWidth, ElementName=TaskPanel, 
-Converter={StaticResource SubtractMarginConverter}, 
-ConverterParameter=20}"
-               FontSize="{Binding NoteFontSize}" 
-               CaretBrush="#FF235C9A" SelectionBrush="#FF235C9A" 
-               PreviewKeyDown="TextBox_PreviewKeyDown" Loaded="TextBox_Loaded" />
-                        <Button Content="Сохранить" Command="{Binding SaveNoteCommand}" 
-                                MinWidth="80" MinHeight="25" 
-                                Margin="20,5,5,10" HorizontalAlignment="Left" 
-                                Background="White" BorderBrush="#FF235C9A" FontSize="{Binding NoteFontSize}" Style="{StaticResource StyledButton}"/>
-
+                    <StackPanel Grid.Row="1" Visibility="{Binding CurrentView, Converter={StaticResource ViewToVisibilityConverter}, ConverterParameter=Notes}">
+                        <TreeView ItemsSource="{Binding Notes}" 
+              SelectedItemChanged="NoteTreeView_SelectedItemChanged"
+              Margin="10">
+                            <TreeView.ItemTemplate>
+                                <HierarchicalDataTemplate>
+                                    <TextBlock Text="{Binding Title}"/>
+                                </HierarchicalDataTemplate>
+                            </TreeView.ItemTemplate>
+                        </TreeView>
                     </StackPanel>
 
-                    -->
                     <!-- Секция напоминаний -->
-                    <!--
-                        <StackPanel Visibility="{Binding CurrentView, Converter={StaticResource ViewToVisibilityConverter}, ConverterParameter=Reminders}">
-                        <TextBlock Text="Создать напоминание" FontSize="{Binding NoteTitleFontSize}" FontWeight="Bold" Margin="10" HorizontalAlignment="Stretch"/>
-                        <TextBox TextWrapping="Wrap" Text="{Binding NewTaskContentRemind}" 
-               AcceptsReturn="True" AcceptsTab="True" 
-               VerticalScrollBarVisibility="Auto" 
-               HorizontalAlignment="Stretch"  
-               Height="{Binding TextBoxHeight}" Margin="10" 
-               MaxWidth="{Binding ActualWidth, ElementName=TaskPanel, 
-                Converter={StaticResource SubtractMarginConverter}, 
-                ConverterParameter=20}"
-               FontSize="{Binding NoteFontSize}" 
-               CaretBrush="#FF235C9A" SelectionBrush="#FF235C9A" 
-               PreviewKeyDown="TextBox_PreviewKeyDown" Loaded="TextBox_Loaded" />
-                        <Button Content="Сохранить" Command="{Binding SaveReminderCommand}" 
-                                MinWidth="80" MinHeight="25" Margin="20,5,5,10"
-                                Background="White" BorderBrush="#FF235C9A" FontSize="{Binding NoteFontSize}" Style="{StaticResource StyledButton}" HorizontalAlignment="Left" />
-                        <TextBlock Text="Время напоминания:" FontSize="{Binding NoteFontSize}" Height="Auto" Width="Auto" Margin="20,0,0,0" HorizontalAlignment="Left" />
-                        <StackPanel Orientation="Horizontal" Margin="10,5,10,10">
-                            <ComboBox x:Name="HourPicker" SelectedItem="{Binding SelectedHour}" 
-                                      Width="100" VerticalAlignment="Center" Margin="5,0,5,0" 
-                                      FontSize="{Binding NoteFontSize}" Style="{StaticResource CustomComboBoxStyle}">
-                                <ComboBox.ItemsSource>
-                                    <x:Array Type="{x:Type sys:Int32}">
-                                        <sys:Int32>0</sys:Int32>
-                                        <sys:Int32>1</sys:Int32>
-                                        <sys:Int32>2</sys:Int32>
-                                        <sys:Int32>3</sys:Int32>
-                                        <sys:Int32>4</sys:Int32>
-                                        <sys:Int32>5</sys:Int32>
-                                        <sys:Int32>6</sys:Int32>
-                                        <sys:Int32>7</sys:Int32>
-                                        <sys:Int32>8</sys:Int32>
-                                        <sys:Int32>9</sys:Int32>
-                                        <sys:Int32>10</sys:Int32>
-                                        <sys:Int32>11</sys:Int32>
-                                        <sys:Int32>12</sys:Int32>
-                                        <sys:Int32>13</sys:Int32>
-                                        <sys:Int32>14</sys:Int32>
-                                        <sys:Int32>15</sys:Int32>
-                                        <sys:Int32>16</sys:Int32>
-                                        <sys:Int32>17</sys:Int32>
-                                        <sys:Int32>18</sys:Int32>
-                                        <sys:Int32>19</sys:Int32>
-                                        <sys:Int32>20</sys:Int32>
-                                        <sys:Int32>21</sys:Int32>
-                                        <sys:Int32>22</sys:Int32>
-                                        <sys:Int32>23</sys:Int32>
-                                    </x:Array>
-                                </ComboBox.ItemsSource>
-                            </ComboBox>
-
-                            <ComboBox x:Name="MinutePicker" SelectedItem="{Binding SelectedMinute}" 
-
-                                      Width="100" VerticalAlignment="Center" Margin="0,0,10,0" 
-                                      FontSize="{Binding NoteFontSize}" Style="{StaticResource CustomComboBoxStyle}">
-                                <ComboBox.ItemsSource>
-                                    <x:Array Type="{x:Type sys:Int32}">
-                                        <sys:Int32>0</sys:Int32>
-                                        <sys:Int32>5</sys:Int32>
-                                        <sys:Int32>10</sys:Int32>
-                                        <sys:Int32>15</sys:Int32>
-                                        <sys:Int32>20</sys:Int32>
-                                        <sys:Int32>25</sys:Int32>
-                                        <sys:Int32>30</sys:Int32>
-                                        <sys:Int32>35</sys:Int32>
-                                        <sys:Int32>40</sys:Int32>
-                                        <sys:Int32>45</sys:Int32>
-                                        <sys:Int32>50</sys:Int32>
-                                        <sys:Int32>55</sys:Int32>
-                                    </x:Array>
-                                </ComboBox.ItemsSource>
-                            </ComboBox>
-
-                        </StackPanel>
-                        
-                        </StackPanel>-->
-
-
-
-
-                    <!-- Заметка -->
-                    <!--
-                        <TextBlock Text="Создать заметку" FontSize="{Binding NoteTitleFontSize}" FontWeight="Bold" Margin="10" HorizontalAlignment="Stretch"/>
-                              <TextBox TextWrapping="Wrap" Text="{Binding NewTaskContent}" 
-               AcceptsReturn="True" AcceptsTab="True" 
-               VerticalScrollBarVisibility="Auto"  
-               HorizontalAlignment="Stretch"
-               Height="{Binding TextBoxHeight}" Margin="10" 
-               MaxWidth="{Binding ActualWidth, ElementName=TaskPanel, 
-Converter={StaticResource SubtractMarginConverter}, 
-ConverterParameter=20}"
-               FontSize="{Binding NoteFontSize}" 
-               CaretBrush="#FF235C9A" SelectionBrush="#FF235C9A" 
-               PreviewKeyDown="TextBox_PreviewKeyDown" Loaded="TextBox_Loaded" />
-                        <Button Content="Сохранить" Command="{Binding SaveNoteCommand}" 
-                                MinWidth="80" MinHeight="25" 
-                                Margin="20,5,5,10" HorizontalAlignment="Left" 
-                                Background="White" BorderBrush="#FF235C9A" FontSize="{Binding NoteFontSize}" Style="{StaticResource StyledButton}"/>
-
-                        -->
-                    <!-- Напоминание -->
-                    <!--
-                        <TextBlock Text="Создать напоминание" FontSize="{Binding NoteTitleFontSize}" FontWeight="Bold" Margin="10" HorizontalAlignment="Stretch"/>
-                              <TextBox TextWrapping="Wrap" Text="{Binding NewTaskContentRemind}" 
-               AcceptsReturn="True" AcceptsTab="True" 
-               VerticalScrollBarVisibility="Auto" 
-               HorizontalAlignment="Stretch"  
-               Height="{Binding TextBoxHeight}" Margin="10" 
-               MaxWidth="{Binding ActualWidth, ElementName=TaskPanel, 
-Converter={StaticResource SubtractMarginConverter}, 
-ConverterParameter=20}"
-               FontSize="{Binding NoteFontSize}" 
-               CaretBrush="#FF235C9A" SelectionBrush="#FF235C9A" 
-               PreviewKeyDown="TextBox_PreviewKeyDown" Loaded="TextBox_Loaded" />
-                        <Button Content="Сохранить" Command="{Binding SaveReminderCommand}" 
-                                MinWidth="80" MinHeight="25" Margin="20,5,5,10"
-                                Background="White" BorderBrush="#FF235C9A" FontSize="{Binding NoteFontSize}" Style="{StaticResource StyledButton}" HorizontalAlignment="Left" />
-                        <TextBlock Text="Время напоминания:" FontSize="{Binding NoteFontSize}" Height="Auto" Width="Auto" Margin="20,0,0,0" HorizontalAlignment="Left" />
-                        <StackPanel Orientation="Horizontal" Margin="10,5,10,10">
-                            <ComboBox x:Name="HourPicker" SelectedItem="{Binding SelectedHour}" 
-                                      Width="100" VerticalAlignment="Center" Margin="5,0,5,0" 
-                                      FontSize="{Binding NoteFontSize}" Style="{StaticResource CustomComboBoxStyle}">
-                                <ComboBox.ItemsSource>
-                                    <x:Array Type="{x:Type sys:Int32}">
-                                        <sys:Int32>0</sys:Int32>
-                                        <sys:Int32>1</sys:Int32>
-                                        <sys:Int32>2</sys:Int32>
-                                        <sys:Int32>3</sys:Int32>
-                                        <sys:Int32>4</sys:Int32>
-                                        <sys:Int32>5</sys:Int32>
-                                        <sys:Int32>6</sys:Int32>
-                                        <sys:Int32>7</sys:Int32>
-                                        <sys:Int32>8</sys:Int32>
-                                        <sys:Int32>9</sys:Int32>
-                                        <sys:Int32>10</sys:Int32>
-                                        <sys:Int32>11</sys:Int32>
-                                        <sys:Int32>12</sys:Int32>
-                                        <sys:Int32>13</sys:Int32>
-                                        <sys:Int32>14</sys:Int32>
-                                        <sys:Int32>15</sys:Int32>
-                                        <sys:Int32>16</sys:Int32>
-                                        <sys:Int32>17</sys:Int32>
-                                        <sys:Int32>18</sys:Int32>
-                                        <sys:Int32>19</sys:Int32>
-                                        <sys:Int32>20</sys:Int32>
-                                        <sys:Int32>21</sys:Int32>
-                                        <sys:Int32>22</sys:Int32>
-                                        <sys:Int32>23</sys:Int32>
-                                    </x:Array>
-                                </ComboBox.ItemsSource>
-                            </ComboBox>
-
-                            <ComboBox x:Name="MinutePicker" SelectedItem="{Binding SelectedMinute}" 
-
-                                      Width="100" VerticalAlignment="Center" Margin="0,0,10,0" 
-                                      FontSize="{Binding NoteFontSize}" Style="{StaticResource CustomComboBoxStyle}">
-                                <ComboBox.ItemsSource>
-                                    <x:Array Type="{x:Type sys:Int32}">
-                                        <sys:Int32>0</sys:Int32>
-                                        <sys:Int32>5</sys:Int32>
-                                        <sys:Int32>10</sys:Int32>
-                                        <sys:Int32>15</sys:Int32>
-                                        <sys:Int32>20</sys:Int32>
-                                        <sys:Int32>25</sys:Int32>
-                                        <sys:Int32>30</sys:Int32>
-                                        <sys:Int32>35</sys:Int32>
-                                        <sys:Int32>40</sys:Int32>
-                                        <sys:Int32>45</sys:Int32>
-                                        <sys:Int32>50</sys:Int32>
-                                        <sys:Int32>55</sys:Int32>
-                                    </x:Array>
-                                </ComboBox.ItemsSource>
-                            </ComboBox>
-
-                        </StackPanel>-->
+                    <StackPanel Grid.Row="1" Visibility="{Binding CurrentView, Converter={StaticResource ViewToVisibilityConverter}, ConverterParameter=Reminders}">
+                        <TreeView ItemsSource="{Binding Reminders}" 
+              SelectedItemChanged="ReminderTreeView_SelectedItemChanged"
+              Margin="10">
+                            <TreeView.ItemTemplate>
+                                <HierarchicalDataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding Time, StringFormat='{}{0:hh\\:mm}'}" Foreground="DimGray" Margin="0,0,5,0"/>
+                                        <TextBlock Text="{Binding Title}"/>
+                                    </StackPanel>
+                                </HierarchicalDataTemplate>
+                            </TreeView.ItemTemplate>
+                        </TreeView>
+                    </StackPanel>
 
                 </StackPanel>
             </Grid>
