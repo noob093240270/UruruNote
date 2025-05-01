@@ -245,10 +245,11 @@ namespace UruruNotes.Views
         /// <summary>
         /// Обработчик для значка настроек
         /// </summary>
-        private void SettingsIcon_MouseUp(object sender, MouseButtonEventArgs e)
+        private void SettingsIcon_Click(object sender, RoutedEventArgs e)
         {
-            // Открываем окно настроек
-            _viewModel.OpenSettingsCommand.Execute(null);
+            // Передаём _viewModel в SettingsWindow
+            var settingsWindow = new SettingsWindow(_viewModel);
+            settingsWindow.ShowDialog();
         }
 
 

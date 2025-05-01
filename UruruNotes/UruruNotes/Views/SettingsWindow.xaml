@@ -9,10 +9,7 @@
         WindowStartupLocation="CenterScreen"
         SizeToContent="WidthAndHeight"
         Background="{DynamicResource WindowBackground}">
-    <Window.LayoutTransform>
-        <ScaleTransform ScaleX="{Binding Scale, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                    ScaleY="{Binding Scale, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-    </Window.LayoutTransform>
+
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -20,9 +17,9 @@
         </Grid.RowDefinitions>
 
         <Grid.LayoutTransform>
-            <ScaleTransform ScaleX="{Binding Scale}" ScaleY="{Binding Scale}" />
+            <ScaleTransform ScaleX="{Binding Scale, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                            ScaleY="{Binding Scale, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
         </Grid.LayoutTransform>
-
         <!-- Заголовок -->
         <TextBlock Text="Настройки" FontWeight="Bold" Margin="0,0,0,20" HorizontalAlignment="Center"
                    Foreground="{DynamicResource TextForeground}"/>
@@ -35,19 +32,15 @@
                 <Button Content="-" Command="{Binding DecreaseScaleCommand}" Style="{StaticResource ScaleButtonStyle}" Width="20" Height="NaN" ToolTip="Уменьшить масштаб"/>
 
                 <ComboBox x:Name="ScaleComboBox" Width="159"
-                          ItemsSource="{Binding ScaleOptions}"
-                          SelectedItem="{Binding SelectedScaleOption, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                          IsEditable="False"
-                          Text="{Binding ScaleDisplay, Mode=TwoWay}"
-                          SelectionChanged="ScaleComboBox_SelectionChanged"
-                          PreviewTextInput="ScaleComboBox_PreviewTextInput"
-                          KeyDown="ScaleComboBox_KeyDown"
-                          Background="{DynamicResource ControlBackground}">
+          ItemsSource="{Binding ScaleOptions}"
+          SelectedItem="{Binding SelectedScaleOption, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+          IsEditable="False"
+          SelectionChanged="ScaleComboBox_SelectionChanged"
+          Background="{DynamicResource ControlBackground}">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding StringFormat={}{0:P0}}" 
-                                           Foreground="{DynamicResource TextForeground}" 
-                                      />
+                       Foreground="{DynamicResource TextForeground}" />
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>

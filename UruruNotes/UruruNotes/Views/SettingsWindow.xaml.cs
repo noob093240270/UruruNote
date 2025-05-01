@@ -33,7 +33,7 @@ namespace UruruNotes.ViewsModels
         private MainViewModel _mainViewModel;
         private CalendarPage _calendarPage;
         private ThemeOption _previousTheme;
-        internal SettingsWindow(MainViewModel mainViewModel, MarkdownViewer markdownViewer = null, CalendarPage calendarPage = null)
+        public SettingsWindow(MainViewModel mainViewModel, MarkdownViewer markdownViewer = null, CalendarPage calendarPage = null)
         {
             InitializeComponent();
 

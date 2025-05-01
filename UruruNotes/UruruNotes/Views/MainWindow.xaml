@@ -6,12 +6,14 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
         xmlns:local="clr-namespace:UruruNotes.Models" 
         xmlns:viewsmodels="clr-namespace:UruruNote.ViewsModels" 
+        xmlns:converters="clr-namespace:UruruNotes.Converters"
         mc:Ignorable="d"
         SizeToContent="WidthAndHeight"
         Title="UruruNote" MinWidth="400" MinHeight="300" 
         Background="{DynamicResource WindowBackground}" Icon="/Views/logo3.ico">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <converters:ThemeToIconPathConverter x:Key="ThemeToIconPathConverter"/>
         <!-- Анимация закрытия левого меню -->
         <Storyboard x:Key="ClosingLeftMenu">
             <DoubleAnimation Storyboard.TargetName="LeftMenu"
@@ -55,7 +57,6 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <!-- Панель инструментов -->
             <Border Grid.ColumnSpan="2" Style="{StaticResource TopPanelBorder}">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -63,31 +64,57 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Orientation="Horizontal">
-                        <Button x:Name="ButtonOpen" Width="23" Height="23" Margin="3,0" Click="ToggleVisibilityButton_Click" Focusable="False" BorderThickness="0"
-                                HorizontalAlignment="Left" Visibility="Collapsed">
+                        <Button x:Name="ButtonOpen" Width="21" Height="21" Margin="3,0" Click="ToggleVisibilityButton_Click" Focusable="False" BorderThickness="0"
+					HorizontalAlignment="Left" Visibility="Collapsed">
                             <Button.Background>
-                                <ImageBrush ImageSource="pack://application:,,,/UruruNotes;component/Resources/treeview.png" />
+                                <ImageBrush>
+                                    <ImageBrush.ImageSource>
+                                        <Binding Path="IsDarkModeEnabled" Converter="{StaticResource ThemeToIconPathConverter}" ConverterParameter="treeview"/>
+
+                                    </ImageBrush.ImageSource>
+                                </ImageBrush>
                             </Button.Background>
                         </Button>
-                        <Button x:Name="ButtonClose" Width="23" Height="23" Margin="3,0" Click="ToggleVisibilityButton_Click" Focusable="False" BorderThickness="0"
-                                HorizontalAlignment="Left">
+                        <Button x:Name="ButtonClose" Width="22" Height="22" Margin="3,0" Click="ToggleVisibilityButton_Click" Focusable="False" BorderThickness="0"
+					HorizontalAlignment="Left">
                             <Button.Background>
-                                <ImageBrush ImageSource="pack://application:,,,/UruruNotes;component/Resources/treeview.png" />
+                                <ImageBrush >
+                                    <ImageBrush.ImageSource>
+                                        <Binding Path="IsDarkModeEnabled" Converter="{StaticResource ThemeToIconPathConverter}" ConverterParameter="treeview"/>
+
+                                    </ImageBrush.ImageSource>
+                                </ImageBrush>
                             </Button.Background>
                         </Button>
-                        <Button x:Name="Сalendar" Width="23" Height="23" Margin="5,0" Command="{Binding OpenCalendarCommand}">
+                        <Button x:Name="Сalendar" Width="23" Height="23" Margin="5,0" Command="{Binding OpenCalendarCommand}" BorderThickness="0">
                             <Button.BorderBrush>
                                 <ImageBrush/>
                             </Button.BorderBrush>
                             <Button.Background>
-                                <ImageBrush ImageSource="pack://application:,,,/UruruNotes;component/Resources/calendar.png" />
+                                <ImageBrush>
+                                    <ImageBrush.ImageSource>
+                                        <Binding Path="IsDarkModeEnabled" Converter="{StaticResource ThemeToIconPathConverter}" ConverterParameter="calendar"/>
+
+                                    </ImageBrush.ImageSource>
+                                </ImageBrush>
                             </Button.Background>
                         </Button>
-                        <Image Width="23" Height="23" Margin="5,0" Focusable="False" Source="pack://application:,,,/UruruNotes;component/Resources/magnifier.png"/>
+                        <Image Width="23" Height="23" Margin="5,0" Focusable="False">
+                            <Image.Source>
+                                <Binding Path="IsDarkModeEnabled" Converter="{StaticResource ThemeToIconPathConverter}" ConverterParameter="magnifier"/>
+
+                            </Image.Source>
+                        </Image>
                         <TextBox x:Name="SearchTextBox" Width="180" Height="34" Margin="10,0,0,0" KeyDown="SearchTextBox_KeyDown" VerticalAlignment="Center" Style="{DynamicResource SearchTextBoxStyle}" />
                     </StackPanel>
-                    <Image Source="pack://application:,,,/UruruNotes;component/Resources/settingsbutton.png" 
-                           Cursor="Hand" HorizontalAlignment="Right" ToolTip="Настройки" MouseUp="SettingsIcon_MouseUp" Grid.Column="1" VerticalAlignment="Top"/>
+                    <Button HorizontalAlignment="Center" Grid.Column="1" Click="SettingsIcon_Click" ToolTip="Настройки" BorderThickness="0"  VerticalAlignment="Top" >
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal">
+                                <Image Width="23" Height="19" Source="{Binding IsDarkModeEnabled, ConverterParameter=settingsbutton, Converter={StaticResource ThemeToIconPathConverter}}" Stretch="Uniform"  />
+
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
                 </Grid>
             </Border>
 
@@ -95,12 +122,14 @@
             <Grid Grid.Row="1" x:Name="MainGrid" Grid.ColumnSpan="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" MaxWidth="300" />
-                    <ColumnDefinition Width="181*" />
-                    <ColumnDefinition Width="19*"/>
+                    <ColumnDefinition Width="148*" />
+                    <ColumnDefinition Width="33*"/>
+                    <ColumnDefinition Width="11*"/>
+                    <ColumnDefinition Width="8*"/>
                 </Grid.ColumnDefinitions>
 
                 <!-- Правая область -->
-                <Grid Grid.Column="1" Grid.ColumnSpan="2">
+                <Grid Grid.Column="1" Grid.ColumnSpan="4">
                     <!-- Панель с режимом редактирования и предпросмотра -->
                     <Grid x:Name="EditorAndPreviewContainer">
                         <!-- Режим редактирования (RichTextBox) -->
@@ -189,7 +218,7 @@
                 </Grid>
 
                 <!-- Основная область для страниц -->
-                <Frame x:Name="PageFrame" NavigationUIVisibility="Hidden" Grid.Column="1" Background="{DynamicResource WindowBackground}" Navigated="PageFrame_Navigated" Grid.ColumnSpan="2"/>
+                <Frame x:Name="PageFrame" NavigationUIVisibility="Hidden" Grid.Column="1" Background="{DynamicResource WindowBackground}" Navigated="PageFrame_Navigated" Grid.ColumnSpan="4"/>
             </Grid>
         </Grid>
     </ScrollViewer>
