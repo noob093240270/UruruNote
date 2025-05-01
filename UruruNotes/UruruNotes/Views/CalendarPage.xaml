@@ -39,9 +39,10 @@
         <!-- Анимация открытия правого меню -->
         <Storyboard x:Key="OpeningRightMenu">
             <DoubleAnimation Storyboard.TargetName="TaskPanel"
-                 Storyboard.TargetProperty="Width" 
-                 From="0" To="{StaticResource PanelWidth}" 
-                 Duration="0:0:0.5" />
+                     Storyboard.TargetProperty="Width" 
+                     From="0" 
+                     To="{StaticResource PanelWidth}" 
+                     Duration="0:0:0.5"/>            
         </Storyboard>
 
         <Style x:Key="NoHoverButtonStyle" TargetType="Button">
@@ -225,13 +226,13 @@
         </EventTrigger>
     </Window.Triggers>
 
-    <Grid x:Name="ContentGrid" LayoutTransform="{Binding ScaleTransform}">
+    <Grid x:Name="ContentGrid" LayoutTransform="{Binding ScaleTransform}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" MinWidth="400" x:Name="CalendarColumn"/>
             <ColumnDefinition Width="Auto" x:Name="NotesColumn"/>
         </Grid.ColumnDefinitions>
 
-        <StackPanel Grid.Column="0" Visibility="{Binding IsCalendarVisible,
+        <Grid Grid.Column="0" Visibility="{Binding IsCalendarVisible,
                 Converter={StaticResource BoolToVisibilityConverter}}">
             <!-- Календарь -->
             <Grid Grid.Column="0">
@@ -263,10 +264,10 @@
                 </UniformGrid>
 
                 <!-- Календарь -->
-                <ItemsControl ItemsSource="{Binding Days}" Grid.Row="2" Margin="0,0,32,0">
+                <ItemsControl ItemsSource="{Binding Days}" Grid.Row="2" Margin="0,0,32,0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <UniformGrid Rows="6" Columns="7" />
+                            <UniformGrid Rows="6" Columns="7" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
@@ -281,7 +282,7 @@
                                     VerticalContentAlignment="Center"
                                     HorizontalContentAlignment="Center"
                                     Margin="{Binding DataContext.MarginButtons, RelativeSource={RelativeSource AncestorType=Window}}">
-                                <Grid>
+                                <Grid VerticalAlignment="Stretch">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*" />
                                         <RowDefinition Height="Auto" />
@@ -316,7 +317,7 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </Grid>
-        </StackPanel>
+        </Grid>
 
         <!-- Поле редактирования и создания заметок/напоминаний -->
         <Grid x:Name="EditBox" Grid.Column="0" Visibility="{Binding IsEditorVisible, Converter={StaticResource BoolToVisibilityConverter}}"  VerticalAlignment="Stretch">

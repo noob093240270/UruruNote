@@ -59,6 +59,7 @@ namespace UruruNotes
             ButtonWidth = 50 * scale;
             ButtonHeight = 50 * scale;
             DayFontSize = 14 * scale;
+            ContentGrid.Height = baseHeight * scale;
         }
 
         public CalendarPage(MainViewModel mainViewModel)

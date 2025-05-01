@@ -449,8 +449,8 @@ namespace UruruNotes.ViewsModels
         private void UpdateScaledProperties()
         {
             ButtonWidth = Math.Max(50 * Scale, 30);
-            ButtonHeight = Math.Max(30 * Scale, 20);
-            MarginTop = new Thickness(10 * Scale);
+            ButtonHeight = Math.Max(50 * Scale, 20);
+            MarginTop = new Thickness(10 * Scale, 10 * Scale, 10 * Scale, 10 * Scale);
             MarginMiddle = new Thickness(20 * Scale, 0, 20 * Scale, 0);
             MarginDays = new Thickness(10 * Scale);
             MarginButtons = new Thickness(5 * Scale);
