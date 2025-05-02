@@ -355,9 +355,10 @@
                                    Margin="10"
                                    Foreground="{DynamicResource TextForeground}"
                                    FontFamily="{DynamicResource GlobalFont}"/>
-                        <TextBox TextWrapping="Wrap" 
+                        <TextBox 
                                  Text="{Binding NewTaskContent}" 
                                  AcceptsReturn="True" 
+                                 TextWrapping="Wrap" 
                                  AcceptsTab="True" 
                                  VerticalScrollBarVisibility="Auto" 
                                  MaxWidth="278" 

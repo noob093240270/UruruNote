@@ -11,13 +11,13 @@
     <!-- #323232 -->
     <Color x:Key="ButtonBorderColor" A="255" R="72" G="72" B="75"/>
     <!-- #4A90E2 -->
-    <Color x:Key="ButtonForegroundColor" A="255" R="131" G="190" B="235"/>
+    <Color x:Key="ButtonForegroundColor" A="255" R="45" G="45" B="48"/>
     <!-- #4A90E2 -->
     <Color x:Key="PanelBackgroundColor" A="255" R="45" G="45" B="48"/>
     <!-- #262A2D -->
     <Color x:Key="MenuBackgroundColor" A="255" R="45" G="45" B="48"/>
     <!-- #282D32 -->
-    <Color x:Key="BorderBrushColor" A="255" R="41" G="41" B="44"/>
+    <Color x:Key="BorderBrushColor" A="255" R="45" G="45" B="48"/>
     <!-- #373737 -->
     <Color x:Key="TextBoxCaretColor" A="255" R="131" G="190" B="235"/>
     <!-- #4A90E2 -->
@@ -25,11 +25,11 @@
     <!-- #323232 -->
     <Color x:Key="ControlBorderColor" A="255" R="64" G="64" B="67"/>
     <!-- #373737 -->
-    <Color x:Key="PlaceholderForegroundColor" A="255" R="160" G="160" B="160"/>
+    <Color x:Key="PlaceholderForegroundColor" A="255" R="45" G="45" B="48"/>
     <!-- #A0A0A0 -->
     <Color x:Key="TreeViewForegroundColor" A="255" R="131" G="190" B="235"/>
     <!-- #4A90E2 -->
-    <Color x:Key="TreeViewBackgroundColor" A="255" R="72" G="72" B="75"/>
+    <Color x:Key="TreeViewBackgroundColor" A="255" R="45" G="45" B="48"/>
     <!-- #323232 -->
     <Color x:Key="ButtonActiveBackgroundColor" A="255" R="90" G="90" B="95"/>
     <!-- #5A5A5F -->
@@ -67,7 +67,7 @@
     <SolidColorBrush x:Key="ButtonBorder" Color="{DynamicResource ButtonBorderColor}"/>
     <SolidColorBrush x:Key="ButtonForeground" Color="{DynamicResource ButtonForegroundColor}"/>
     <SolidColorBrush x:Key="PanelBackground" Color="{DynamicResource PanelBackgroundColor}"/>
-    <SolidColorBrush x:Key="MenuBackground" Color="{DynamicResource MenuBackgroundColor}"/>
+    <SolidColorBrush x:Key="MenuBackground" Color="{DynamicResource PanelBackgroundColor}"/>
     <SolidColorBrush x:Key="BorderBrush" Color="{DynamicResource BorderBrushColor}"/>
     <SolidColorBrush x:Key="TextBoxCaret" Color="{DynamicResource TextBoxCaretColor}"/>
     <SolidColorBrush x:Key="ControlBackground" Color="{DynamicResource ControlBackgroundColor}"/>
