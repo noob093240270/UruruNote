@@ -377,7 +377,6 @@
             <!-- Кнопка "Назад" -->
             <Button Content="← Назад к календарю" 
             Command="{Binding BackToCalendarCommand}"
-            Style="{StaticResource StyledButton}"
             Margin="10" HorizontalAlignment="Left" Width="157"/>
 
             <ScrollViewer Grid.Row="1"
@@ -419,7 +418,7 @@
                                 MinWidth="80" MinHeight="25" 
                                 Margin="20,5,5,10" HorizontalAlignment="Left" 
                                 FontSize="{Binding NoteFontSize}"
-                                Background="{DynamicResource ButtonBackground}" BorderBrush="{DynamicResource ButtonBorder}" Style="{StaticResource StyledButton}" Foreground="{DynamicResource ButtonForeground}" />
+                                Background="{DynamicResource ButtonBackground}" BorderBrush="{DynamicResource ButtonBorder}" Foreground="{DynamicResource ButtonForeground}" />
                         </StackPanel>
                     </Grid>
 
@@ -469,7 +468,6 @@
                             BorderBrush="{DynamicResource ButtonBorder}"
                             Foreground="{DynamicResource ButtonForeground}"
                             FontSize="{Binding NoteFontSize}" 
-                            Style="{StaticResource StyledButton}" 
                             HorizontalAlignment="Left" />
                             <TextBlock Grid.Row="2" Text="Время напоминания:" FontSize="{Binding NoteFontSize}" Height="Auto" Width="Auto" Margin="20,0,0,0" HorizontalAlignment="Left" />
                             <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="10,5,10,10">
@@ -596,20 +594,17 @@
                         <Button Content="Заметки" 
                                 Command="{Binding SwitchViewCommand}" 
                                 CommandParameter="Notes"
-                                Style="{StaticResource StyledButton}"
                                 Margin="5,0"
                                 Background="{Binding CurrentView, Converter={StaticResource ViewToBrushConverter}, ConverterParameter=Notes}"/>
 
                         <Button Content="Напоминания" 
                                 Command="{Binding SwitchViewCommand}" 
                                 CommandParameter="Reminders" 
-                                Style="{StaticResource StyledButton}"
                                 Margin="5,0"
                                 Background="{Binding CurrentView, Converter={StaticResource ViewToBrushConverter}, ConverterParameter=Reminders}"/>
 
                         <Button Content="Создать" 
                                 Command="{Binding CreateNewNoteCommand}"
-                                Style="{StaticResource StyledButton}"
                                 Margin="5,0"/>
                     </StackPanel>
 
