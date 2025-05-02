@@ -419,7 +419,7 @@
                                 MinWidth="80" MinHeight="25" 
                                 Margin="20,5,5,10" HorizontalAlignment="Left" 
                                 FontSize="{Binding NoteFontSize}"
-                                Background="{DynamicResource ButtonBackground}" BorderBrush="{DynamicResource ButtonBorder}" FontSize="{Binding NoteFontSize}" Style="{StaticResource StyledButton}" Foreground="{DynamicResource ButtonForeground}" />
+                                Background="{DynamicResource ButtonBackground}" BorderBrush="{DynamicResource ButtonBorder}" Style="{StaticResource StyledButton}" Foreground="{DynamicResource ButtonForeground}" />
                         </StackPanel>
                     </Grid>
 
