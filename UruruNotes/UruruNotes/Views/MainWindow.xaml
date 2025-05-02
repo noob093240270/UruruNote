@@ -1,0 +1,267 @@
+﻿<Window x:Class="UruruNotes.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
+        xmlns:local="clr-namespace:UruruNotes.Models" 
+        xmlns:viewsmodels="clr-namespace:UruruNote.ViewsModels" 
+        mc:Ignorable="d"
+        SizeToContent="WidthAndHeight"
+        Title="UruruNote" MinWidth="400" MinHeight="300" Background="#FFEBEBEB" Icon="/Views/logo3.ico">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <!-- Анимация закрытия левого меню -->
+        <Storyboard x:Key="ClosingLeftMenu">
+            <DoubleAnimation Storyboard.TargetName="LeftMenu"
+                             Storyboard.TargetProperty="Width" 
+                             From="200" To="0" 
+                             Duration="0:0:0.5" />
+        </Storyboard>
+        <!-- Анимация открытия левого меню -->
+        <Storyboard x:Key="OpeningLeftMenu">
+            <DoubleAnimation Storyboard.TargetName="LeftMenu"
+                             Storyboard.TargetProperty="Width" 
+                             From="0" To="200" 
+                             Duration="0:0:0.5" />
+        </Storyboard>
+
+        <Style x:Key="StyledButton" TargetType="Button">
+            <Setter Property="Padding" Value="6,3"/>
+            <Setter Property="Width" Value="130"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="#5C6D93"/>
+            <Setter Property="Background" Value="#F8F9FC"/>
+            <Setter Property="BorderBrush" Value="#C5CDE6"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#E3EAF8"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="#B0BADF"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#D6E0F5"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="#A1AAD3"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="MenuButtons" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="OverridesDefaultStyle" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </Window.Resources>
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="ButtonClose">
+            <BeginStoryboard Storyboard="{StaticResource ClosingLeftMenu}" />
+        </EventTrigger>
+        <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="ButtonOpen">
+            <BeginStoryboard Storyboard="{StaticResource OpeningLeftMenu}" />
+        </EventTrigger>
+    </Window.Triggers>
+    <Window.Foreground>
+        <SolidColorBrush Color="#FFF9F9F9" Opacity="0.2"/>
+    </Window.Foreground>
+
+    <Grid>
+        <Grid.LayoutTransform>
+            <ScaleTransform ScaleX="{Binding Scale}" ScaleY="{Binding Scale}" />
+        </Grid.LayoutTransform>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <!-- Для TreeViewGrid -->
+            <ColumnDefinition Width="*"/>
+            <!-- Для PageFrame -->
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30" />
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Панель инструментов -->
+        <Border Grid.ColumnSpan="2" BorderBrush="#FFCCCCCC" BorderThickness="3" Background="#FFCCCCCC">
+            <Grid Background="#FFF6F6F6">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="ButtonOpen" Width="23" Height="23" Margin="3,0" Click="ToggleVisibilityButton_Click" Focusable="False" BorderThickness="0"
+                        HorizontalAlignment="Left" Visibility="Collapsed" Style="{StaticResource MenuButtons}">
+                        <Button.Background>
+                            <ImageBrush ImageSource="pack://application:,,,/UruruNotes;component/Resources/treeview.png" />
+                        </Button.Background>
+                    </Button>
+                    <Button x:Name="ButtonClose" Width="23" Height="23" Margin="3,0" Click="ToggleVisibilityButton_Click" Focusable="False" BorderThickness="0"
+                        HorizontalAlignment="Left" Style="{StaticResource MenuButtons}">
+                        <Button.Background>
+                            <ImageBrush ImageSource="pack://application:,,,/UruruNotes;component/Resources/treeview.png" />
+                        </Button.Background>
+                    </Button>
+                    <Button x:Name="Сalendar" Width="23" Height="23" Margin="5,0" Command="{Binding OpenCalendarCommand}" Style="{StaticResource MenuButtons}">
+                        <Button.BorderBrush>
+                            <ImageBrush/>
+                        </Button.BorderBrush>
+                        <Button.Background>
+                            <ImageBrush ImageSource="pack://application:,,,/UruruNotes;component/Resources/calendar.png" />
+                        </Button.Background>
+                    </Button>
+                    <Image Width="23" Height="23" Margin="5,0" Focusable="False" Source="pack://application:,,,/UruruNotes;component/Resources/magnifier.png"/>
+                    <TextBox x:Name="SearchTextBox" Width="200" Height="20" Margin="10,0,0,0" KeyDown="SearchTextBox_KeyDown"/>
+                </StackPanel>
+                <Image Source="pack://application:,,,/UruruNotes;component/Resources/settingsbutton.png" 
+                   Cursor="Hand" HorizontalAlignment="Right" ToolTip="Настройки" MouseUp="SettingsIcon_MouseUp" Grid.Column="1" VerticalAlignment="Top"/>
+            </Grid>
+        </Border>
+
+        <!-- Основная область -->
+        <Grid Grid.Row="1" x:Name="MainGrid" Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" MaxWidth="300" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Правая область -->
+            <Grid Grid.Column="1">
+                <!-- Панель с режимом редактирования и предпросмотра -->
+                <Grid x:Name="EditorAndPreviewContainer">
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                        <RichTextBox Name="MarkdownRichTextBox" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Visible" />
+                    </ScrollViewer>
+
+                    <WebBrowser Name="MarkdownPreview" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed"/>
+                </Grid>
+            </Grid>
+
+            <!-- Левое меню -->
+            <Grid Grid.Column="0" Background="#FFEBEBEB" x:Name="TreeViewGrid">
+                <materialDesign:Card x:Name="LeftMenu" Width="200" UniformCornerRadius="0" VerticalAlignment="Stretch">
+                    <materialDesign:Card.Background>
+                        <SolidColorBrush Color="#FFEBEBEB" Opacity="0"/>
+                    </materialDesign:Card.Background>
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                    <Grid>
+                        <Grid.Background>
+                            <SolidColorBrush Color="#FFCCCCCC" Opacity="1"/>
+                        </Grid.Background>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" MinHeight="100"/>
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
+                        <ScrollViewer Grid.Row="0" Background="#FFF6F6F6" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Margin="3,0,3,3">
+                            <StackPanel>
+                                <!-- Первый TreeView для папок -->
+                                    <TreeView x:Name="FoldersTreeView"
+          ItemsSource="{Binding Folders}"
+          Margin="10,10,10,10"
+          SelectedItemChanged="TreeView_SelectedItemChanged"
+          PreviewMouseLeftButtonDown="TreeView_PreviewMouseLeftButtonDown"
+          DragEnter="TreeView_DragEnter"
+          Drop="TreeView_Drop"
+          AllowDrop="True">
+
+                                        <TreeView.Resources>
+                                            <!-- Шаблон для папок -->
+                                            <HierarchicalDataTemplate DataType="{x:Type local:FolderItem}" ItemsSource="{Binding CompositeSubItems}">
+                                                <TextBlock Text="{Binding FileName}" ToolTip="{Binding FilePath}">
+                                                    <TextBlock.ContextMenu>
+                                                        <ContextMenu>
+                                                            <MenuItem Header="Добавить файл" Click="AddFileMenuItem_Click" />
+                                                            <MenuItem Header="Добавить подпапку" Click="AddSubFolderMenuItem_Click" CommandParameter="{Binding}" />
+                                                            <MenuItem Header="Удалить папку" Click="DeleteFolderButton_Click" CommandParameter="{Binding}" />
+                                                            <MenuItem Header="Перенести в..." Click="MoveToFolderMenuItem_Click" />
+                                                        </ContextMenu>
+                                                    </TextBlock.ContextMenu>
+                                                </TextBlock>
+                                            </HierarchicalDataTemplate>
+
+                                            <!-- Шаблон для файлов -->
+                                            <DataTemplate DataType="{x:Type local:FileItem}">
+                                                <TextBlock Text="{Binding FileName}" ToolTip="{Binding FilePath}">
+                                                    <TextBlock.ContextMenu>
+                                                        <ContextMenu>
+                                                            <MenuItem Header="Удалить файл" Click="DeleteFileButton_Click" CommandParameter="{Binding}" />
+                                                            <MenuItem Header="Перенести в..." Click="MoveToFolderMenuItem_Click" />
+                                                        </ContextMenu>
+                                                    </TextBlock.ContextMenu>
+                                                </TextBlock>
+                                            </DataTemplate>
+                                        </TreeView.Resources>
+                                    </TreeView>
+
+                                    <TreeView x:Name="FilesTreeView" ItemsSource="{Binding Files}" SelectedItemChanged="TreeView_SelectedItemChanged"
+                                        Margin="10,10,10,10" PreviewMouseLeftButtonDown="TreeView_PreviewMouseLeftButtonDown"
+                                        DragEnter="TreeView_DragEnter"
+                                        Drop="TreeView_Drop"
+                                        AllowDrop="True">
+                                    <TreeView.ItemTemplate>
+                                        <HierarchicalDataTemplate ItemsSource="{Binding CompositeSubItems}">
+                                            <TextBlock Text="{Binding FileName}" ToolTip="{Binding FilePath}">
+                                                <TextBlock.ContextMenu>
+                                                    <ContextMenu>
+                                                        <MenuItem Header="Удалить файл" Click="DeleteFileButton_Click" CommandParameter="{Binding}" />
+                                                        <MenuItem Header="Перенести в..." Click="MoveToFolderMenuItem_Click" />
+                                                    </ContextMenu>
+                                                </TextBlock.ContextMenu>
+                                            </TextBlock>
+                                        </HierarchicalDataTemplate>
+                                    </TreeView.ItemTemplate>
+                                </TreeView>
+                            </StackPanel>
+                        </ScrollViewer>
+                        <Grid Grid.Row="1" Margin="0,1,0,3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" HorizontalAlignment="Center">
+                                <Button Content="Новый файл" Click="CreateNewFileButton_Click" Padding="3" Width="90" BorderBrush="#FF235C9A" Background="#FFF6F6F6"
+                                    Style="{StaticResource StyledButton}"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" HorizontalAlignment="Center">
+                                <Button Click="CreateNewFolderButton_Click" Padding="3" Content="Новая папка" Background="#FFF6F6F6" Width="92" BorderBrush="#FF235C9A"
+                                    Style="{StaticResource StyledButton}"/>
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
+                    </ScrollViewer>
+                </materialDesign:Card>
+            </Grid>
+
+            <!-- Основная область для страниц -->
+            <Frame x:Name="PageFrame" NavigationUIVisibility="Hidden" Grid.Column="1" Background="#FFEBEBEB" 
+               HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Navigated="PageFrame_Navigated"/>
+        </Grid>
+
+
+    </Grid>
+</Window>
