@@ -335,6 +335,9 @@ namespace UruruNote.ViewsModels
             return !Folders.Any(f => f.FileName.Equals(folderName, StringComparison.OrdinalIgnoreCase));
         }
 
+        
+
+
 
 
         // Метод для загрузки структуры папок из файловой системы
