@@ -9,6 +9,7 @@ using System.Xml;
 using Formatting = Newtonsoft.Json.Formatting;
 using UruruNotes.Properties;
 using System.Diagnostics;
+using UruruNotes;
 
 namespace UruruNotes
 {
@@ -30,6 +31,34 @@ namespace UruruNotes
                     FontSize = Math.Clamp(fontSize, 10, 35),
                     Scale = Math.Clamp(scale, 0.5, 2.0),
                     DarkMode = darkMode
+                };
+
+                // Убедимся, что директория существует
+                string directory = Path.GetDirectoryName(SettingsFilePath);
+                if (!Directory.Exists(directory))
+                {
+                    Directory.CreateDirectory(directory);
+                }
+
+                // Сохраняем настройки в JSON
+                string json = JsonConvert.SerializeObject(settings, Formatting.Indented);
+                File.WriteAllText(SettingsFilePath, json);
+                Debug.WriteLine("Настройки успешно сохранены.");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Ошибка при сохранении настроек: {ex.Message}");
+                Debug.WriteLine($"Стек вызовов: {ex.StackTrace}");
+            }
+        }
+        public static void SaveSettings(int fontSize, double scale)
+        {
+            try
+            {
+                var settings = new Settings
+                {
+                    FontSize = Math.Clamp(fontSize, 10, 35),
+                    Scale = Math.Clamp(scale, 0.5, 2.0),
                 };
 
                 // Убедимся, что директория существует
@@ -120,5 +149,7 @@ namespace UruruNotes
             // Возвращаем настройки по умолчанию, если файл не существует или произошла ошибка
             return new Settings();
         }
+
+
     }
 }

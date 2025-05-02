@@ -4,8 +4,7 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:local="clr-namespace:UruruNotes.Helpers"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
-             ShutdownMode="OnLastWindowClose">
-
+             ShutdownMode="OnMainWindowClose">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -18,7 +17,9 @@
 
             <!-- Размер шрифта -->
             <sys:Double x:Key="GlobalFontSize">15</sys:Double>
-            <sys:Double x:Key="NoteFontSize">15</sys:Double>
+            <Style TargetType="TextBox" x:Key="MarkdownEditorStyle">
+                <Setter Property="FontSize" Value="{DynamicResource GlobalFontSize}"/>
+            </Style>
             <!-- Масштаб интерфейса -->
             <sys:Double x:Key="GlobalScale">1.0</sys:Double>
             <!-- Стиль для иконок -->

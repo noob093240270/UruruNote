@@ -38,7 +38,7 @@ namespace UruruNotes.ViewsModels
             InitializeComponent();
 
             DataContext = mainViewModel;
-            _markdownViewer = markdownViewer;
+            _markdownViewer = markdownViewer ?? new MarkdownViewer();
             _mainViewModel = mainViewModel;
             _calendarPage = calendarPage;
 
@@ -49,8 +49,8 @@ namespace UruruNotes.ViewsModels
                     _isInitializedF = true;
 
                     // Подписываемся на событие изменения размера шрифта
-                    FontSizeComboBox.SelectionChanged -= FontSizeComboBox_SelectionChanged;
-                    FontSizeComboBox.SelectionChanged += FontSizeComboBox_SelectionChanged;
+                    //FontSizeComboBox.SelectionChanged -= FontSizeComboBox_SelectionChanged;
+                    //FontSizeComboBox.SelectionChanged += FontSizeComboBox_SelectionChanged;
                     ScaleComboBox.SelectionChanged -= ScaleComboBox_SelectionChanged;
                     ScaleComboBox.SelectionChanged += ScaleComboBox_SelectionChanged;
                     ScaleComboBox.SelectedItem = _mainViewModel.SelectedScaleOption;
@@ -66,12 +66,11 @@ namespace UruruNotes.ViewsModels
             };
 
         }
+        
         protected override void OnClosed(EventArgs e)
         {
             base.OnClosed(e);
-
-            // Удаляем подписки
-            FontSizeComboBox.SelectionChanged -= FontSizeComboBox_SelectionChanged;
+        
             ScaleComboBox.SelectionChanged -= ScaleComboBox_SelectionChanged;
             ThemeComboBox.SelectionChanged -= ThemeComboBox_SelectionChanged;
         }
@@ -171,6 +170,19 @@ namespace UruruNotes.ViewsModels
             {
                 // Если значение корректное, применяем его
                 _mainViewModel.SelectedFontSize = size;
+
+                // Проверяем, что _markdownViewer существует
+                if (_markdownViewer != null)
+                {
+                    _markdownViewer.FontSize = size;
+                }
+                else
+                {
+                    // Логируем ошибку или выводим сообщение
+                    Debug.WriteLine("MarkdownViewer не инициализирован!");
+                }
+
+                UpdateFontSize(size);
             }
         }
 
@@ -184,11 +196,13 @@ namespace UruruNotes.ViewsModels
                 // Проверяем, изменился ли шрифт пользователем, а не при загрузке
                 if (_previousFontSize.HasValue && _previousFontSize != size)
                 {
+                    _mainViewModel.SelectedFontSize = size;
                     UpdateFontSize(size);
                 }
                 else if (!_previousFontSize.HasValue)
                 {
                     _previousFontSize = size; // Устанавливаем начальное значение без уведомления
+                    _mainViewModel.SelectedFontSize = size;
                 }
             }
         }
@@ -250,7 +264,7 @@ namespace UruruNotes.ViewsModels
 
                 if (_previousFontSize != newSize)
                 {
-                    MessageBox.Show($"Установлен размер шрифта: {newSize}", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
+                    //MessageBox.Show($"Установлен размер шрифта: {newSize}", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
 
                     _previousFontSize = newSize;
                     _markdownViewer?.UpdateFontSize(newSize);

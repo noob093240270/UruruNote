@@ -11,6 +11,8 @@ using UruruNotes.Views;
 using System.Diagnostics;
 using Microsoft.Win32.TaskScheduler;
 
+
+
 namespace UruruNotes
 {
     /// <summary>
@@ -18,11 +20,11 @@ namespace UruruNotes
     /// </summary>
     public partial class App : Application
     {
-
         /// <summary>
         /// Метод для обновления глобального размера шрифта
         /// </summary>
         /// <param name="fontSize">Размер шрифта</param>
+        public static event EventHandler FontSizeChanged;
         public static void UpdateGlobalFontSize(double fontSize)
         {
             if (Application.Current.Resources.Contains("GlobalFontSize"))
@@ -228,7 +230,6 @@ namespace UruruNotes
             }
         }
         public static bool CurrentTheme { get; set; } = false;
-
     }
 }
 
