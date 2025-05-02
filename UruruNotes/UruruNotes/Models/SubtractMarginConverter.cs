@@ -12,35 +12,23 @@ namespace UruruNotes.Models
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            // value - ActualWidth панели
-            // parameter - величина отступа (например, "20" для margin 10+10)
-
-            if (value is double width)
+            if (value is double parentWidth)
             {
-                double margin = 20; // значение по умолчанию
-
+                double margin = 40; // значение по умолчанию
                 if (parameter != null)
                 {
-                    // Пробуем получить margin из параметра
-                    if (parameter is string strParam && double.TryParse(strParam, out double parsedMargin))
-                    {
-                        margin = parsedMargin;
-                    }
-                    else if (parameter is double doubleParam)
-                    {
-                        margin = doubleParam;
-                    }
+                    if (!double.TryParse(parameter.ToString(), out margin))
+                        margin = 40;
                 }
-
-                return Math.Max(0, width - margin);
+                return Math.Max(0, parentWidth - margin);
             }
-
-            return value;
+            return 0;
         }
+
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
     }
 }

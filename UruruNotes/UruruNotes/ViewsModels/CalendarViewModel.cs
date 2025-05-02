@@ -16,6 +16,9 @@ using System.IO;           // Из ветки
 using System.Windows;
 using Microsoft.Toolkit.Uwp.Notifications;
 using Microsoft.Win32.TaskScheduler;
+using System.Globalization;
+using System.Text.RegularExpressions;
+using System.Collections.Generic; // Для IEnumerable<T>
 
 namespace UruruNotes.ViewsModels
 {
@@ -31,19 +34,68 @@ namespace UruruNotes.ViewsModels
         private bool _isTaskPanelVisible;
         private double _scale = 1.0;
 
+        // enum для типов вкладок
+        public enum ViewType { Notes, Reminders }
+
         public ObservableCollection<DayViewModel> Days { get; private set; }
         public string CurrentMonthYear => $"{_currentDate:MMMM yyyy}";
 
-        private ObservableCollection<Note> _notes;
-        public ObservableCollection<Note> Notes
+
+        private ObservableCollection<NoteItem> _notes;
+        public ObservableCollection<NoteItem> Notes { get; set; }
+
+        private ObservableCollection<ReminderItem> _reminders;
+        public ObservableCollection<ReminderItem> Reminders { get; set; }
+
+        private NoteItem _selectedNote;
+        public NoteItem SelectedNote
         {
-            get => _notes;
+            get => _selectedNote;
             set
             {
-                _notes = value;
+                _selectedNote = value;
                 OnPropertyChanged();
+
+                if (value != null)
+                {
+                    NewTaskContent = value.Content;
+                    SelectedDate = value.Date;
+                }
             }
         }
+
+        private ReminderItem _selectedReminder;
+        public ReminderItem SelectedReminder
+        {
+            get => _selectedReminder;
+            set
+            {
+                _selectedReminder = value;
+                OnPropertyChanged();
+
+                if (value != null)
+                {
+                    // Автозаполнение полей редактирования
+                    NewTaskContentRemind = value.Content;
+                    SelectedDate = value.Date;
+                    SelectedReminderTime = value.Time;
+                }
+            }
+        }
+
+        private void LoadNote(NoteItem note)
+        {
+            NewTaskContent = note.Content;
+            SelectedDate = note.Date;
+        }
+
+        private void LoadReminder(ReminderItem reminder)
+        {
+            NewTaskContentRemind = reminder.Content;
+            SelectedDate = reminder.Date;
+            SelectedReminderTime = reminder.Time;
+        }
+
 
         public bool IsTaskPanelVisible
         {
@@ -54,6 +106,26 @@ namespace UruruNotes.ViewsModels
                 OnPropertyChanged();
             }
         }
+
+        /// Свойство для отслеживания активной вкладки
+        private ViewType _currentView = ViewType.Notes;
+        public ViewType CurrentView
+        {
+            get => _currentView;
+            set
+            {
+                _currentView = value;
+                OnPropertyChanged();
+            }
+        }
+        public ICommand SwitchViewCommand { get; }
+
+        /// <summary>
+        /// Метод для переключения вкладок
+        /// </summary>
+        /// <param name="viewType"></param>
+        private void SwitchView(string viewType) =>
+            CurrentView = (ViewType)Enum.Parse(typeof(ViewType), viewType);
 
         private string _newTaskContent;
         public string NewTaskContent
@@ -82,6 +154,28 @@ namespace UruruNotes.ViewsModels
                 }
             }
         }
+
+        private bool _isEditorVisible;
+        public bool IsEditorVisible
+        {
+            get => _isEditorVisible;
+            set
+            {
+                _isEditorVisible = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(IsCalendarVisible));
+            }
+        }
+
+        public bool IsCalendarVisible => !_isEditorVisible;
+
+        public ICommand CreateNewNoteCommand { get; }
+        public ICommand BackToCalendarCommand { get; }
+
+        /// <summary>
+        /// Команда для сохранения в зависимости от текущего вида
+        /// </summary>
+        public ICommand SaveCommand { get; }
 
         private DateTime? _selectedDate;
         public DateTime? SelectedDate
@@ -260,10 +354,10 @@ namespace UruruNotes.ViewsModels
 
         public ICommand PreviousMonthCommand { get; }
         public ICommand NextMonthCommand { get; }
-        public ICommand ShowTaskPanelCommand { get; } // Добавлено
+        public ICommand ShowTaskPanelCommand { get; }
         public ICommand OpenTaskAreaCommand { get; }
-        public ICommand SaveNoteCommand { get; }
-        public ICommand SaveReminderCommand { get; }
+        public ICommand SaveNoteCommand { get; private set; }
+        public ICommand SaveReminderCommand { get; private set; }
 
         private int _selectedHour;
         public int SelectedHour
@@ -314,30 +408,49 @@ namespace UruruNotes.ViewsModels
             EnsureFoldersExist();
 
             Days = new ObservableCollection<DayViewModel>();
-            Notes = new ObservableCollection<Note>();
+            Notes = new ObservableCollection<NoteItem>();
+            Reminders = new ObservableCollection<ReminderItem>();
+            LoadFromFiles();
 
+            // 2. Инициализация команд после загрузки данных
             PreviousMonthCommand = new RelayCommand(ShowPreviousMonth);
             NextMonthCommand = new RelayCommand(ShowNextMonth);
-            ShowTaskPanelCommand = new RelayCommand<DayViewModel>(ShowTaskPanel); // Добавлено
+            ShowTaskPanelCommand = new RelayCommand<DayViewModel>(ShowTaskPanel);
             OpenTaskAreaCommand = new RelayCommand<DayViewModel>(OpenTaskArea);
+
+            // 3. Новые реализации команд
             SaveNoteCommand = new RelayCommand(SaveNote);
             SaveReminderCommand = new RelayCommand(SaveReminder);
 
+            CreateNewNoteCommand = new RelayCommand(() => IsEditorVisible = true);
+            BackToCalendarCommand = new RelayCommand(() => IsEditorVisible = false);
+            SwitchViewCommand = new RelayCommand<string>(SwitchView);
+            SaveCommand = new RelayCommand(() =>
+            {
+                if (CurrentView == ViewType.Notes) SaveNote();
+                else SaveReminder();
+            });
+
             Hours = new ObservableCollection<int>(Enumerable.Range(0, 24));
-            Minutes = new ObservableCollection<int>(Enumerable.Range(0, 60).Where(m => m % 5 == 0)); // Шаг 5 минут
+            Minutes = new ObservableCollection<int>(Enumerable.Range(0, 60).Where(m => m % 5 == 0));
 
             SelectedHour = 8;
             SelectedMinute = 0;
+
+            EnsureFoldersExist();
+            LoadNotesAndReminders();
 
             UpdateCalendar();
             UpdateScaledProperties();
         }
 
+        
+
         private void UpdateScaledProperties()
         {
             ButtonWidth = Math.Max(50 * Scale, 30);
-            ButtonHeight = Math.Max(30 * Scale, 20);
-            MarginTop = new Thickness(10 * Scale);
+            ButtonHeight = Math.Max(50 * Scale, 20);
+            MarginTop = new Thickness(10 * Scale, 10 * Scale, 10 * Scale, 10 * Scale);
             MarginMiddle = new Thickness(20 * Scale, 0, 20 * Scale, 0);
             MarginDays = new Thickness(10 * Scale);
             MarginButtons = new Thickness(5 * Scale);
@@ -382,7 +495,22 @@ namespace UruruNotes.ViewsModels
                     DisplayText = i.ToString(),
                     IsCurrentMonth = true
                 };
-                CheckForNoteAndReminder(dayViewModel);
+
+                // Получаем все напоминания для этого дня
+                var dayReminders = Reminders
+                    .Where(r => r.Date.Date == date.Date)
+                    .OrderBy(r => r.Time)
+                    .ToList();
+
+                // Находим ближайшее не прошедшее время
+                var currentTime = DateTime.Now.TimeOfDay;
+                var nearest = dayReminders
+                    .FirstOrDefault(r => r.Time > currentTime)?.Time
+                    ?? dayReminders.FirstOrDefault()?.Time;
+
+                dayViewModel.NearestReminder = nearest?.ToString(@"hh\:mm") ?? "";
+                dayViewModel.HasNote = dayReminders.Any() || Notes.Any(n => n.Date.Date == date.Date);
+
                 Days.Add(dayViewModel);
             }
 
@@ -400,29 +528,23 @@ namespace UruruNotes.ViewsModels
             OnPropertyChanged(nameof(CurrentMonthYear));
         }
 
-        private void CheckForNoteAndReminder(DayViewModel dayViewModel)
-        {
-            if (dayViewModel.Date.HasValue)
-            {
-                string noteFilePath = GetNotesFilePath(dayViewModel.Date.Value, false);
-                string reminderFilePath = GetNotesFilePath(dayViewModel.Date.Value, true);
+        //private void CheckForNoteAndReminder(DayViewModel dayViewModel)
+        //{
+        //    if (!dayViewModel.Date.HasValue) return;
 
-                if (File.Exists(noteFilePath))
-                {
-                    dayViewModel.HasNote = true;
-                }
+        //    // Убрать условие r.Time > DateTime.Now.TimeOfDay
+        //    var reminders = Reminders
+        //        .Where(r => r.Date.Date == dayViewModel.Date.Value.Date)
+        //        .OrderBy(r => r.Time)
+        //        .ToList();
 
-                if (File.Exists(reminderFilePath))
-                {
-                    string reminderContent = File.ReadAllText(reminderFilePath);
-                    var timeMatch = System.Text.RegularExpressions.Regex.Match(reminderContent, @"\*\*Время напоминания:\*\* (\d{2}:\d{2})");
-                    if (timeMatch.Success)
-                    {
-                        dayViewModel.ReminderTime = timeMatch.Groups[1].Value;
-                    }
-                }
-            }
-        }
+        //    dayViewModel.HasNote = reminders.Any()
+        //        || Notes.Any(n => n.Date.Date == dayViewModel.Date.Value.Date); // Учитываем заметки
+
+        //    dayViewModel.ReminderTime = reminders.Any()
+        //        ? reminders.First().Time.ToString(@"hh\:mm")
+        //        : string.Empty;
+        //}
 
         private void ShowPreviousMonth()
         {
@@ -451,8 +573,17 @@ namespace UruruNotes.ViewsModels
             {
                 SelectedDate = selectedDay.Date;
                 IsTaskPanelVisible = true; // Показываем панель задач
-                // Загружаем данные для выбранного дня
-                LoadNotesForDate(selectedDay.Date.Value);
+                IsEditorVisible = true; // Открываем редактор
+
+                // Загружаем данные в зависимости от текущего вида
+                if (CurrentView == ViewType.Notes)
+                {
+                    LoadNoteForDate(selectedDay.Date.Value);
+                }
+                else
+                {
+                    LoadReminderForDate(selectedDay.Date.Value);
+                }
 
                 if (string.IsNullOrEmpty(NewTaskContent))
                 {
@@ -468,20 +599,19 @@ namespace UruruNotes.ViewsModels
 
         private void EnsureFoldersExist()
         {
-            string baseFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "UruruNotes");
-            string notesFolder = Path.Combine(baseFolder, "Notes");
-            string remindersFolder = Path.Combine(baseFolder, "Reminders");
+            var basePath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                "UruruNotes"
+            );
 
-            if (!Directory.Exists(baseFolder)) Directory.CreateDirectory(baseFolder);
-            if (!Directory.Exists(notesFolder)) Directory.CreateDirectory(notesFolder);
-            if (!Directory.Exists(remindersFolder)) Directory.CreateDirectory(remindersFolder);
+            // Создаем все необходимые папки одной операцией
+            Directory.CreateDirectory(Path.Combine(basePath, "Notes"));
+            Directory.CreateDirectory(Path.Combine(basePath, "Reminders"));
         }
 
-        private void LoadNotesForDate(DateTime date)
+        private void LoadNoteForDate(DateTime date)
         {
             string noteFilePath = GetNotesFilePath(date, false);
-            string reminderFilePath = GetNotesFilePath(date, true);
-
             if (File.Exists(noteFilePath))
             {
                 NewTaskContent = File.ReadAllText(noteFilePath);
@@ -490,7 +620,11 @@ namespace UruruNotes.ViewsModels
             {
                 NewTaskContent = $"# Создание задачи на {date:dd MMMM yyyy}\n";
             }
+        }
 
+        private void LoadReminderForDate(DateTime date)
+        {
+            string reminderFilePath = GetNotesFilePath(date, true);
             if (File.Exists(reminderFilePath))
             {
                 string reminderContent = File.ReadAllText(reminderFilePath);
@@ -514,80 +648,255 @@ namespace UruruNotes.ViewsModels
 
         private void SaveNote()
         {
-            if (SelectedDate.HasValue && !string.IsNullOrEmpty(NewTaskContent))
+            try
             {
-                var note = new Note
+                if (!ValidateNoteData()) return;
+
+                // Режим редактирования
+                if (SelectedNote != null)
                 {
-                    Date = SelectedDate.Value,
-                    Content = NewTaskContent,
-                    IsReminder = false
-                };
-                SaveNoteForDate(SelectedDate.Value, note);
-                MessageBox.Show("Заметка успешно сохранена!");
+                    UpdateExistingNote();
+                    MessageBox.Show("Изменения сохранены!");
+                }
+                // Режим создания
+                else
+                {
+                    CreateNewNote();
+                    MessageBox.Show("Новая заметка создана!");
+                }
+
                 UpdateCalendar();
+                ResetForm();
             }
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show("Ошибка: не все данные для заметки заполнены.");
+                MessageBox.Show($"Ошибка: {ex.Message}");
             }
         }
 
-        // Метод для показа уведомления
-        /*public void ShowToastNotification(string title, string message)
+        private bool ValidateNoteData()
         {
-            new ToastContentBuilder()
-                .AddText(title)
-                .AddText(message)
-                .Show();
-        }*/
-
-        // Метод для планирования уведомления
-        /*private async System.Threading.Tasks.Task ScheduleReminderNotification(DateTime reminderTime, string message)
-        {
-            // Вычисляем, сколько времени осталось до напоминания
-            var timeUntilReminder = reminderTime - DateTime.Now;
-
-            // Если время ещё не наступило, ждём
-            if (timeUntilReminder > TimeSpan.Zero)
+            if (!SelectedDate.HasValue)
             {
-                await System.Threading.Tasks.Task.Delay(timeUntilReminder);
-
-                // Показываем уведомление
-                ShowToastNotification("Напоминание", message);
+                MessageBox.Show("Не выбрана дата!");
+                return false;
             }
+            if (string.IsNullOrWhiteSpace(NewTaskContent))
+            {
+                MessageBox.Show("Содержимое не может быть пустым!");
+                return false;
+            }
+            return true;
         }
-        */
+
+        private void UpdateExistingNote()
+        {
+            SelectedNote.Title = GetTitleFromContent(NewTaskContent);
+            SelectedNote.Content = NewTaskContent;
+            SelectedNote.Date = SelectedDate.Value;
+            SaveToFile(SelectedNote);
+        }
+
+        private void CreateNewNote()
+        {
+            var note = new NoteItem
+            {
+                Date = SelectedDate.Value,
+                Title = GetTitleFromContent(NewTaskContent),
+                Content = NewTaskContent
+            };
+            Notes.Add(note);
+            SaveToFile(note);
+        }
+
+        /// <summary>
+        /// Метод сброса формы
+        /// </summary>
+        private void ResetForm()
+        {
+            NewTaskContent = string.Empty;
+            SelectedNote = null;
+            SelectedDate = null;
+        }
+
+
+
         // Метод для сохранения напоминания
         private void SaveReminder()
         {
-            if (SelectedDate.HasValue && !string.IsNullOrEmpty(NewTaskContentRemind))
+            try
             {
-                var reminder = new Note
+                if (!ValidateReminderData()) return;
+
+                // Режим редактирования
+                if (SelectedReminder != null)
                 {
-                    Date = SelectedDate.Value,
-                    Content = NewTaskContentRemind,
-                    IsReminder = true,
-                    ReminderTime = SelectedReminderTime
-                };
+                    UpdateExistingReminder();
+                    MessageBox.Show("Напоминание обновлено!");
+                }
+                // Режим создания
+                else
+                {
+                    CreateNewReminder();
+                    MessageBox.Show("Новое напоминание создано!");
+                }
 
-                // Сохраняем напоминание в файл
-                SaveReminderForDate(SelectedDate.Value, reminder);
-
-                /* Планируем уведомление на указанное время
-                DateTime reminderDateTime = SelectedDate.Value.Date + SelectedReminderTime;
-                ScheduleReminderNotification(reminderDateTime, NewTaskContentRemind);
-
-                MessageBox.Show("Напоминание успешно сохранено!");*/
-                // Планируем уведомление через планировщик задач
-                DateTime reminderDateTime = SelectedDate.Value.Date + SelectedReminderTime;
-                ScheduleReminderTask(reminderDateTime, NewTaskContentRemind);
-                MessageBox.Show("Напоминание успешно сохранено!");
                 UpdateCalendar();
+                ResetReminderForm();
             }
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show("Ошибка: не все данные для напоминания заполнены.");
+                MessageBox.Show($"Ошибка: {ex.Message}");
             }
+        }
+
+        private bool ValidateReminderData()
+        {
+            if (!SelectedDate.HasValue)
+            {
+                MessageBox.Show("Не выбрана дата!");
+                return false;
+            }
+            if (string.IsNullOrWhiteSpace(NewTaskContentRemind))
+            {
+                MessageBox.Show("Содержимое не может быть пустым!");
+                return false;
+            }
+            return true;
+        }
+
+        private void UpdateExistingReminder()
+        {
+            SelectedReminder.Title = GetTitleFromContent(NewTaskContentRemind);
+            SelectedReminder.Content = NewTaskContentRemind;
+            SelectedReminder.Date = SelectedDate.Value;
+            SelectedReminder.Time = SelectedReminderTime;
+            SaveToFile(SelectedReminder);
+        }
+
+        private void CreateNewReminder()
+        {
+            var reminder = new ReminderItem
+            {
+                Date = SelectedDate.Value,
+                Title = GetTitleFromContent(NewTaskContentRemind),
+                Content = NewTaskContentRemind,
+                Time = SelectedReminderTime
+            };
+            Reminders.Add(reminder);
+            SaveToFile(reminder);
+            ScheduleReminderTask(reminder.Date + reminder.Time, reminder.Content);
+        }
+
+        private void ResetReminderForm()
+        {
+            NewTaskContentRemind = string.Empty;
+            SelectedReminder = null;
+            SelectedDate = null;
+        }
+
+
+
+        private void LoadNotesAndReminders()
+        {
+            Notes.Clear();
+            Reminders.Clear();
+
+            var notesDir = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                "UruruNotes",
+                "Notes"
+            );
+
+            var remindersDir = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                "UruruNotes",
+                "Reminders"
+            );
+
+            // Загружаем все заметки
+            foreach (var file in Directory.GetFiles(notesDir, "*.md"))
+            {
+                var date = ExtractDateFromFileName(file);
+                Notes.AddRange(LoadNotesForDate(date));
+            }
+
+            // Загружаем все напоминания
+            foreach (var file in Directory.GetFiles(remindersDir, "*.md"))
+            {
+                var date = ExtractDateFromFileName(file);
+                Reminders.AddRange(LoadRemindersForDate(date));
+            }
+
+            LoadFromFiles(); // Перезагружаем данные из файлов
+            UpdateCalendar();
+        }
+
+
+        private List<NoteItem> LoadNotesForDate(DateTime date)
+        {
+            var notes = new List<NoteItem>();
+            var notesDir = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                "UruruNotes",
+                "Notes"
+            );
+
+            foreach (var file in Directory.GetFiles(notesDir, $"note_{date:yyyy-MM-dd}_*.md"))
+            {
+                var id = ExtractGuidFromFileName(file);
+                var content = File.ReadAllText(file);
+                notes.Add(new NoteItem
+                {
+                    Id = id,
+                    Date = date,
+                    Title = GetTitleFromContent(content),
+                    Content = content
+                });
+            }
+
+            return notes;
+        }
+
+        // Загрузка напоминаний
+        private List<ReminderItem> LoadRemindersForDate(DateTime date)
+        {
+            var reminders = new List<ReminderItem>();
+            var remindersDir = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                "UruruNotes",
+                "Reminders"
+            );
+
+            foreach (var file in Directory.GetFiles(remindersDir, $"reminder_{date:yyyy-MM-dd}_*.md"))
+            {
+                var content = File.ReadAllText(file);
+                var time = ExtractTimeFromContent(content);
+                if (time == TimeSpan.Zero)
+                {
+                    Debug.WriteLine($"Ошибка чтения времени из файла: {file}");
+                    continue;
+                }
+
+                reminders.Add(new ReminderItem
+                {
+                    Id = ExtractGuidFromFileName(file),
+                    Date = date,
+                    Title = GetTitleFromContent(content),
+                    Content = content,
+                    Time = time
+                });
+            }
+
+            return reminders;
+        }
+
+        // Метод для извлечения GUID из имени файла
+        private Guid ExtractGuidFromFileName(string filePath)
+        {
+            var fileName = Path.GetFileNameWithoutExtension(filePath);
+            var guidPart = fileName.Split('_').Last();
+            return Guid.Parse(guidPart);
         }
 
 
@@ -637,32 +946,180 @@ namespace UruruNotes.ViewsModels
             }
         }
 
-        private void SaveNoteForDate(DateTime date, Note note)
+        private void SaveNoteForDate(DateTime date, NoteItem note)
         {
             string noteFilePath = GetNotesFilePath(date, false);
             File.WriteAllText(noteFilePath, note.Content);
         }
 
-        private void SaveReminderForDate(DateTime date, Note reminder)
+        //private void SaveReminderForDate(DateTime date, NoteItem reminder)
+        //{
+        //    try
+        //    {
+        //        // Получаем путь к файлу напоминания
+        //        string reminderFilePath = GetNotesFilePath(date, true);
+
+        //        // Формируем содержимое файла
+        //        string reminderContent = $"{reminder.Content}\n\n**Время напоминания:** {reminder.ReminderTime:hh\\:mm}";
+
+        //        // Сохраняем содержимое в файл
+        //        File.WriteAllText(reminderFilePath, reminderContent);
+
+        //        Debug.WriteLine($"Напоминание сохранено: {reminderFilePath}");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Debug.WriteLine($"Ошибка при сохранении напоминания: {ex.Message}");
+        //        MessageBox.Show($"Ошибка при сохрааавнении напоминания: {ex.Message}");
+        //    }
+        //}
+
+        private void SaveToFile(NoteItem item)
+        {
+            string content;
+            string path;
+
+            if (item is ReminderItem reminder)
+            {
+                content = $"{reminder.Title}\n{reminder.Content}\n**Время:** {reminder.Time:hh\\:mm}";
+                path = GetReminderPath(reminder.Date, reminder.Id);
+            }
+            else
+            {
+                content = $"{item.Title}\n{item.Content}";
+                path = GetNotePath(item.Date, item.Id);
+            }
+
+            File.WriteAllText(path, content);
+        }
+
+        private string GetNotePath(DateTime date, Guid id)
+        {
+            return Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                "UruruNotes",
+                "Notes",
+                $"note_{date:yyyy-MM-dd}_{id}.md"
+            );
+        }
+
+        private string GetReminderPath(DateTime date, Guid id)
+        {
+            return Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                "UruruNotes",
+                "Reminders",
+                $"reminder_{date:yyyy-MM-dd}_{id}.md"
+            );
+        }
+
+        private void LoadFromFiles()
+        {
+            var basePath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                "UruruNotes"
+            );
+
+            LoadItems(
+                Path.Combine(basePath, "Notes"),
+                "note_*.md",
+                (path, content) => new NoteItem
+                {
+                    Date = ExtractDateFromFileName(path),
+                    Title = GetTitleFromContent(content),
+                    Content = content
+                },
+                Notes
+            );
+
+            LoadItems(
+                Path.Combine(basePath, "Reminders"),
+                "reminder_*.md",
+                (path, content) => new ReminderItem
+                {
+                    Date = ExtractDateFromFileName(path),
+                    Title = GetTitleFromContent(content),
+                    Content = content,
+                    Time = ExtractTimeFromContent(content)
+                },
+                Reminders
+            );
+        }
+
+        private void LoadItems<T>(string directory, string searchPattern,
+    Func<string, string, T> itemFactory, ObservableCollection<T> collection)
+    where T : class
         {
             try
             {
-                // Получаем путь к файлу напоминания
-                string reminderFilePath = GetNotesFilePath(date, true);
+                if (!Directory.Exists(directory))
+                {
+                    Debug.WriteLine($"Directory not found: {directory}");
+                    return;
+                }
 
-                // Формируем содержимое файла
-                string reminderContent = $"{reminder.Content}\n\n**Время напоминания:** {reminder.ReminderTime:hh\\:mm}";
+                foreach (var file in Directory.EnumerateFiles(directory, searchPattern))
+                {
+                    try
+                    {
+                        var content = File.ReadAllText(file, Encoding.UTF8);
+                        if (string.IsNullOrWhiteSpace(content))
+                        {
+                            Debug.WriteLine($"Empty file skipped: {file}");
+                            continue;
+                        }
 
-                // Сохраняем содержимое в файл
-                File.WriteAllText(reminderFilePath, reminderContent);
-
-                Debug.WriteLine($"Напоминание сохранено: {reminderFilePath}");
+                        var item = itemFactory(file, content);
+                        if (item != null)
+                        {
+                            Application.Current.Dispatcher.Invoke(() => collection.Add(item));
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine($"Error loading file {file}: {ex.Message}");
+                    }
+                }
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Ошибка при сохранении напоминания: {ex.Message}");
-                MessageBox.Show($"Ошибка при сохранении напоминания: {ex.Message}");
+                Debug.WriteLine($"Critical error in LoadItems: {ex.Message}");
             }
+        }
+
+        private DateTime ExtractDateFromFileName(string filePath)
+        {
+            var fileName = Path.GetFileNameWithoutExtension(filePath);
+            var parts = fileName.Split('_');
+
+            // Старый формат: [тип]_[дата]
+            if (parts.Length == 2)
+            {
+                return DateTime.ParseExact(parts[1], "dd-MM-yyyy", CultureInfo.InvariantCulture);
+            }
+
+            // Новый формат: [тип]_[дата]_[GUID]
+            if (parts.Length >= 3)
+            {
+                return DateTime.ParseExact(parts[1], "yyyy-MM-dd", CultureInfo.InvariantCulture);
+            }
+
+            throw new FormatException($"Неизвестный формат файла: {fileName}");
+        }
+
+        private string GetTitleFromContent(string content)
+        {
+            return content.Split('\n').FirstOrDefault()?.TrimStart('#', ' ') ?? "Без названия";
+        }
+
+        private TimeSpan ExtractTimeFromContent(string content)
+        {
+            var timeMatch = Regex.Match(content, @"\*\*Время:\*\* (\d{2}:\d{2})");
+            if (timeMatch.Success)
+            {
+                return TimeSpan.ParseExact(timeMatch.Groups[1].Value, "hh\\:mm", CultureInfo.InvariantCulture);
+            }
+            return TimeSpan.Zero; 
         }
 
         private string GetNotesFilePath(DateTime date, bool isReminder)
@@ -679,5 +1136,25 @@ namespace UruruNotes.ViewsModels
             // Полный путь к файлу
             return Path.Combine(baseFolder, subFolder, fileName);
         }
+    }
+
+
+    public class NoteItem : INotifyPropertyChanged
+    {
+        public Guid Id { get; set; } = Guid.NewGuid();
+        public DateTime Date { get; set; }
+        public string Title { get; set; }
+        public string Content { get; set; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+    }
+
+    public class ReminderItem : NoteItem
+    {
+        public TimeSpan Time { get; set; }
     }
 }

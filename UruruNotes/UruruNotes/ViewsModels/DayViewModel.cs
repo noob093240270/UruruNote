@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Collections.ObjectModel;
 
 namespace UruruNotes.ViewsModels
 {
@@ -61,14 +62,14 @@ namespace UruruNotes.ViewsModels
             }
         }
 
-        // Новое свойство для отображения времени напоминания
-        private string _reminderTime;
-        public string ReminderTime
+
+        private string _nearestReminder;
+        public string NearestReminder
         {
-            get => _reminderTime;
+            get => _nearestReminder;
             set
             {
-                _reminderTime = value;
+                _nearestReminder = value;
                 OnPropertyChanged();
             }
         }

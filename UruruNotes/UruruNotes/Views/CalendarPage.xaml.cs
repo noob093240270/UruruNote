@@ -59,6 +59,7 @@ namespace UruruNotes
             ButtonWidth = 50 * scale;
             ButtonHeight = 50 * scale;
             DayFontSize = 14 * scale;
+            ContentGrid.Height = baseHeight * scale;
         }
 
         public CalendarPage(MainViewModel mainViewModel)
@@ -78,6 +79,30 @@ namespace UruruNotes
                     Debug.WriteLine($"CalendarPage: Scale обновлён: {_viewModel.Scale}");
                 }
             };
+        }
+
+        private void NoteTreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            if (e.NewValue is NoteItem note)
+            {
+                _viewModel.SelectedNote = note; 
+                _viewModel.NewTaskContent = note.Content;
+                _viewModel.IsEditorVisible = true;
+                _viewModel.CurrentView = CalendarViewModel.ViewType.Notes;
+            }
+        }
+
+        private void ReminderTreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            if (e.NewValue is ReminderItem reminder)
+            {
+                _viewModel.SelectedReminder = reminder;
+                _viewModel.NewTaskContentRemind = reminder.Content;
+                _viewModel.SelectedHour = reminder.Time.Hours;
+                _viewModel.SelectedMinute = reminder.Time.Minutes;
+                _viewModel.IsEditorVisible = true;
+                _viewModel.CurrentView = CalendarViewModel.ViewType.Reminders;
+            }
         }
 
         private double _scale = 1.0;
