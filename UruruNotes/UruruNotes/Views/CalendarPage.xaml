@@ -9,9 +9,9 @@
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         d:DataContext="{d:DesignInstance Type=viewsmodels:CalendarViewModel}"
         mc:Ignorable="d" 
-        MinHeight="550" MinWidth="850" 
-        Width="800"
-        Height="600"
+        MinHeight="600" MinWidth="1010" 
+        Width="1100"
+        Height="650"
         Title="CalendarPage" Icon="/Views/calendar.png"
         SizeToContent="Manual"
         HorizontalContentAlignment="Stretch">
@@ -360,7 +360,7 @@
 
                         <!-- Секция заметок -->
                         <StackPanel Visibility="{Binding CurrentView, Converter={StaticResource ViewToVisibilityConverter}, ConverterParameter=Notes}">
-                            <TextBlock Grid.Row="0" Text="Создать заметку" FontSize="{Binding NoteTitleFontSize}" FontWeight="Bold" Margin="10" HorizontalAlignment="Stretch"/>
+                            <TextBlock Grid.Row="0" Text="{Binding EditorTitle}" FontSize="{Binding NoteTitleFontSize}" FontWeight="Bold" Margin="10" HorizontalAlignment="Stretch"/>
                             <TextBox Grid.Row="1" TextWrapping="Wrap" Text="{Binding NewTaskContent}" 
                             AcceptsReturn="True" AcceptsTab="True" 
                             VerticalScrollBarVisibility="Auto" VerticalAlignment="Stretch"
@@ -373,7 +373,7 @@
                            CaretBrush="#FF235C9A" SelectionBrush="#FF235C9A" 
                            PreviewKeyDown="TextBox_PreviewKeyDown" Loaded="TextBox_Loaded" />
                             <Button Grid.Row="2" Content="{Binding EditorButtonText}" Command="{Binding SaveNoteCommand}" CommandParameter="{Binding SelectedNote}"
-                                MinWidth="220" MinHeight="25" 
+                                MinWidth="290" MinHeight="25" 
                                 Margin="20,5,5,10" HorizontalAlignment="Left" 
                                 Background="White" BorderBrush="#FF235C9A" FontSize="{Binding NoteFontSize}" Style="{StaticResource StyledButton}"/>
                         </StackPanel>
@@ -388,7 +388,7 @@
                         </Grid.RowDefinitions>
                         <!-- Секция напоминаний -->
                         <StackPanel Visibility="{Binding CurrentView, Converter={StaticResource ViewToVisibilityConverter}, ConverterParameter=Reminders}">
-                            <TextBlock Grid.Row="0" Text="Создать напоминание" FontSize="{Binding NoteTitleFontSize}" FontWeight="Bold" Margin="10" HorizontalAlignment="Stretch"/>
+                            <TextBlock Grid.Row="0" Text="{Binding EditorTitle}"  FontSize="{Binding NoteTitleFontSize}" FontWeight="Bold" Margin="10" HorizontalAlignment="Stretch"/>
                             <TextBox Grid.Row="1" TextWrapping="Wrap" Text="{Binding NewTaskContentRemind}" 
                                 AcceptsReturn="True" AcceptsTab="True" 
                                  VerticalScrollBarVisibility="Auto"  VerticalAlignment="Stretch"
@@ -402,7 +402,7 @@
                                PreviewKeyDown="TextBox_PreviewKeyDown" Loaded="TextBox_Loaded" />
 
                             <Button Grid.Row="2" Content="{Binding EditorButtonText}" Command="{Binding SaveReminderCommand}" 
-                                MinWidth="220" MinHeight="25" Margin="20,5,5,10"
+                                MinWidth="290" MinHeight="25" Margin="20,5,5,10"
                                 Background="White" BorderBrush="#FF235C9A" FontSize="{Binding NoteFontSize}" Style="{StaticResource StyledButton}" HorizontalAlignment="Left" />
                             <TextBlock Grid.Row="2" Text="Время напоминания:" FontSize="{Binding NoteFontSize}" Height="Auto" Width="Auto" Margin="20,0,0,0" HorizontalAlignment="Left" />
                             <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="10,5,10,10">
@@ -561,7 +561,8 @@
                   Background="LightGray"               
                   Height="{Binding ActualHeight, ElementName=TaskPanel}">
                             <TreeView ItemsSource="{Binding Notes}" 
-                  SelectedItemChanged="NoteTreeView_SelectedItemChanged"
+                  SelectedItemChanged="NoteTreeView_SelectedItemChanged" 
+                  Visibility="{Binding CurrentView, Converter={StaticResource ViewToVisibilityConverter}, ConverterParameter=Notes}"
                   PreviewMouseWheel="TreeView_PreviewMouseWheel" Background="Transparent" BorderThickness="0"
                   Margin="10">
                                 <TreeView.ItemTemplate>
@@ -584,6 +585,7 @@
                   Background="LightGray"
                   Height="{Binding ActualHeight, ElementName=TaskPanel}">
                             <TreeView ItemsSource="{Binding Reminders}" 
+                 Visibility="{Binding CurrentView, Converter={StaticResource ViewToVisibilityConverter}, ConverterParameter=Reminders}"
                  SelectedItemChanged="ReminderTreeView_SelectedItemChanged"
                  PreviewMouseWheel="TreeView_PreviewMouseWheel" Background="Transparent" BorderThickness="0"
                  Margin="10">

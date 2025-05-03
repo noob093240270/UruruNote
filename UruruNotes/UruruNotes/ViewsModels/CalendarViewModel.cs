@@ -48,6 +48,7 @@ namespace UruruNotes.ViewsModels
             {
                 _isEditing = value;
                 OnPropertyChanged(nameof(EditorButtonText)); // Уведомляем UI об изменении текста кнопки
+                OnPropertyChanged(nameof(EditorTitle));
             }
         }
 
@@ -147,6 +148,7 @@ namespace UruruNotes.ViewsModels
             SelectedNote = null;
             SelectedReminder = null;
             OnPropertyChanged(nameof(EditorButtonText)); // Обновляем кнопку
+            OnPropertyChanged(nameof(EditorTitle)); // Обновляем заголовок
         }
 
         private string _newTaskContent;
@@ -193,6 +195,21 @@ namespace UruruNotes.ViewsModels
 
         public ICommand CreateNewNoteCommand { get; }
         public ICommand BackToCalendarCommand { get; }
+
+        public ICommand SelectNoteCommand { get; }
+        public ICommand SelectReminderCommand { get; }
+
+        private void BackToCalendarCommandExecute()
+        {
+            IsEditorVisible = false;
+            IsEditing = false;
+            SelectedNote = null;
+            SelectedReminder = null;
+            NewTaskContent = string.Empty;
+            NewTaskContentRemind = string.Empty;
+            OnPropertyChanged(nameof(EditorButtonText));
+            OnPropertyChanged(nameof(EditorTitle)); 
+        }
 
         /// <summary>
         /// Команда для сохранения в зависимости от текущего вида
@@ -457,6 +474,22 @@ namespace UruruNotes.ViewsModels
             SelectedHour = 8;
             SelectedMinute = 0;
 
+            SelectNoteCommand = new RelayCommand<NoteItem>(note =>
+            {
+                SelectedNote = note;
+                CurrentView = ViewType.Notes;
+                IsEditing = true;
+                OnPropertyChanged(nameof(EditorTitle)); // Уведомление об изменении
+            });
+
+            SelectReminderCommand = new RelayCommand<ReminderItem>(reminder =>
+            {
+                SelectedReminder = reminder;
+                CurrentView = ViewType.Reminders;
+                IsEditing = true;
+                OnPropertyChanged(nameof(EditorTitle));
+            });
+
             EnsureFoldersExist();
             LoadNotesAndReminders();
 
@@ -588,18 +621,39 @@ namespace UruruNotes.ViewsModels
             }
         }
 
+        public string EditorTitle
+        {
+            get
+            {
+                if (IsEditing)
+                {
+                    return CurrentView == ViewType.Notes
+                        ? "Редактирование заметки"
+                        : "Редактирование напоминания";
+                }
+                else
+                {
+                    return CurrentView == ViewType.Notes
+                        ? "Создать заметку"
+                        : "Создать напоминание";
+                }
+            }
+        }
+
         private void OpenTaskArea(DayViewModel selectedDay)
         {
             if (selectedDay?.Date == null) return;
 
             // Проверяем, есть ли заметки/напоминания на выбранную дату
             IsEditing = Notes.Any(n => n.Date.Date == selectedDay.Date.Value.Date)
-                      || Reminders.Any(r => r.Date.Date == selectedDay.Date.Value.Date);
+              || Reminders.Any(r => r.Date.Date == selectedDay.Date.Value.Date);
             IsEditing = (SelectedNote != null || SelectedReminder != null);
 
             SelectedDate = selectedDay.Date;
             IsTaskPanelVisible = true;
             IsEditorVisible = true;
+
+            OnPropertyChanged(nameof(EditorTitle)); // Уведомляем об изменении заголовка
 
             // Загружаем данные, если они существуют
             if (CurrentView == ViewType.Notes)
@@ -701,6 +755,7 @@ namespace UruruNotes.ViewsModels
 
                 UpdateCalendar();
                 OnPropertyChanged(nameof(EditorButtonText)); // Обновляем кнопку
+                OnPropertyChanged(nameof(EditorTitle));
             }
             catch (Exception ex)
             {
@@ -947,16 +1002,7 @@ namespace UruruNotes.ViewsModels
 
 
 
-        private void BackToCalendarCommandExecute()
-        {
-            IsEditorVisible = false;
-            IsEditing = false;
-            SelectedNote = null;
-            SelectedReminder = null;
-            NewTaskContent = string.Empty;
-            NewTaskContentRemind = string.Empty;
-            OnPropertyChanged(nameof(EditorButtonText));
-        }
+        
 
         private List<NoteItem> LoadNotesForDate(DateTime date)
         {
