@@ -10,7 +10,6 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using System.IO;
 using Microsoft.Toolkit.Uwp.Notifications;
 using Microsoft.Win32.TaskScheduler;
@@ -44,7 +43,7 @@ namespace UruruNotes.Views
             try
             {
                 string reminderFilePath = GetNotesFilePath(date, true);
-                if (File.Exists(reminderFilePath))
+                if (reminderFilePath != null && File.Exists(reminderFilePath))
                 {
                     string reminderContent = File.ReadAllText(reminderFilePath);
                     ReminderTextBlock.Document.Blocks.Clear();
@@ -118,10 +117,25 @@ namespace UruruNotes.Views
 
         private string GetNotesFilePath(DateTime date, bool isReminder)
         {
-            string baseFolder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "UruruNotes");
+            string baseFolder = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                "UruruNotes"
+            );
             string subFolder = isReminder ? "Reminders" : "Notes";
-            string fileName = $"{(isReminder ? "reminder" : "note")}_{date:dd-MM-yyyy}.md";
-            return System.IO.Path.Combine(baseFolder, subFolder, fileName);
+            string searchPattern = $"{(isReminder ? "reminder" : "note")}_{date:yyyy-MM-dd}_*.md";
+
+            try
+            {
+                var directory = Path.Combine(baseFolder, subFolder);
+                if (!Directory.Exists(directory)) return null;
+
+                var files = Directory.GetFiles(directory, searchPattern);
+                return files.FirstOrDefault(); // Берём первый найденный файл
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 }

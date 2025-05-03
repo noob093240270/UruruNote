@@ -37,12 +37,26 @@ namespace UruruNotes.ViewsModels
         // enum для типов вкладок
         public enum ViewType { Notes, Reminders }
 
-        public ObservableCollection<DayViewModel> Days { get; private set; }
+        /// <summary>
+        /// флаг редактирования
+        /// </summary>
+        private bool _isEditing;
+        public bool IsEditing
+        {
+            get => _isEditing;
+            set
+            {
+                _isEditing = value;
+                OnPropertyChanged(nameof(EditorButtonText)); // Уведомляем UI об изменении текста кнопки
+            }
+        }
+
+        public ObservableCollection<DayViewModel> Days { get; } = new ObservableCollection<DayViewModel>();
         public string CurrentMonthYear => $"{_currentDate:MMMM yyyy}";
 
 
         private ObservableCollection<NoteItem> _notes;
-        public ObservableCollection<NoteItem> Notes { get; set; }
+        public ObservableCollection<NoteItem> Notes { get; set; } = new ObservableCollection<NoteItem>();
 
         private ObservableCollection<ReminderItem> _reminders;
         public ObservableCollection<ReminderItem> Reminders { get; set; }
@@ -124,8 +138,16 @@ namespace UruruNotes.ViewsModels
         /// Метод для переключения вкладок
         /// </summary>
         /// <param name="viewType"></param>
-        private void SwitchView(string viewType) =>
+        private void SwitchView(string viewType)
+        {
             CurrentView = (ViewType)Enum.Parse(typeof(ViewType), viewType);
+            IsEditing = false; // Сбрасываем флаг
+            NewTaskContent = string.Empty;
+            NewTaskContentRemind = string.Empty;
+            SelectedNote = null;
+            SelectedReminder = null;
+            OnPropertyChanged(nameof(EditorButtonText)); // Обновляем кнопку
+        }
 
         private string _newTaskContent;
         public string NewTaskContent
@@ -405,12 +427,10 @@ namespace UruruNotes.ViewsModels
         public CalendarViewModel()
         {
             _currentDate = DateTime.Today;
-            EnsureFoldersExist();
 
             Days = new ObservableCollection<DayViewModel>();
             Notes = new ObservableCollection<NoteItem>();
             Reminders = new ObservableCollection<ReminderItem>();
-            LoadFromFiles();
 
             // 2. Инициализация команд после загрузки данных
             PreviousMonthCommand = new RelayCommand(ShowPreviousMonth);
@@ -423,7 +443,7 @@ namespace UruruNotes.ViewsModels
             SaveReminderCommand = new RelayCommand(SaveReminder);
 
             CreateNewNoteCommand = new RelayCommand(() => IsEditorVisible = true);
-            BackToCalendarCommand = new RelayCommand(() => IsEditorVisible = false);
+            BackToCalendarCommand = new RelayCommand(BackToCalendarCommandExecute);
             SwitchViewCommand = new RelayCommand<string>(SwitchView);
             SaveCommand = new RelayCommand(() =>
             {
@@ -440,11 +460,12 @@ namespace UruruNotes.ViewsModels
             EnsureFoldersExist();
             LoadNotesAndReminders();
 
+
             UpdateCalendar();
             UpdateScaledProperties();
         }
 
-        
+
 
         private void UpdateScaledProperties()
         {
@@ -469,7 +490,7 @@ namespace UruruNotes.ViewsModels
             var firstDayOfMonth = new DateTime(_currentDate.Year, _currentDate.Month, 1);
             var daysInMonth = DateTime.DaysInMonth(_currentDate.Year, _currentDate.Month);
             int startDayOffset = (int)firstDayOfMonth.DayOfWeek;
-            if (System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek == DayOfWeek.Monday)
+            if (CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek == DayOfWeek.Monday)
             {
                 startDayOffset = (startDayOffset == 0) ? 6 : startDayOffset - 1;
             }
@@ -510,7 +531,7 @@ namespace UruruNotes.ViewsModels
 
                 dayViewModel.NearestReminder = nearest?.ToString(@"hh\:mm") ?? "";
                 dayViewModel.HasNote = dayReminders.Any() || Notes.Any(n => n.Date.Date == date.Date);
-
+                OnPropertyChanged(nameof(Days));
                 Days.Add(dayViewModel);
             }
 
@@ -569,28 +590,30 @@ namespace UruruNotes.ViewsModels
 
         private void OpenTaskArea(DayViewModel selectedDay)
         {
-            if (selectedDay?.Date != null)
+            if (selectedDay?.Date == null) return;
+
+            // Проверяем, есть ли заметки/напоминания на выбранную дату
+            IsEditing = Notes.Any(n => n.Date.Date == selectedDay.Date.Value.Date)
+                      || Reminders.Any(r => r.Date.Date == selectedDay.Date.Value.Date);
+            IsEditing = (SelectedNote != null || SelectedReminder != null);
+
+            SelectedDate = selectedDay.Date;
+            IsTaskPanelVisible = true;
+            IsEditorVisible = true;
+
+            // Загружаем данные, если они существуют
+            if (CurrentView == ViewType.Notes)
             {
-                SelectedDate = selectedDay.Date;
-                IsTaskPanelVisible = true; // Показываем панель задач
-                IsEditorVisible = true; // Открываем редактор
-
-                // Загружаем данные в зависимости от текущего вида
-                if (CurrentView == ViewType.Notes)
-                {
-                    LoadNoteForDate(selectedDay.Date.Value);
-                }
-                else
-                {
-                    LoadReminderForDate(selectedDay.Date.Value);
-                }
-
-                if (string.IsNullOrEmpty(NewTaskContent))
+                LoadNoteForDate(selectedDay.Date.Value);
+                if (!IsEditing)
                 {
                     NewTaskContent = $"Создание задачи на {selectedDay.Date.Value:dd MMMM yyyy}\n";
                 }
-
-                if (string.IsNullOrEmpty(NewTaskContentRemind))
+            }
+            else
+            {
+                LoadReminderForDate(selectedDay.Date.Value);
+                if (!IsEditing)
                 {
                     NewTaskContentRemind = $"Создание напоминания на {selectedDay.Date.Value:dd MMMM yyyy}\n";
                 }
@@ -611,14 +634,14 @@ namespace UruruNotes.ViewsModels
 
         private void LoadNoteForDate(DateTime date)
         {
-            string noteFilePath = GetNotesFilePath(date, false);
-            if (File.Exists(noteFilePath))
+            var note = Notes.FirstOrDefault(n => n.Date.Date == date.Date);
+            if (note != null)
             {
-                NewTaskContent = File.ReadAllText(noteFilePath);
+                NewTaskContent = note.Content; // Заполняем поле данными
             }
             else
             {
-                NewTaskContent = $"# Создание задачи на {date:dd MMMM yyyy}\n";
+                NewTaskContent = string.Empty; // Очищаем, если запись новая
             }
         }
 
@@ -628,10 +651,9 @@ namespace UruruNotes.ViewsModels
             if (File.Exists(reminderFilePath))
             {
                 string reminderContent = File.ReadAllText(reminderFilePath);
-                NewTaskContentRemind = System.Text.RegularExpressions.Regex.Replace(
-                    reminderContent, @"\*\*Время напоминания:\*\* \d{2}:\d{2}", "").Trim();
+                NewTaskContentRemind = reminderContent;
 
-                var timeMatch = System.Text.RegularExpressions.Regex.Match(reminderContent, @"\*\*Время напоминания:\*\* (\d{2}:\d{2})");
+                var timeMatch = Regex.Match(reminderContent, @"\*\*Время напоминания:\*\* (\d{2}:\d{2})");
                 if (timeMatch.Success && TimeSpan.TryParse(timeMatch.Groups[1].Value, out var reminderTime))
                 {
                     SelectedHour = reminderTime.Hours;
@@ -640,11 +662,13 @@ namespace UruruNotes.ViewsModels
             }
             else
             {
-                NewTaskContentRemind = $"# Создание напоминания на {date:dd MMMM yyyy}\n";
+                NewTaskContentRemind = string.Empty;
                 SelectedHour = 8;
                 SelectedMinute = 0;
             }
         }
+
+        public string EditorButtonText => IsEditing ? "Сохранить изменения" : "Создать";
 
         private void SaveNote()
         {
@@ -652,26 +676,47 @@ namespace UruruNotes.ViewsModels
             {
                 if (!ValidateNoteData()) return;
 
-                // Режим редактирования
-                if (SelectedNote != null)
+                if (IsEditing && SelectedNote != null)
                 {
-                    UpdateExistingNote();
+                    // Редактируем существующую заметку
+                    SelectedNote.Content = NewTaskContent;
+                    SaveToFile(SelectedNote);
                     MessageBox.Show("Изменения сохранены!");
                 }
-                // Режим создания
                 else
                 {
-                    CreateNewNote();
+                    // Создаём новую заметку
+                    var note = new NoteItem
+                    {
+                        Date = SelectedDate.Value,
+                        Title = GetTitleFromContent(NewTaskContent),
+                        Content = NewTaskContent
+                    };
+                    Notes.Add(note);
+                    SaveToFile(note);
+                    SelectedNote = note; // Привязываем новую заметку
+                    IsEditing = true; // Устанавливаем флаг редактирования
                     MessageBox.Show("Новая заметка создана!");
                 }
 
                 UpdateCalendar();
-                ResetForm();
+                OnPropertyChanged(nameof(EditorButtonText)); // Обновляем кнопку
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Ошибка: {ex.Message}");
             }
+        }
+
+        /// <summary>
+        /// Сброс флага при закрытии формы
+        /// </summary>
+        private void CancelEditing()
+        {
+            IsEditing = false;
+            NewTaskContent = string.Empty;
+            SelectedDate = null;
+            OnPropertyChanged(nameof(EditorButtonText));
         }
 
         private bool ValidateNoteData()
@@ -691,22 +736,43 @@ namespace UruruNotes.ViewsModels
 
         private void UpdateExistingNote()
         {
-            SelectedNote.Title = GetTitleFromContent(NewTaskContent);
-            SelectedNote.Content = NewTaskContent;
-            SelectedNote.Date = SelectedDate.Value;
-            SaveToFile(SelectedNote);
+            var oldNote = SelectedNote;
+            var newNote = new NoteItem
+            {
+                Id = oldNote.Id,
+                Date = SelectedDate.Value,
+                Title = GetTitleFromContent(NewTaskContent),
+                Content = NewTaskContent
+            };
+
+            // Заменяем элемент в коллекции
+            int index = Notes.IndexOf(oldNote);
+            Notes[index] = newNote;
+
+            SaveToFile(newNote);
         }
 
         private void CreateNewNote()
         {
+            if (!SelectedDate.HasValue)
+            {
+                MessageBox.Show("Выберите дату!");
+                return;
+            }
+
             var note = new NoteItem
             {
                 Date = SelectedDate.Value,
                 Title = GetTitleFromContent(NewTaskContent),
                 Content = NewTaskContent
             };
+
             Notes.Add(note);
             SaveToFile(note);
+
+            // Уведомить UI об изменении коллекции
+            OnPropertyChanged(nameof(Notes));
+            UpdateCalendar(); // Обновить календарь
         }
 
         /// <summary>
@@ -714,7 +780,6 @@ namespace UruruNotes.ViewsModels
         /// </summary>
         private void ResetForm()
         {
-            NewTaskContent = string.Empty;
             SelectedNote = null;
             SelectedDate = null;
         }
@@ -802,36 +867,96 @@ namespace UruruNotes.ViewsModels
             Notes.Clear();
             Reminders.Clear();
 
-            var notesDir = Path.Combine(
+            string notesDir = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
                 "UruruNotes",
                 "Notes"
             );
-
-            var remindersDir = Path.Combine(
+            string remindersDir = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
                 "UruruNotes",
                 "Reminders"
             );
 
-            // Загружаем все заметки
-            foreach (var file in Directory.GetFiles(notesDir, "*.md"))
+            // Загрузка заметок
+            foreach (var file in Directory.GetFiles(notesDir, "note_*.md"))
             {
-                var date = ExtractDateFromFileName(file);
-                Notes.AddRange(LoadNotesForDate(date));
+                NoteItem note = LoadNoteFromFile(file);
+                if (note != null && !Notes.Any(n => n.Id == note.Id))
+                {
+                    Notes.Add(note);
+                }
             }
 
-            // Загружаем все напоминания
-            foreach (var file in Directory.GetFiles(remindersDir, "*.md"))
+            // Загрузка напоминаний
+            foreach (var file in Directory.GetFiles(remindersDir, "reminder_*.md"))
             {
-                var date = ExtractDateFromFileName(file);
-                Reminders.AddRange(LoadRemindersForDate(date));
+                ReminderItem reminder = LoadReminderFromFile(file);
+                if (reminder != null && !Reminders.Any(r => r.Id == reminder.Id))
+                {
+                    Reminders.Add(reminder);
+                }
             }
 
-            LoadFromFiles(); // Перезагружаем данные из файлов
+            OnPropertyChanged(nameof(Notes));
+            OnPropertyChanged(nameof(Reminders));
             UpdateCalendar();
         }
 
+        private NoteItem LoadNoteFromFile(string filePath)
+        {
+            try
+            {
+                string content = File.ReadAllText(filePath);
+                return new NoteItem
+                {
+                    Id = ExtractGuidFromFileName(filePath),
+                    Date = ExtractDateFromFileName(filePath),
+                    Title = GetTitleFromContent(content),
+                    Content = content
+                };
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Ошибка загрузки заметки: {ex.Message}");
+                return null;
+            }
+        }
+
+        private ReminderItem LoadReminderFromFile(string filePath)
+        {
+            try
+            {
+                string content = File.ReadAllText(filePath);
+                TimeSpan time = ExtractTimeFromContent(content);
+                return new ReminderItem
+                {
+                    Id = ExtractGuidFromFileName(filePath),
+                    Date = ExtractDateFromFileName(filePath),
+                    Title = GetTitleFromContent(content),
+                    Content = content,
+                    Time = time
+                };
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Ошибка загрузки напоминания: {ex.Message}");
+                return null;
+            }
+        }
+
+
+
+        private void BackToCalendarCommandExecute()
+        {
+            IsEditorVisible = false;
+            IsEditing = false;
+            SelectedNote = null;
+            SelectedReminder = null;
+            NewTaskContent = string.Empty;
+            NewTaskContentRemind = string.Empty;
+            OnPropertyChanged(nameof(EditorButtonText));
+        }
 
         private List<NoteItem> LoadNotesForDate(DateTime date)
         {
@@ -895,8 +1020,17 @@ namespace UruruNotes.ViewsModels
         private Guid ExtractGuidFromFileName(string filePath)
         {
             var fileName = Path.GetFileNameWithoutExtension(filePath);
-            var guidPart = fileName.Split('_').Last();
-            return Guid.Parse(guidPart);
+            var parts = fileName.Split('_');
+
+            if (parts.Length >= 3 && Guid.TryParse(parts[2], out Guid guid))
+            {
+                return guid;
+            }
+            else
+            {
+                Debug.WriteLine($"Ошибка извлечения GUID: {fileName}");
+                return Guid.NewGuid(); // Создаем новый GUID для избежания конфликтов
+            }
         }
 
 
@@ -981,16 +1115,16 @@ namespace UruruNotes.ViewsModels
 
             if (item is ReminderItem reminder)
             {
-                content = $"{reminder.Title}\n{reminder.Content}\n**Время:** {reminder.Time:hh\\:mm}";
+                content = $"{reminder.Content}\n**Время:** {reminder.Time:hh\\:mm}";
                 path = GetReminderPath(reminder.Date, reminder.Id);
             }
             else
             {
-                content = $"{item.Title}\n{item.Content}";
+                content = item.Content;
                 path = GetNotePath(item.Date, item.Id);
             }
 
-            File.WriteAllText(path, content);
+            File.WriteAllText(path, content, Encoding.UTF8);
         }
 
         private string GetNotePath(DateTime date, Guid id)
@@ -1050,41 +1184,16 @@ namespace UruruNotes.ViewsModels
     Func<string, string, T> itemFactory, ObservableCollection<T> collection)
     where T : class
         {
-            try
+            Application.Current.Dispatcher.Invoke(() =>
             {
-                if (!Directory.Exists(directory))
-                {
-                    Debug.WriteLine($"Directory not found: {directory}");
-                    return;
-                }
-
+                collection.Clear();
                 foreach (var file in Directory.EnumerateFiles(directory, searchPattern))
                 {
-                    try
-                    {
-                        var content = File.ReadAllText(file, Encoding.UTF8);
-                        if (string.IsNullOrWhiteSpace(content))
-                        {
-                            Debug.WriteLine($"Empty file skipped: {file}");
-                            continue;
-                        }
-
-                        var item = itemFactory(file, content);
-                        if (item != null)
-                        {
-                            Application.Current.Dispatcher.Invoke(() => collection.Add(item));
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.WriteLine($"Error loading file {file}: {ex.Message}");
-                    }
+                    var content = File.ReadAllText(file);
+                    var item = itemFactory(file, content);
+                    if (item != null) collection.Add(item);
                 }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Critical error in LoadItems: {ex.Message}");
-            }
+            });
         }
 
         private DateTime ExtractDateFromFileName(string filePath)
@@ -1119,7 +1228,7 @@ namespace UruruNotes.ViewsModels
             {
                 return TimeSpan.ParseExact(timeMatch.Groups[1].Value, "hh\\:mm", CultureInfo.InvariantCulture);
             }
-            return TimeSpan.Zero; 
+            return TimeSpan.Zero;
         }
 
         private string GetNotesFilePath(DateTime date, bool isReminder)
@@ -1143,8 +1252,27 @@ namespace UruruNotes.ViewsModels
     {
         public Guid Id { get; set; } = Guid.NewGuid();
         public DateTime Date { get; set; }
-        public string Title { get; set; }
-        public string Content { get; set; }
+        private string _title;
+        public string Title
+        {
+            get => _title;
+            set
+            {
+                _title = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _content;
+        public string Content
+        {
+            get => _content;
+            set
+            {
+                _content = value;
+                OnPropertyChanged();
+            }
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -1155,6 +1283,16 @@ namespace UruruNotes.ViewsModels
 
     public class ReminderItem : NoteItem
     {
-        public TimeSpan Time { get; set; }
+        private TimeSpan _time;
+
+        public TimeSpan Time
+        {
+            get => _time;
+            set
+            {
+                _time = value;
+                OnPropertyChanged();
+            }
+        }
     }
 }

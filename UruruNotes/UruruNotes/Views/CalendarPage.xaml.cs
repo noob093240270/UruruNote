@@ -85,10 +85,11 @@ namespace UruruNotes
         {
             if (e.NewValue is NoteItem note)
             {
-                _viewModel.SelectedNote = note; 
-                _viewModel.NewTaskContent = note.Content;
+                _viewModel.SelectedNote = note;
+                _viewModel.NewTaskContent = note.Content.Trim(); 
                 _viewModel.IsEditorVisible = true;
                 _viewModel.CurrentView = CalendarViewModel.ViewType.Notes;
+                _viewModel.IsEditing = true; // Устанавливаем флаг
             }
         }
 
@@ -97,11 +98,12 @@ namespace UruruNotes
             if (e.NewValue is ReminderItem reminder)
             {
                 _viewModel.SelectedReminder = reminder;
-                _viewModel.NewTaskContentRemind = reminder.Content;
+                _viewModel.NewTaskContentRemind = reminder.Content.Replace("**Время:** " + reminder.Time.ToString(@"hh\:mm"), "").Trim();
                 _viewModel.SelectedHour = reminder.Time.Hours;
                 _viewModel.SelectedMinute = reminder.Time.Minutes;
                 _viewModel.IsEditorVisible = true;
                 _viewModel.CurrentView = CalendarViewModel.ViewType.Reminders;
+                _viewModel.IsEditing = true; // Устанавливаем флаг
             }
         }
 
