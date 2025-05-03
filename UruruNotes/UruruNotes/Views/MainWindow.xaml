@@ -261,7 +261,9 @@
                 </Grid>
 
                 <!-- Основная область для страниц -->
-                <Frame x:Name="PageFrame" NavigationUIVisibility="Hidden" Grid.Column="1" Background="{DynamicResource WindowBackground}" Navigated="PageFrame_Navigated" Grid.ColumnSpan="2"/>
+                <Frame x:Name="PageFrame" NavigationUIVisibility="Hidden" Grid.Column="1" HorizontalAlignment="Stretch"
+                       
+                       Navigated="PageFrame_Navigated" Grid.ColumnSpan="2"/>
             </Grid>
         </Grid>
     </ScrollViewer>
