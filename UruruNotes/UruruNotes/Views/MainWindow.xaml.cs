@@ -240,6 +240,8 @@ namespace UruruNotes.Views
         private bool _isInternalSelection = false;
         private FileItem _lastOpenedFile; // Храним последний открытый файл
 
+        private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
         /// <summary>
         /// Обработчик изменения выбранного элемента в TreeView
         /// </summary>
