@@ -156,12 +156,15 @@
                         </Image>
                         <TextBox x:Name="SearchTextBox" Width="180" Height="34" Margin="10,0,0,0" KeyDown="SearchTextBox_KeyDown" VerticalAlignment="Center" Style="{DynamicResource SearchTextBoxStyle}" />
                     </StackPanel>
-                    <Button HorizontalAlignment="Center" Grid.Column="1" Click="SettingsIcon_Click" ToolTip="Настройки" BorderThickness="0" VerticalAlignment="Top">
-                        <Button.Content>
-                            <StackPanel Orientation="Horizontal">
-                                <Image Width="23" Height="19" Source="{Binding IsDarkModeEnabled, ConverterParameter=settingsbutton, Converter={StaticResource ThemeToIconPathConverter}}" Stretch="Uniform" />
-                            </StackPanel>
-                        </Button.Content>
+                    <Button Width="23" Height="23" Margin="5,0" HorizontalAlignment="Center" Grid.Column="1" Click="SettingsIcon_Click" ToolTip="Настройки" BorderThickness="0" VerticalAlignment="Top">
+                        <Button.Background>
+                            <ImageBrush>
+                                <ImageBrush.ImageSource>
+                                    <Binding Path="IsDarkModeEnabled" Converter="{StaticResource ThemeToIconPathConverter}" ConverterParameter="settingsbutton"></Binding>
+                                </ImageBrush.ImageSource>
+                            </ImageBrush>
+                           
+                        </Button.Background>
                     </Button>
                 </Grid>
             </Border>
