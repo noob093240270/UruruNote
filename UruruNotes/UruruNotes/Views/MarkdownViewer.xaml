@@ -11,7 +11,7 @@
              Background="{DynamicResource WindowBackground}"
              Foreground="{DynamicResource InputText}">
     <Grid>
-        <TabControl Name="TabControl" Grid.Row="0" SelectionChanged="TabControl_SelectionChanged"
+        <TabControl Name="TabControl" Grid.Row="0" SelectionChanged="TabControl_SelectionChanged" Width="Auto"
                     Background="{DynamicResource PanelBackground}"
                     BorderBrush="{DynamicResource BorderBrush}"
                     Foreground="{DynamicResource TextForeground}">
@@ -65,50 +65,63 @@
             </TabControl.Resources>
 
             <TabItem Header="Редактирование">
-                <RichTextBox Name="MarkdownRichTextBox"
-                             VerticalScrollBarVisibility="Auto"
-                             HorizontalScrollBarVisibility="Auto"
-                             FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=OneWay}"
-                             Margin="1"
-                             MinWidth="300"
-                             AcceptsReturn="True"
-                             AcceptsTab="True"
-                             PreviewKeyDown="MarkdownRichTextBox_PreviewKeyDown"
-                             CaretBrush="{DynamicResource TextBoxCaret}"
-                             SelectionBrush="{DynamicResource TextBoxCaret}"
-                             SelectionTextBrush="{DynamicResource TextBoxCaret}"
-                             TextChanged="MarkdownRichTextBox_TextChanged"
-                             Background="{DynamicResource ControlBackground}"
-                             BorderBrush="{DynamicResource ControlBorder}"
-                             Foreground="{DynamicResource InputText}">
-                    <RichTextBox.ContextMenu>
-                        <ContextMenu Background="{DynamicResource PanelBackground}"
-                                     BorderBrush="{DynamicResource BorderBrush}"
-                                     Foreground="{DynamicResource TextForeground}">
-                            <MenuItem Header="Жирный" Click="BoldMenuItem_Click"
-                                      Background="{DynamicResource ControlBackground}"
-                                      Foreground="{DynamicResource TextForeground}" />
-                            <MenuItem Header="Курсив" Click="ItalicMenuItem_Click"
-                                      Background="{DynamicResource ControlBackground}"
-                                      Foreground="{DynamicResource TextForeground}" />
-                            <MenuItem Header="Зачеркнутый" Click="StrikethroughMenuItem_Click"
-                                      Background="{DynamicResource ControlBackground}"
-                                      Foreground="{DynamicResource TextForeground}" />
-                            <MenuItem Header="Выделенный" Click="HighlightMenuItem_Click"
-                                      Background="{DynamicResource ControlBackground}"
-                                      Foreground="{DynamicResource TextForeground}" />
-                            <Separator />
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <RichTextBox Name="MarkdownRichTextBox"
+                                 VerticalScrollBarVisibility="Auto"
+                                 HorizontalScrollBarVisibility="Auto"
+                                 FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=OneWay}"
+                                 Margin="1"
+                                 MinWidth="300"
+                                 AcceptsReturn="True"
+                                 AcceptsTab="True"
+                                 PreviewKeyDown="MarkdownRichTextBox_PreviewKeyDown"
+                                 CaretBrush="{DynamicResource TextBoxCaret}"
+                                 SelectionBrush="{DynamicResource TextBoxCaret}"
+                                 SelectionTextBrush="{DynamicResource TextBoxCaret}"
+                                 TextChanged="MarkdownRichTextBox_TextChanged"
+                                 Background="{DynamicResource ControlBackground}"
+                                 BorderBrush="{DynamicResource ControlBorder}"
+                                 Foreground="{DynamicResource InputText}">      
+                        <RichTextBox.ContextMenu>
+                            <ContextMenu Background="{DynamicResource PanelBackground}"
+                                         BorderBrush="{DynamicResource BorderBrush}"
+                                         Foreground="{DynamicResource TextForeground}">
+                                                    <MenuItem Header="Жирный" Click="BoldMenuItem_Click"
+                                          Background="{DynamicResource ControlBackground}"
+                                          Foreground="{DynamicResource TextForeground}" />
+                                                    <MenuItem Header="Курсив" Click="ItalicMenuItem_Click"
+                                          Background="{DynamicResource ControlBackground}"
+                                          Foreground="{DynamicResource TextForeground}" />
+                                                    <MenuItem Header="Зачеркнутый" Click="StrikethroughMenuItem_Click"
+                                          Background="{DynamicResource ControlBackground}"
+                                          Foreground="{DynamicResource TextForeground}" />
+                                                <MenuItem Header="Выделенный" Click="HighlightMenuItem_Click"
+                                          Background="{DynamicResource ControlBackground}"
+                                          Foreground="{DynamicResource TextForeground}" />  
+                                <Separator />
                                 <MenuItem Header="Заголовок 1" Click="Header1MenuItem_Click" />
                                 <MenuItem Header="Заголовок 2" Click="Header2MenuItem_Click" />
                                 <MenuItem Header="Заголовок 3" Click="Header3MenuItem_Click" />
-                            <Separator />
-                            <MenuItem Header="Сохранить (Ctrl+S)" Click="SaveButton_Click" />
-                        </ContextMenu>
-                    </RichTextBox.ContextMenu>
-                    <FlowDocument PagePadding="5">
-                        <Paragraph />
-                    </FlowDocument>
-                </RichTextBox>
+                                <Separator />
+                                <MenuItem Header="Сохранить (Ctrl+S)" Click="SaveButton_Click" />
+                            </ContextMenu>
+                        </RichTextBox.ContextMenu>
+                        <FlowDocument PagePadding="5">
+                            <Paragraph />
+                        </FlowDocument>
+                    </RichTextBox>
+
+                </Grid>
+                
             </TabItem>
 
             <TabItem Header="Предпросмотр">
