@@ -209,10 +209,15 @@
             </Style.Triggers>
         </Style>
 
+        <!-- Общий стиль для элементов TreeView -->
         <Style TargetType="TreeViewItem">
-            <Setter Property="Foreground" Value="#333"/>
             <Setter Property="FontSize" Value="{Binding NoteFontSize}"/>
             <Setter Property="Margin" Value="2"/>
+        </Style>
+
+        <Style TargetType="TreeView">
+            <Setter Property="ScrollViewer.CanContentScroll" Value="True"/>
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
         </Style>
 
     </Window.Resources>
@@ -518,7 +523,11 @@
                         </ControlTemplate>
                     </Button.Template>
                 </Button>
-                <StackPanel x:Name="TaskPanel" Grid.Column="1" Background="LightGray" Width="{StaticResource PanelWidth}">
+                <Grid x:Name="TaskPanel" Grid.Column="1" Background="LightGray" Width="{StaticResource PanelWidth}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>    <!-- Для кнопок переключения -->
+                        <RowDefinition Height="*"/>       <!-- Для TreeView (занимает всё оставшееся пространство) -->
+                    </Grid.RowDefinitions>
                     <!-- Кнопки переключения -->
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10,5">
                         <Button Content="Заметки" 
@@ -542,35 +551,61 @@
                     </StackPanel>
 
                     <!-- Секция заметок -->
-                    <StackPanel Grid.Row="1" Visibility="{Binding CurrentView, Converter={StaticResource ViewToVisibilityConverter}, ConverterParameter=Notes}">
-                        <TreeView ItemsSource="{Binding Notes}" 
-              SelectedItemChanged="NoteTreeView_SelectedItemChanged"
-              Margin="10">
-                            <TreeView.ItemTemplate>
-                                <HierarchicalDataTemplate>
-                                    <TextBlock Text="{Binding Title}"/>
-                                </HierarchicalDataTemplate>
-                            </TreeView.ItemTemplate>
-                        </TreeView>
+                    <StackPanel Grid.Row="1" Margin="0,0,0,10"
+            Visibility="{Binding CurrentView, Converter={StaticResource ViewToVisibilityConverter}, ConverterParameter=Notes}">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Disabled"
+                  PanningMode="VerticalOnly"
+                  CanContentScroll="True"
+                  Padding="0,0,0,5"
+                  Background="LightGray"               
+                  Height="{Binding ActualHeight, ElementName=TaskPanel}">
+                            <TreeView ItemsSource="{Binding Notes}" 
+                  SelectedItemChanged="NoteTreeView_SelectedItemChanged"
+                  PreviewMouseWheel="TreeView_PreviewMouseWheel" Background="Transparent" BorderThickness="0"
+                  Margin="10">
+                                <TreeView.ItemTemplate>
+                                    <HierarchicalDataTemplate>
+                                        <TextBlock Text="{Binding Title}" FontSize="16" 
+                                                    ToolTip="{Binding Content}"/>
+                                    </HierarchicalDataTemplate>
+                                </TreeView.ItemTemplate>
+                            </TreeView>
+                        </ScrollViewer>
                     </StackPanel>
 
                     <!-- Секция напоминаний -->
-                    <StackPanel Grid.Row="1" Visibility="{Binding CurrentView, Converter={StaticResource ViewToVisibilityConverter}, ConverterParameter=Reminders}">
-                        <TreeView ItemsSource="{Binding Reminders}" 
-              SelectedItemChanged="ReminderTreeView_SelectedItemChanged"
-              Margin="10">
-                            <TreeView.ItemTemplate>
-                                <HierarchicalDataTemplate>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{Binding Time, StringFormat='{}{0:hh\\:mm}'}" Foreground="DimGray" Margin="0,0,5,0"/>
-                                        <TextBlock Text="{Binding Title}"/>
-                                    </StackPanel>
-                                </HierarchicalDataTemplate>
-                            </TreeView.ItemTemplate>
-                        </TreeView>
+                    <StackPanel Grid.Row="1" Margin="0,0,0,10"
+            Visibility="{Binding CurrentView, Converter={StaticResource ViewToVisibilityConverter}, ConverterParameter=Reminders}">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Disabled"
+                  PanningMode="VerticalOnly"
+                  CanContentScroll="True"
+                  Background="LightGray"
+                  Height="{Binding ActualHeight, ElementName=TaskPanel}">
+                            <TreeView ItemsSource="{Binding Reminders}" 
+                 SelectedItemChanged="ReminderTreeView_SelectedItemChanged"
+                 PreviewMouseWheel="TreeView_PreviewMouseWheel" Background="Transparent" BorderThickness="0"
+                 Margin="10">
+                                <TreeView.ItemTemplate>
+                                    <HierarchicalDataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding Time, StringFormat='{}{0:hh\\:mm}'}" 
+                                   Foreground="Red" FontSize="16" 
+                                   Margin="0,0,5,5"
+                                   ToolTip="{Binding Content}"/>
+                                            <!-- Для времени -->
+                                            <TextBlock Text="{Binding Title}" FontSize="16" 
+                                   ToolTip="{Binding Content}"/>
+                                            <!-- Для заголовка -->
+                                        </StackPanel>
+                                    </HierarchicalDataTemplate>
+                                </TreeView.ItemTemplate>
+                            </TreeView>
+                        </ScrollViewer>
                     </StackPanel>
 
-                </StackPanel>
+                </Grid>
             </Grid>
         </Border>
     </Grid>

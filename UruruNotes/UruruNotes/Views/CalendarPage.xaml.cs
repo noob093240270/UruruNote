@@ -130,6 +130,16 @@ namespace UruruNotes
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        private void TreeView_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            // Если TreeView внутри ScrollViewer
+            if (sender is TreeView treeView &&
+                treeView.Parent is ScrollViewer scrollViewer)
+            {
+                scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset - e.Delta);
+                e.Handled = true;
+            }
+        }
 
         private void TogglePanel_Click(object sender, RoutedEventArgs e)
         {
