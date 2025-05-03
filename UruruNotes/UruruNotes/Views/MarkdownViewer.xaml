@@ -6,12 +6,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
              mc:Ignorable="d">
-
-
     <Grid>
-
-
-
         <TabControl Name="TabControl" Width="Auto" SelectionChanged="TabControl_SelectionChanged">
             <TabItem Header="Редактирование">
                 <Grid>
@@ -107,15 +102,6 @@
                 <ComboBoxItem Content="30"/>
                 <ComboBoxItem Content="35"/>
             </ComboBox>
-
-
-
-
         </StackPanel>
-
-
-
-
-
     </Grid>
 </UserControl>
