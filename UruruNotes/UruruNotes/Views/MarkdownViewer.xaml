@@ -68,6 +68,7 @@
                 <RichTextBox Name="MarkdownRichTextBox"
                              VerticalScrollBarVisibility="Auto"
                              HorizontalScrollBarVisibility="Auto"
+                             FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=OneWay}"
                              Margin="1"
                              MinWidth="300"
                              AcceptsReturn="True"
