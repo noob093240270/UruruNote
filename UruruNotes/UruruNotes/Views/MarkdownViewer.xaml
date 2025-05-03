@@ -53,7 +53,7 @@
             </TabItem>
 
             <TabItem Header="Предпросмотр">
-                <Grid>
+                <Grid  Margin="10" MinWidth="300">
                     <wv2:WebView2 Name="MarkdownPreview"
               HorizontalAlignment="Stretch"
               VerticalAlignment="Stretch"
