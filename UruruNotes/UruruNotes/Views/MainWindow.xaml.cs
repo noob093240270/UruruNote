@@ -773,6 +773,149 @@ namespace UruruNotes.Views
                     // Удаляем файл из коллекции папки
                     var parentFolder = fileItem.ParentFolder;
                     if (parentFolder != null)
+                    childTreeViewItem.IsSelected = false;
+                    UnselectAllItems(childTreeViewItem);
+                }
+            }
+        }
+
+
+        private void UnselectChildItems(TreeViewItem item)
+        {
+            foreach (var child in item.Items)
+            {
+                var childItem = item.ItemContainerGenerator.ContainerFromItem(child) as TreeViewItem;
+                if (childItem != null)
+                {
+                    childItem.IsSelected = false; // Сбрасываем выделение
+                    UnselectChildItems(childItem); // Рекурсивно для дочерних
+                }
+            }
+        }
+        // Обработчик для значка настроек
+        private void SettingsIcon_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+
+            // Открываем окно настроек
+            if (DataContext is MainViewModel mainViewModel)
+            {
+                // Передаем MainViewModel в конструктор SettingsWindow
+                var settingsWindow = new SettingsWindow(mainViewModel, _currentMarkdownViewer);
+                settingsWindow.ShowDialog();
+            }
+        }
+
+        // Обработчик для сворачивания и разворачивания treeview
+        private void ToggleVisibilityButton_Click(object sender, RoutedEventArgs e)
+        {
+            var button = sender as Button;
+
+            if ((TreeViewGrid.Visibility == Visibility.Visible) & (ButtonOpen.Visibility == Visibility.Collapsed))
+            {
+                //TreeViewGrid.Visibility = Visibility.Collapsed;
+                ButtonClose.Visibility = Visibility.Collapsed;
+                ButtonOpen.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                //TreeViewGrid.Visibility = Visibility.Visible;
+                ButtonOpen.Visibility = Visibility.Collapsed;
+                ButtonClose.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void SearchTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                string query = SearchTextBox.Text;
+                PerformSearch(query); // Метод для выполнения поиска по введенному тексту
+            }
+        }
+
+        private void PerformSearch(string query)
+        {
+            var viewModel = DataContext as MainViewModel;
+            
+            var foundFile = viewModel.Files.FirstOrDefault(file => file.FileName.Contains(query, StringComparison.OrdinalIgnoreCase));
+
+            if (foundFile != null)
+            {
+                OpenFile(foundFile); return;
+            }
+
+            string rootDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "MyFolders");
+            if (!Directory.Exists(rootDirectory))
+            {
+                MessageBox.Show("Файл не найден.");
+                return;
+            }
+
+            var allFiles = Directory.GetFiles(rootDirectory, "*", SearchOption.AllDirectories)
+                            .Where(path => Path.GetFileName(path).Contains(query, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+
+            if (allFiles.Any())
+            {
+                string foundFilePath = allFiles.First(); 
+
+                var newFileItem = new FileItem
+                {
+                    FileName = Path.GetFileName(foundFilePath), 
+                    FilePath = foundFilePath
+                };
+
+                OpenFile(newFileItem);
+            }
+            else
+            {
+                MessageBox.Show("Файл не найден во всём каталоге.");
+            }
+
+        }
+
+
+
+        private void OpenFile(FileItem file)
+        {
+            try
+            {
+                // Создаем новый экземпляр MarkdownViewer и передаем ему файл для отображения
+                var markdownViewer = new MarkdownViewer(file);// MarkdownViewer — это UserControl, который отображает содержимое
+                _currentMarkdownViewer = markdownViewer;
+                PageFrame.Content = markdownViewer; // Загружаем этот UserControl в PageFrame
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при открытии файла: {ex.Message}");
+            }
+        }
+
+
+        // Страница с календарём
+
+        private void CalendarButton_Click(object sender, RoutedEventArgs e)
+        {
+            PageFrame.Content = new CalendarPage();
+        }
+
+        // Начальная страница
+        private void HomePageButton_Click(object sender, RoutedEventArgs e)
+        {
+            PageFrame.Content = new HomePage();
+        }
+
+    }
+        private void AddSubFolderMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuItem menuItem && menuItem.CommandParameter is FolderItem parentFolder)
+            {
+                var newFolderWindow = new NewFolderWindow();
+                if (newFolderWindow.ShowDialog() == true)
+                {
+                    var folderName = newFolderWindow.FolderName;
+
+                    if (parentFolder.SubFolders.Any(f => f.FileName == folderName))
                     {
                         parentFolder.Files.Remove(fileItem); // Удаляем файл из папки
                     }
