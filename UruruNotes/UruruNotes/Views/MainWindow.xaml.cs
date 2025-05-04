@@ -949,7 +949,7 @@ namespace UruruNotes.Views
                 }
             }
         }
-        private void AddSubFolderMenuItem_Click(object sender, RoutedEventArgs e)
+        /*private void AddSubFolderMenuItem_Click(object sender, RoutedEventArgs e)
         {
             if (sender is MenuItem menuItem && menuItem.CommandParameter is FolderItem parentFolder)
             {
@@ -976,7 +976,7 @@ namespace UruruNotes.Views
                     parentFolder.SubFolders.Add(newFolder);
                 }
             }
-        }
+        }*/
 
 
 
