@@ -37,10 +37,12 @@ namespace UruruNotes.ViewsModels
         // enum для типов вкладок
         public enum ViewType { Notes, Reminders }
 
+        
+        private bool _isEditing;
+
         /// <summary>
         /// флаг редактирования
         /// </summary>
-        private bool _isEditing;
         public bool IsEditing
         {
             get => _isEditing;
@@ -142,13 +144,36 @@ namespace UruruNotes.ViewsModels
         private void SwitchView(string viewType)
         {
             CurrentView = (ViewType)Enum.Parse(typeof(ViewType), viewType);
-            IsEditing = false; // Сбрасываем флаг
-            NewTaskContent = string.Empty;
-            NewTaskContentRemind = string.Empty;
-            SelectedNote = null;
-            SelectedReminder = null;
-            OnPropertyChanged(nameof(EditorButtonText)); // Обновляем кнопку
-            OnPropertyChanged(nameof(EditorTitle)); // Обновляем заголовок
+            IsEditing = false;
+
+            // Если дата выбрана, обновляем данные для новой вкладки
+            if (SelectedDate.HasValue)
+            {
+                bool hasNotes = Notes.Any(n => n.Date.Date == SelectedDate.Value.Date);
+                bool hasReminders = Reminders.Any(r => r.Date.Date == SelectedDate.Value.Date);
+
+                if (CurrentView == ViewType.Notes)
+                {
+                    LoadNoteForDate(SelectedDate.Value);
+                    if (!hasNotes)
+                    {
+                        NewTaskContent = $"Создание задачи на {SelectedDate.Value:dd MMMM yyyy}\n";
+                    }
+                }
+                else
+                {
+                    LoadReminderForDate(SelectedDate.Value);
+                    if (!hasReminders)
+                    {
+                        NewTaskContentRemind = $"Создание напоминания на {SelectedDate.Value:dd MMMM yyyy}\n";
+                    }
+                }
+            }
+
+            OnPropertyChanged(nameof(NewTaskContent));
+            OnPropertyChanged(nameof(NewTaskContentRemind));
+            OnPropertyChanged(nameof(EditorButtonText));
+            OnPropertyChanged(nameof(EditorTitle));
         }
 
         private string _newTaskContent;
@@ -459,7 +484,7 @@ namespace UruruNotes.ViewsModels
             SaveNoteCommand = new RelayCommand(SaveNote);
             SaveReminderCommand = new RelayCommand(SaveReminder);
 
-            CreateNewNoteCommand = new RelayCommand(() => IsEditorVisible = true);
+            CreateNewNoteCommand = newCreateNewNoteCommand();
             BackToCalendarCommand = new RelayCommand(BackToCalendarCommandExecute);
             SwitchViewCommand = new RelayCommand<string>(SwitchView);
             SaveCommand = new RelayCommand(() =>
@@ -498,7 +523,37 @@ namespace UruruNotes.ViewsModels
             UpdateScaledProperties();
         }
 
+        public RelayCommand newCreateNewNoteCommand()
+        {
+            return new RelayCommand(() =>
+            {
+                IsEditorVisible = true;
+                IsEditing = false;
+                SelectedNote = null;
+                SelectedReminder = null;
 
+                // Если дата не выбрана, используем текущую
+                if (!SelectedDate.HasValue)
+                {
+                    SelectedDate = DateTime.Today;
+                }
+
+                // Устанавливаем текст по умолчанию
+                if (CurrentView == ViewType.Notes)
+                {
+                    NewTaskContent = $"Создание задачи на {SelectedDate.Value:dd MMMM yyyy}\n";
+                }
+                else
+                {
+                    NewTaskContentRemind = $"Создание напоминания на {SelectedDate.Value:dd MMMM yyyy}\n";
+                    SelectedHour = 8;
+                    SelectedMinute = 0;
+                }
+
+                OnPropertyChanged(nameof(NewTaskContent));
+                OnPropertyChanged(nameof(NewTaskContentRemind));
+            });
+        }
 
         private void UpdateScaledProperties()
         {
@@ -644,34 +699,39 @@ namespace UruruNotes.ViewsModels
         {
             if (selectedDay?.Date == null) return;
 
-            // Проверяем, есть ли заметки/напоминания на выбранную дату
-            IsEditing = Notes.Any(n => n.Date.Date == selectedDay.Date.Value.Date)
-              || Reminders.Any(r => r.Date.Date == selectedDay.Date.Value.Date);
-            IsEditing = (SelectedNote != null || SelectedReminder != null);
-
-            SelectedDate = selectedDay.Date;
+            SelectedDate = selectedDay.Date; // Фиксируем выбранную дату
             IsTaskPanelVisible = true;
             IsEditorVisible = true;
 
-            OnPropertyChanged(nameof(EditorTitle)); // Уведомляем об изменении заголовка
+            // Проверяем наличие записей для активной вкладки
+            bool hasNotes = Notes.Any(n => n.Date.Date == SelectedDate.Value.Date);
+            bool hasReminders = Reminders.Any(r => r.Date.Date == SelectedDate.Value.Date);
 
-            // Загружаем данные, если они существуют
+            IsEditing = (CurrentView == ViewType.Notes && hasNotes)
+                      || (CurrentView == ViewType.Reminders && hasReminders);
+
+            // Обновляем данные для текущей вкладки
             if (CurrentView == ViewType.Notes)
             {
-                LoadNoteForDate(selectedDay.Date.Value);
+                LoadNoteForDate(SelectedDate.Value);
                 if (!IsEditing)
                 {
-                    NewTaskContent = $"Создание задачи на {selectedDay.Date.Value:dd MMMM yyyy}\n";
+                    NewTaskContent = $"Создание задачи на {SelectedDate.Value:dd MMMM yyyy}\n";
                 }
             }
             else
             {
-                LoadReminderForDate(selectedDay.Date.Value);
+                LoadReminderForDate(SelectedDate.Value);
                 if (!IsEditing)
                 {
-                    NewTaskContentRemind = $"Создание напоминания на {selectedDay.Date.Value:dd MMMM yyyy}\n";
+                    NewTaskContentRemind = $"Создание напоминания на {SelectedDate.Value:dd MMMM yyyy}\n";
                 }
             }
+
+            // Принудительное обновление UI
+            OnPropertyChanged(nameof(NewTaskContent));
+            OnPropertyChanged(nameof(NewTaskContentRemind));
+            OnPropertyChanged(nameof(EditorTitle));
         }
 
         private void EnsureFoldersExist()
@@ -691,31 +751,45 @@ namespace UruruNotes.ViewsModels
             var note = Notes.FirstOrDefault(n => n.Date.Date == date.Date);
             if (note != null)
             {
-                NewTaskContent = note.Content; // Заполняем поле данными
+                NewTaskContent = note.Content;
+                IsEditing = true;
             }
             else
             {
-                NewTaskContent = string.Empty; // Очищаем, если запись новая
+                IsEditing = false;
             }
         }
 
         private void LoadReminderForDate(DateTime date)
         {
-            string reminderFilePath = GetNotesFilePath(date, true);
-            if (File.Exists(reminderFilePath))
+            try
             {
-                string reminderContent = File.ReadAllText(reminderFilePath);
-                NewTaskContentRemind = reminderContent;
+                // Ищем все файлы напоминаний для выбранной даты
+                var reminders = Reminders
+                    .Where(r => r.Date.Date == date.Date)
+                    .OrderBy(r => r.Time)
+                    .ToList();
 
-                var timeMatch = Regex.Match(reminderContent, @"\*\*Время напоминания:\*\* (\d{2}:\d{2})");
-                if (timeMatch.Success && TimeSpan.TryParse(timeMatch.Groups[1].Value, out var reminderTime))
+                if (reminders.Any())
                 {
-                    SelectedHour = reminderTime.Hours;
-                    SelectedMinute = reminderTime.Minutes;
+                    // Берём первое напоминание (или реализуйте выбор через UI)
+                    var reminder = reminders.First();
+                    NewTaskContentRemind = reminder.Content;
+                    SelectedHour = reminder.Time.Hours;
+                    SelectedMinute = reminder.Time.Minutes;
+                    IsEditing = true;
+                }
+                else
+                {
+                    NewTaskContentRemind = $"Создание напоминания на {date:dd MMMM yyyy}\n";
+                    SelectedHour = 8;
+                    SelectedMinute = 0;
+                    IsEditing = false;
                 }
             }
-            else
+            catch (Exception ex)
             {
+                MessageBox.Show($"Ошибка загрузки напоминания: {ex.Message}");
                 NewTaskContentRemind = string.Empty;
                 SelectedHour = 8;
                 SelectedMinute = 0;
@@ -729,6 +803,12 @@ namespace UruruNotes.ViewsModels
             try
             {
                 if (!ValidateNoteData()) return;
+
+                if (!SelectedDate.HasValue)
+                {
+                    MessageBox.Show("Выберите дату!");
+                    return;
+                }
 
                 if (IsEditing && SelectedNote != null)
                 {
@@ -781,7 +861,7 @@ namespace UruruNotes.ViewsModels
                 MessageBox.Show("Не выбрана дата!");
                 return false;
             }
-            if (string.IsNullOrWhiteSpace(NewTaskContent))
+            if (CurrentView == ViewType.Notes && string.IsNullOrWhiteSpace(NewTaskContent))
             {
                 MessageBox.Show("Содержимое не может быть пустым!");
                 return false;
@@ -848,21 +928,35 @@ namespace UruruNotes.ViewsModels
             {
                 if (!ValidateReminderData()) return;
 
-                // Режим редактирования
+                if (!SelectedDate.HasValue)
+                {
+                    MessageBox.Show("Выберите дату!");
+                    return;
+                }
+
                 if (SelectedReminder != null)
                 {
                     UpdateExistingReminder();
-                    MessageBox.Show("Напоминание обновлено!");
                 }
-                // Режим создания
                 else
                 {
-                    CreateNewReminder();
-                    MessageBox.Show("Новое напоминание создано!");
+                    var reminder = new ReminderItem
+                    {
+                        Date = SelectedDate.Value,
+                        Title = GetTitleFromContent(NewTaskContentRemind),
+                        Content = NewTaskContentRemind,
+                        Time = SelectedReminderTime
+                    };
+                    Reminders.Add(reminder);
+                    SaveToFile(reminder);
+                    ScheduleReminderTask(reminder.Date + reminder.Time, reminder.Content);
+                    SelectedReminder = reminder; // Привязываем новое напоминание
+                    IsEditing = true; // Переводим в режим редактирования
                 }
 
                 UpdateCalendar();
-                ResetReminderForm();
+                OnPropertyChanged(nameof(EditorButtonText));
+                OnPropertyChanged(nameof(EditorTitle));
             }
             catch (Exception ex)
             {
@@ -877,7 +971,7 @@ namespace UruruNotes.ViewsModels
                 MessageBox.Show("Не выбрана дата!");
                 return false;
             }
-            if (string.IsNullOrWhiteSpace(NewTaskContentRemind))
+            if (CurrentView == ViewType.Reminders && string.IsNullOrWhiteSpace(NewTaskContentRemind))
             {
                 MessageBox.Show("Содержимое не может быть пустым!");
                 return false;
