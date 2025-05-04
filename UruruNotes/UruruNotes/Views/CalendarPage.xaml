@@ -561,7 +561,7 @@
                   Padding="0,0,0,5"
                   Background="LightGray"               
                   Height="{Binding ActualHeight, ElementName=TaskPanel}">
-                            <TreeView ItemsSource="{Binding Notes}" 
+                            <TreeView x:Name="NotesTreeView"  ItemsSource="{Binding Notes}"  
                   SelectedItemChanged="NoteTreeView_SelectedItemChanged" 
                   Visibility="{Binding CurrentView, Converter={StaticResource ViewToVisibilityConverter}, ConverterParameter=Notes}"
                   PreviewMouseWheel="TreeView_PreviewMouseWheel" Background="Transparent" BorderThickness="0"
@@ -583,9 +583,10 @@
                   HorizontalScrollBarVisibility="Disabled"
                   PanningMode="VerticalOnly"
                   CanContentScroll="True"
+                  Padding="0,0,0,5"
                   Background="LightGray"
                   Height="{Binding ActualHeight, ElementName=TaskPanel}">
-                            <TreeView ItemsSource="{Binding Reminders}" 
+                            <TreeView x:Name="RemindersTreeView" ItemsSource="{Binding Reminders}" 
                  Visibility="{Binding CurrentView, Converter={StaticResource ViewToVisibilityConverter}, ConverterParameter=Reminders}"
                  SelectedItemChanged="ReminderTreeView_SelectedItemChanged"
                  PreviewMouseWheel="TreeView_PreviewMouseWheel" Background="Transparent" BorderThickness="0"

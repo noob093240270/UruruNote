@@ -81,21 +81,45 @@ namespace UruruNotes
             };
         }
 
+        public void ScrollToNote(NoteItem note)
+        {
+            if (NotesTreeView != null)
+            {
+                var item = NotesTreeView.ItemContainerGenerator.ContainerFromItem(note) as TreeViewItem;
+                item?.BringIntoView();
+            }
+        }
+
+        public void ScrollToReminder(ReminderItem reminder)
+        {
+            if (RemindersTreeView != null)
+            {
+                var item = RemindersTreeView.ItemContainerGenerator.ContainerFromItem(reminder) as TreeViewItem;
+                item?.BringIntoView();
+            }
+        }
+
         private void NoteTreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            if (e.NewValue is NoteItem note)
+            if (e.NewValue is NoteItem note )
             {
                 _viewModel.SelectedNote = note;
                 _viewModel.NewTaskContent = note.Content.Trim(); 
                 _viewModel.IsEditorVisible = true;
                 _viewModel.CurrentView = CalendarViewModel.ViewType.Notes;
                 _viewModel.IsEditing = true; // Устанавливаем флаг
+
+                if (note != _viewModel.SelectedNote)
+                {
+                    _viewModel.SelectedNote = note;
+                    _viewModel.CurrentView = CalendarViewModel.ViewType.Notes;
+                }
             }
         }
 
         private void ReminderTreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            if (e.NewValue is ReminderItem reminder)
+            if (e.NewValue is ReminderItem reminder )
             {
                 _viewModel.SelectedReminder = reminder;
                 _viewModel.NewTaskContentRemind = reminder.Content.Replace("**Время:** " + reminder.Time.ToString(@"hh\:mm"), "").Trim();
@@ -104,6 +128,12 @@ namespace UruruNotes
                 _viewModel.IsEditorVisible = true;
                 _viewModel.CurrentView = CalendarViewModel.ViewType.Reminders;
                 _viewModel.IsEditing = true; // Устанавливаем флаг
+
+                if (reminder != _viewModel.SelectedReminder)
+                {
+                    _viewModel.SelectedReminder = reminder;
+                    _viewModel.CurrentView = CalendarViewModel.ViewType.Reminders;
+                }
             }
         }
 

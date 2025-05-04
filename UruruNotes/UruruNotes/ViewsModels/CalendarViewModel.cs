@@ -62,7 +62,7 @@ namespace UruruNotes.ViewsModels
         public ObservableCollection<NoteItem> Notes { get; set; } = new ObservableCollection<NoteItem>();
 
         private ObservableCollection<ReminderItem> _reminders;
-        public ObservableCollection<ReminderItem> Reminders { get; set; }
+        public ObservableCollection<ReminderItem> Reminders { get; set; } = new ObservableCollection<ReminderItem>();
 
         private NoteItem _selectedNote;
         public NoteItem SelectedNote
@@ -77,6 +77,8 @@ namespace UruruNotes.ViewsModels
                 {
                     NewTaskContent = value.Content;
                     SelectedDate = value.Date;
+                    IsEditing = true;
+                    CurrentView = ViewType.Notes; // Автоматический переход на вкладку
                 }
             }
         }
@@ -96,6 +98,8 @@ namespace UruruNotes.ViewsModels
                     NewTaskContentRemind = value.Content;
                     SelectedDate = value.Date;
                     SelectedReminderTime = value.Time;
+                    IsEditing = true; // Режим редактирования
+            CurrentView = ViewType.Reminders; // Автоматический переход на вкладку
                 }
             }
         }
@@ -812,14 +816,12 @@ namespace UruruNotes.ViewsModels
 
                 if (IsEditing && SelectedNote != null)
                 {
-                    // Редактируем существующую заметку
                     SelectedNote.Content = NewTaskContent;
                     SaveToFile(SelectedNote);
                     MessageBox.Show("Изменения сохранены!");
                 }
                 else
                 {
-                    // Создаём новую заметку
                     var note = new NoteItem
                     {
                         Date = SelectedDate.Value,
@@ -829,12 +831,13 @@ namespace UruruNotes.ViewsModels
                     Notes.Add(note);
                     SaveToFile(note);
                     SelectedNote = note; // Привязываем новую заметку
-                    IsEditing = true; // Устанавливаем флаг редактирования
+                    OnPropertyChanged(nameof(Notes));
+                    IsEditing = true;
                     MessageBox.Show("Новая заметка создана!");
                 }
 
                 UpdateCalendar();
-                OnPropertyChanged(nameof(EditorButtonText)); // Обновляем кнопку
+                OnPropertyChanged(nameof(EditorButtonText));
                 OnPropertyChanged(nameof(EditorTitle));
             }
             catch (Exception ex)
@@ -949,9 +952,10 @@ namespace UruruNotes.ViewsModels
                     };
                     Reminders.Add(reminder);
                     SaveToFile(reminder);
-                    ScheduleReminderTask(reminder.Date + reminder.Time, reminder.Content);
                     SelectedReminder = reminder; // Привязываем новое напоминание
-                    IsEditing = true; // Переводим в режим редактирования
+                    OnPropertyChanged(nameof(Reminders));
+                    ScheduleReminderTask(reminder.Date + reminder.Time, reminder.Content);
+                    IsEditing = true;
                 }
 
                 UpdateCalendar();
