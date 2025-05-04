@@ -11,6 +11,10 @@
              Background="{DynamicResource WindowBackground}"
              Foreground="{DynamicResource InputText}">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
         <TabControl Name="TabControl" Grid.Row="0" SelectionChanged="TabControl_SelectionChanged" Width="Auto"
                     Background="{DynamicResource PanelBackground}"
                     BorderBrush="{DynamicResource BorderBrush}"
