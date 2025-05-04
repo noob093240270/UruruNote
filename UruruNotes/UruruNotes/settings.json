@@ -1,6 +1,5 @@
 ﻿{
-    "FontSize": 15,
+    "SelectedFontSize": 15,
     "Scale": 1.0,
-    "DarkMode": false
-
+    "IsNotificationsEnabled": false
 }

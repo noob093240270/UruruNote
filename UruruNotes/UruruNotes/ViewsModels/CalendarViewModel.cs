@@ -16,14 +16,22 @@ using System.IO;           // Из ветки
 using System.Windows;
 using Microsoft.Toolkit.Uwp.Notifications;
 using Microsoft.Win32.TaskScheduler;
+
 using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Collections.Generic; // Для IEnumerable<T>
+
+using System.Windows.Documents;
+using Newtonsoft.Json.Linq;
+using UruruNote.ViewsModels;
+
 
 namespace UruruNotes.ViewsModels
 {
     public class CalendarViewModel : INotifyPropertyChanged
     {
+        private readonly MainViewModel _mainViewModel;
+
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
@@ -376,6 +384,7 @@ namespace UruruNotes.ViewsModels
             }
         }
 
+
         private double _dayFontSize = 12;
         public double DayFontSize
         {
@@ -397,6 +406,8 @@ namespace UruruNotes.ViewsModels
                 OnPropertyChanged();
             }
         }
+
+        
 
         private double _noteFontSize = 14;
         public double NoteFontSize
@@ -470,9 +481,12 @@ namespace UruruNotes.ViewsModels
         public ObservableCollection<int> Hours { get; set; }
         public ObservableCollection<int> Minutes { get; set; }
 
-        public CalendarViewModel()
+        public CalendarViewModel(MainViewModel mainViewModel)
         {
             _currentDate = DateTime.Today;
+
+            EnsureFoldersExist();
+            _mainViewModel = mainViewModel ?? throw new ArgumentNullException(nameof(mainViewModel));
 
             Days = new ObservableCollection<DayViewModel>();
             Notes = new ObservableCollection<NoteItem>();
@@ -639,6 +653,7 @@ namespace UruruNotes.ViewsModels
             }
 
             OnPropertyChanged(nameof(CurrentMonthYear));
+            OnPropertyChanged(nameof(ForeGroundFont));
         }
 
         //private void CheckForNoteAndReminder(DayViewModel dayViewModel)
@@ -669,6 +684,7 @@ namespace UruruNotes.ViewsModels
         {
             _currentDate = _currentDate.AddMonths(1);
             UpdateCalendar();
+
         }
 
         private void ShowTaskPanel(DayViewModel selectedDay)
@@ -958,6 +974,11 @@ namespace UruruNotes.ViewsModels
                     IsEditing = true;
                 }
 
+                DateTime reminderDateTime = SelectedDate.Value.Date + SelectedReminderTime;
+                ScheduleReminderTask(reminderDateTime, NewTaskContentRemind);
+
+                Debug.WriteLine("Задача запланирована");
+
                 UpdateCalendar();
                 OnPropertyChanged(nameof(EditorButtonText));
                 OnPropertyChanged(nameof(EditorTitle));
@@ -1178,6 +1199,7 @@ namespace UruruNotes.ViewsModels
         }
 
 
+
         // Метод для показа уведомления
         private void ShowToastNotification(string title, string message)
         {
@@ -1191,6 +1213,13 @@ namespace UruruNotes.ViewsModels
 
         private void ScheduleReminderTask(DateTime reminderTime, string message)
         {
+            // Проверяем, включены ли уведомления
+            if (!_mainViewModel.IsNotificationsEnabled)
+            {
+                Debug.WriteLine("Уведомления отключены, задача не запланирована.");
+                return;
+            }
+
             try
             {
                 using (TaskService ts = new TaskService())
@@ -1199,15 +1228,13 @@ namespace UruruNotes.ViewsModels
                     td.RegistrationInfo.Description = "UruruNotes Reminder";
                     td.Triggers.Add(new TimeTrigger(reminderTime));
 
-                    // Убедимся, что задача не повторяется
                     td.Settings.AllowDemandStart = false;
                     td.Settings.DisallowStartIfOnBatteries = false;
                     td.Settings.StopIfGoingOnBatteries = false;
                     td.Settings.AllowHardTerminate = true;
 
-                    // Указываем путь к .exe файлу
                     string appPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
-                    string exePath = appPath.Replace(".dll", ".exe"); // Заменяем .dll на .exe
+                    string exePath = appPath.Replace(".dll", ".exe");
 
                     td.Actions.Add(new ExecAction(exePath, $"\"{message}\"", null));
 
@@ -1224,7 +1251,8 @@ namespace UruruNotes.ViewsModels
             }
         }
 
-        private void SaveNoteForDate(DateTime date, NoteItem note)
+
+        private void SaveNoteForDate(DateTime date, Note note)
         {
             string noteFilePath = GetNotesFilePath(date, false);
             File.WriteAllText(noteFilePath, note.Content);
@@ -1388,6 +1416,18 @@ namespace UruruNotes.ViewsModels
 
             // Полный путь к файлу
             return Path.Combine(baseFolder, subFolder, fileName);
+        }
+        public string ForeGroundFont
+        {
+            get
+            {
+                if (_currentDate.Equals(DateTime.Today))
+                {
+                    return "Black";
+                }
+                return "Gray";
+                
+            }
         }
     }
 
