@@ -59,6 +59,7 @@ namespace UruruNotes
             ButtonWidth = 50 * scale;
             ButtonHeight = 50 * scale;
             DayFontSize = 14 * scale;
+            ContentGrid.Height = baseHeight * scale;
         }
 
         public CalendarPage(MainViewModel mainViewModel)
@@ -78,6 +79,62 @@ namespace UruruNotes
                     Debug.WriteLine($"CalendarPage: Scale обновлён: {_viewModel.Scale}");
                 }
             };
+        }
+
+        public void ScrollToNote(NoteItem note)
+        {
+            if (NotesTreeView != null)
+            {
+                var item = NotesTreeView.ItemContainerGenerator.ContainerFromItem(note) as TreeViewItem;
+                item?.BringIntoView();
+            }
+        }
+
+        public void ScrollToReminder(ReminderItem reminder)
+        {
+            if (RemindersTreeView != null)
+            {
+                var item = RemindersTreeView.ItemContainerGenerator.ContainerFromItem(reminder) as TreeViewItem;
+                item?.BringIntoView();
+            }
+        }
+
+        private void NoteTreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            if (e.NewValue is NoteItem note )
+            {
+                _viewModel.SelectedNote = note;
+                _viewModel.NewTaskContent = note.Content.Trim(); 
+                _viewModel.IsEditorVisible = true;
+                _viewModel.CurrentView = CalendarViewModel.ViewType.Notes;
+                _viewModel.IsEditing = true; // Устанавливаем флаг
+
+                if (note != _viewModel.SelectedNote)
+                {
+                    _viewModel.SelectedNote = note;
+                    _viewModel.CurrentView = CalendarViewModel.ViewType.Notes;
+                }
+            }
+        }
+
+        private void ReminderTreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            if (e.NewValue is ReminderItem reminder )
+            {
+                _viewModel.SelectedReminder = reminder;
+                _viewModel.NewTaskContentRemind = reminder.Content.Replace("**Время:** " + reminder.Time.ToString(@"hh\:mm"), "").Trim();
+                _viewModel.SelectedHour = reminder.Time.Hours;
+                _viewModel.SelectedMinute = reminder.Time.Minutes;
+                _viewModel.IsEditorVisible = true;
+                _viewModel.CurrentView = CalendarViewModel.ViewType.Reminders;
+                _viewModel.IsEditing = true; // Устанавливаем флаг
+
+                if (reminder != _viewModel.SelectedReminder)
+                {
+                    _viewModel.SelectedReminder = reminder;
+                    _viewModel.CurrentView = CalendarViewModel.ViewType.Reminders;
+                }
+            }
         }
 
         private double _scale = 1.0;
@@ -105,6 +162,16 @@ namespace UruruNotes
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        private void TreeView_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            // Если TreeView внутри ScrollViewer
+            if (sender is TreeView treeView &&
+                treeView.Parent is ScrollViewer scrollViewer)
+            {
+                scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset - e.Delta);
+                e.Handled = true;
+            }
+        }
 
         private void TogglePanel_Click(object sender, RoutedEventArgs e)
         {
@@ -144,20 +211,24 @@ namespace UruruNotes
                 int caretIndex = textBox.CaretIndex;
                 string[] lines = textBox.Text.Split('\n');
 
-                // Запрещаем удаление заголовка
-                if ((e.Key == Key.Back || e.Key == Key.Delete) && caretIndex <= lines[0].Length)
+                if (lines.Length > 0 && !string.IsNullOrEmpty(lines[0]))
                 {
-                    e.Handled = true;
-                    return;
-                }
+                    // Запрещаем удаление заголовка
+                    if ((e.Key == Key.Back || e.Key == Key.Delete) && caretIndex <= lines[0].Length)
+                    {
+                        e.Handled = true;
+                        return;
+                    }
 
-                // Запрещаем изменение заголовка
-                if (caretIndex <= lines[0].Length && e.Key != Key.Right && e.Key != Key.Left)
-                {
-                    e.Handled = true;
+                    // Запрещаем изменение заголовка
+                    if (caretIndex <= lines[0].Length && e.Key != Key.Right && e.Key != Key.Left)
+                    {
+                        e.Handled = true;
+                    }
                 }
             }
         }
+
 
         //private bool _isPanelVisible = true;
 

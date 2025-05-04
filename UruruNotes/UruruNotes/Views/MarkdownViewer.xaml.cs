@@ -339,6 +339,20 @@ namespace UruruNote.Views
         {
             try
             {
+                var htmlContent = Markdig.Markdown.ToHtml(markdownText);
+                // Извлекаем цвет TextForeground из ресурсов темы
+                var textForegroundBrush = (SolidColorBrush)FindResource("TextForeground");
+                var textForegroundColor = textForegroundBrush.Color;
+                string textColorHex = $"#{textForegroundColor.R:X2}{textForegroundColor.G:X2}{textForegroundColor.B:X2}";
+
+                // Извлекаем цвет фона ControlBackground
+                var controlBackgroundBrush = (SolidColorBrush)FindResource("ControlBackground");
+                var controlBackgroundColor = controlBackgroundBrush.Color;
+                string backgroundColorHex = $"#{controlBackgroundColor.R:X2}{controlBackgroundColor.G:X2}{controlBackgroundColor.B:X2}";
+                htmlContent = $"<head><meta charset=\"UTF-8\"></head>{htmlContent}"; // Добавляем метатег кодировки
+                return htmlContent;
+
+/*
                 if (string.IsNullOrEmpty(markdownText))
                 {
                     return "<head><meta charset=\"UTF-8\"><style>mark { background-color: yellow; }</style></head><body></body>";
@@ -356,6 +370,7 @@ namespace UruruNote.Views
 
                 var htmlContent = Markdig.Markdown.ToHtml(processedMarkdown, pipeline);
                 return $"<head><meta charset=\"UTF-8\"><style>mark {{ background-color: yellow; }}</style></head><body>{htmlContent}</body>";
+*/
 
             }
             catch (Exception ex)
@@ -426,6 +441,7 @@ namespace UruruNote.Views
                     _selectedFontSize = value;
                     UpdateFontSize(value); // Обновляем размер шрифта
                                            // Сохраняем новый размер шрифта в настройки
+                    
                     SettingsManager.SaveSettings(_selectedFontSize, SettingsManager.LoadScale());
                 }
             }
