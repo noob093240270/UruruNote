@@ -16,11 +16,18 @@
     <None Remove="Resources\magnifier.png" />
     <None Remove="Resources\settingsbutton.png" />
     <None Remove="Resources\treeview.png" />
+    <None Remove="Resources\ururu.svg" />
     <None Remove="settings.json" />
     <None Remove="Views\calendar.png" />
     <None Remove="Views\homeButton.png" />
     <None Remove="Views\logo2.png" />
     <None Remove="Views\logo3.ico" />
+    <None Remove="Views\ururu.svg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Remove="Resources\clear window.xaml" />
+    <Page Remove="Views\clear window.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -53,10 +60,13 @@
     <Resource Include="Resources\magnifier.png" />
     <Resource Include="Resources\settingsbutton.png" />
     <Resource Include="Resources\treeview.png" />
+    <Resource Include="Resources\ururu.svg" />
     <Resource Include="Views\calendar.png" />
+    <Resource Include="Views\clear window.xaml" />
     <Resource Include="Views\homeButton.png" />
     <Resource Include="Views\logo2.png" />
     <Resource Include="Views\logo3.ico" />
+    <Resource Include="Views\ururu.svg" />
   </ItemGroup>
 
   <ItemGroup>
