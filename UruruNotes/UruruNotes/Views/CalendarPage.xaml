@@ -231,14 +231,14 @@
         </EventTrigger>
     </Window.Triggers>
 
-    <Grid x:Name="ContentGrid" LayoutTransform="{Binding ScaleTransform}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+    <Grid x:Name="ContentGrid" LayoutTransform="{Binding ScaleTransform}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{DynamicResource ContextMenuBorder}">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" MinWidth="400" x:Name="CalendarColumn"/>
+            <ColumnDefinition Width="*" MinWidth="400" x:Name="CalendarColumn" />
             <ColumnDefinition Width="Auto" x:Name="NotesColumn"/>
         </Grid.ColumnDefinitions>
 
         <Grid Grid.Column="0" Visibility="{Binding IsCalendarVisible,
-                Converter={StaticResource BoolToVisibilityConverter}}" Background="{DynamicResource ContextMenuBorder}">
+                Converter={StaticResource BoolToVisibilityConverter}}" >
             <!-- Календарь -->
             <Grid Grid.Column="0">
                 <Grid.RowDefinitions>
@@ -593,19 +593,19 @@
 
                     <!-- Секция напоминаний -->
                     <StackPanel Grid.Row="1" Margin="0,0,0,10"
-            Visibility="{Binding CurrentView, Converter={StaticResource ViewToVisibilityConverter}, ConverterParameter=Reminders}">
+            Visibility="{Binding CurrentView, Converter={StaticResource ViewToVisibilityConverter}, ConverterParameter=Reminders}" >
                         <ScrollViewer VerticalScrollBarVisibility="Auto"
                   HorizontalScrollBarVisibility="Disabled"
                   PanningMode="VerticalOnly"
                   CanContentScroll="True"
                   Padding="0,0,0,5"
                   Background="LightGray"
-                  Height="{Binding ActualHeight, ElementName=TaskPanel}">
+                  Height="{Binding ActualHeight, ElementName=TaskPanel}" >
                             <TreeView x:Name="RemindersTreeView" ItemsSource="{Binding Reminders}" 
                  Visibility="{Binding CurrentView, Converter={StaticResource ViewToVisibilityConverter}, ConverterParameter=Reminders}"
                  SelectedItemChanged="ReminderTreeView_SelectedItemChanged"
                  PreviewMouseWheel="TreeView_PreviewMouseWheel" Background="Transparent" BorderThickness="0"
-                 Margin="10">
+                 Margin="10" >
                                 <TreeView.ItemTemplate>
                                     <HierarchicalDataTemplate>
                                         <StackPanel Orientation="Horizontal">
