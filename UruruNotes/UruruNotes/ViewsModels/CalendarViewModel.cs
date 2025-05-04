@@ -583,18 +583,12 @@ namespace UruruNotes.ViewsModels
                 // Сохраняем напоминание в файл
                 SaveReminderForDate(SelectedDate.Value, reminder);
 
-                // Планируем задачу только если уведомления включены
                 DateTime reminderDateTime = SelectedDate.Value.Date + SelectedReminderTime;
-                if (_mainViewModel.IsNotificationsEnabled)
-                {
-                    ScheduleReminderTask(reminderDateTime, NewTaskContentRemind);
-                    Debug.WriteLine("Задача запланирована, так как уведомления включены.");
-                }
-                else
-                {
-                    Debug.WriteLine("Уведомления отключены, задача не запланирована.");
-                }
+                ScheduleReminderTask(reminderDateTime, NewTaskContentRemind);
 
+                Debug.WriteLine("Задача запланирована");
+               
+               
                 UpdateCalendar();
             }
             else

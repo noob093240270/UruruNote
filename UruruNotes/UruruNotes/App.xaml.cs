@@ -10,6 +10,7 @@ using UruruNotes;
 using UruruNotes.Views;
 using System.Diagnostics;
 using Microsoft.Win32.TaskScheduler;
+using UruruNotes.Models;
 
 
 
@@ -22,6 +23,7 @@ namespace UruruNotes
 
     {
         public static event EventHandler FontSizeChanged;
+        private bool _isReminderWindowOpen = false;
 
 
         private MainViewModel _mainViewModel;
@@ -85,8 +87,8 @@ namespace UruruNotes
                 string message = e.Args[0];
                 Debug.WriteLine($"Показ уведомления: {message}");
                 ShowToastNotification("Напоминание", message);
-                
-                return;
+                Application.Current.Shutdown(); // Гарантируем завершение
+                return; 
             }
             foreach (Window window in Application.Current.Windows)
             {
@@ -150,25 +152,23 @@ namespace UruruNotes
 
         private void ShowToastNotification(string title, string message)
         {
-            //Console.WriteLine("Попытка показать уведомление");
+            var settings = SettingsManager.LoadSettings();
+            if (!settings.IsNotificationsEnabled)
+            {
+                Debug.WriteLine("Уведомления отключены, уведомление не показано.");
+                return;
+            }
 
-            //Console.WriteLine($"IsNotificationsEnabled: {_mainViewModel.IsNotificationsEnabled}");
-
-            //// Проверяем, включены ли уведомления
-            //if (!_mainViewModel.IsNotificationsEnabled)
-            //{
-            //    Console.WriteLine("Уведомления отключены, уведомление не показано.");
-            //    return;
-            //}
-            //Console.WriteLine($"IsReminderWindowOpen: {IsReminderWindowOpen}");
-
-            if (!IsReminderWindowOpen)
+            Debug.WriteLine($"IsReminderWindowOpen: {_isReminderWindowOpen}");
+            if (!_isReminderWindowOpen)
             {
                 new ToastContentBuilder()
-                    .AddText(title)
+                    .AddText("Напоминание")
                     .AddText(message)
                     .AddArgument("action", "openReminder")
+                    .AddArgument("date", DateTime.Now.ToString("yyyy-MM-dd"))
                     .Show();
+                Debug.WriteLine("Уведомление успешно показано.");
             }
             else
             {

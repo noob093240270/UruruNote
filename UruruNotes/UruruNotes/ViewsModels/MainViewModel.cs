@@ -466,7 +466,7 @@ namespace UruruNote.ViewsModels
             Scale = settings.Scale;
             SelectedScaleOption = settings.Scale;
             _isInitializing = false;
-            IsNotificationsEnabled = settings.IsNotificationsEnabled ?? false;
+            IsNotificationsEnabled = settings.IsNotificationsEnabled;
 
             // Явно вызываем уведомления для начальной синхронизации
             OnPropertyChanged(nameof(Scale));

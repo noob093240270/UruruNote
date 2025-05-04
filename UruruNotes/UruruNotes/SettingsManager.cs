@@ -20,7 +20,7 @@ namespace UruruNotes
             public int FontSize { get; set; }
             public double Scale { get; set; }
 
-            public bool? IsNotificationsEnabled { get; set; }
+            public bool IsNotificationsEnabled { get; set; }
         }
         public static void SaveSettings(int fontSize, double scale, bool isNotificationsEnabled)
         {
