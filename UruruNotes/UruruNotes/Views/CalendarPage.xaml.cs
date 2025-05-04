@@ -65,7 +65,7 @@ namespace UruruNotes
         public CalendarPage(MainViewModel mainViewModel)
         {
             InitializeComponent();
-            _viewModel = new CalendarViewModel(mainViewModel);
+            _viewModel = new CalendarViewModel();
 
             // Передаём масштаб главного окна
             _viewModel.Scale = mainViewModel.Scale;

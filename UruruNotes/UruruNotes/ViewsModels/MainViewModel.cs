@@ -87,14 +87,11 @@ namespace UruruNote.ViewsModels
                         Debug.WriteLine($"SelectedFontSize изменён на: {value}");
                         OnPropertyChanged(nameof(SelectedFontSize));
                         ApplyFont();
-
-                        /*
+                        
                         SettingsManager.SaveSettings(value, Scale, IsDarkModeEnabled); // Сохраняем всегда
                         if (_previousFontSize.HasValue && _previousFontSize != value)
-                        */
                         
-                        App.UpdateGlobalFontSize(value);
-                        SettingsManager.SaveSettings(value, Scale, IsNotificationsEnabled); // Сохраняем всегда
+                        
                         if (!_isUpdatingFontSize)
 
                         {
@@ -161,10 +158,7 @@ namespace UruruNote.ViewsModels
                     Debug.WriteLine($"Scale изменён на: {value}");
                     OnPropertyChanged(nameof(Scale));
                     UpdateScale();
-/*
                     SettingsManager.SaveSettings(SelectedFontSize, value, IsDarkModeEnabled); // Сохраняем при каждом изменении
-*/
-                    SettingsManager.SaveSettings(SelectedFontSize, value, IsNotificationsEnabled); // Сохраняем при каждом изменении
                     if (!_isInitializing)
                     {
                         //ShowScaleNotification(value);
@@ -172,21 +166,6 @@ namespace UruruNote.ViewsModels
                     }
                     ScaleDisplay = $"{value * 100:F0}%";
                     _previousScale = value;
-                }
-            }
-        }
-        private bool _isNotificationsEnabled;
-        public bool IsNotificationsEnabled
-        {
-            get => _isNotificationsEnabled;
-            set
-            {
-                if (_isNotificationsEnabled != value)
-                {
-                    _isNotificationsEnabled = value;
-                    OnPropertyChanged();
-                    Debug.WriteLine($"ПРИМЕНЕНИЕ НАСТРОЕК ---------------------------------{_isNotificationsEnabled}");
-                    SettingsManager.SaveSettings(SelectedFontSize, Scale, _isNotificationsEnabled);
                 }
             }
         }
@@ -523,7 +502,6 @@ namespace UruruNote.ViewsModels
             Scale = settings.Scale;
             SelectedScaleOption = settings.Scale;
             _isInitializing = false;
-            IsNotificationsEnabled = settings.IsNotificationsEnabled;
 
             // Инициализация тем
             ThemeOptions = new ObservableCollection<ThemeOption>
@@ -585,10 +563,7 @@ namespace UruruNote.ViewsModels
             {
                 if (e.PropertyName == nameof(SelectedFontSize))
                 {
-/*
                     SettingsManager.SaveSettings(SelectedFontSize, SelectedScaleOption, _isDarkModeEnabled);
-*/
-                    SettingsManager.SaveSettings(SelectedFontSize, SelectedScaleOption, IsNotificationsEnabled);
                 }
             };
         }
