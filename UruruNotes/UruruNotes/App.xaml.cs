@@ -82,18 +82,10 @@ namespace UruruNotes
                 }
 
                 // Проверяем IsNotificationsEnabled перед показом уведомления
-                Debug.WriteLine($"Проверяем IsNotificationsEnabled перед показом уведомления {_mainViewModel.IsNotificationsEnabled}");
-                if (_mainViewModel.IsNotificationsEnabled)
-                {
-                    Debug.WriteLine($"Проверили IsNotificationsEnabled перед показом уведомления {_mainViewModel.IsNotificationsEnabled}");
-                    string message = e.Args[0];
-                    Debug.WriteLine($"Показ уведомления: {message}");
-                    ShowToastNotification("Напоминание", message);
-                }
-                else
-                {
-                    Debug.WriteLine("Уведомления отключены, уведомление не показано.");
-                }
+                string message = e.Args[0];
+                Debug.WriteLine($"Показ уведомления: {message}");
+                ShowToastNotification("Напоминание", message);
+                
                 return;
             }
             foreach (Window window in Application.Current.Windows)
@@ -158,17 +150,17 @@ namespace UruruNotes
 
         private void ShowToastNotification(string title, string message)
         {
-            Console.WriteLine("Попытка показать уведомление");
+            //Console.WriteLine("Попытка показать уведомление");
 
-            Console.WriteLine($"IsNotificationsEnabled: {_mainViewModel.IsNotificationsEnabled}");
+            //Console.WriteLine($"IsNotificationsEnabled: {_mainViewModel.IsNotificationsEnabled}");
 
-            // Проверяем, включены ли уведомления
-            if (!_mainViewModel.IsNotificationsEnabled)
-            {
-                Console.WriteLine("Уведомления отключены, уведомление не показано.");
-                return;
-            }
-            Console.WriteLine($"IsReminderWindowOpen: {IsReminderWindowOpen}");
+            //// Проверяем, включены ли уведомления
+            //if (!_mainViewModel.IsNotificationsEnabled)
+            //{
+            //    Console.WriteLine("Уведомления отключены, уведомление не показано.");
+            //    return;
+            //}
+            //Console.WriteLine($"IsReminderWindowOpen: {IsReminderWindowOpen}");
 
             if (!IsReminderWindowOpen)
             {
