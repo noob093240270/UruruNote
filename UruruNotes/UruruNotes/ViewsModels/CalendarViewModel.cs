@@ -786,13 +786,14 @@ namespace UruruNotes.ViewsModels
                     var reminder = reminders.First();
                     SelectedReminder = reminder;
 
-                    // Удаляем строку с временем из содержимого
+                    // Удаляем строку времени только для отображения в UI
                     NewTaskContentRemind = Regex.Replace(
                         reminder.Content,
                         @"\*\*Время:\*\* \d{2}:\d{2}",
                         string.Empty
                     ).Trim();
 
+                    // Время берём из объекта, а не из текста
                     SelectedHour = reminder.Time.Hours;
                     SelectedMinute = reminder.Time.Minutes;
                     IsEditing = true;
@@ -1266,7 +1267,7 @@ namespace UruruNotes.ViewsModels
             if (item is ReminderItem reminder)
             {
                 // Убираем автоматическое добавление времени в текст
-                content = reminder.Content;
+                content = $"{reminder.Content}\n**Время:** {reminder.Time:hh\\:mm}";
                 path = GetReminderPath(reminder.Date, reminder.Id);
             }
             else
@@ -1375,11 +1376,9 @@ namespace UruruNotes.ViewsModels
         private TimeSpan ExtractTimeFromContent(string content)
         {
             var timeMatch = Regex.Match(content, @"\*\*Время:\*\* (\d{2}:\d{2})");
-            if (timeMatch.Success)
-            {
-                return TimeSpan.ParseExact(timeMatch.Groups[1].Value, "hh\\:mm", CultureInfo.InvariantCulture);
-            }
-            return TimeSpan.Zero;
+            return timeMatch.Success
+                ? TimeSpan.ParseExact(timeMatch.Groups[1].Value, "hh\\:mm", CultureInfo.InvariantCulture)
+                : TimeSpan.Zero;
         }
 
         private string GetNotesFilePath(DateTime date, bool isReminder)
