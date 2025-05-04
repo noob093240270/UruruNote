@@ -67,7 +67,7 @@
     <SolidColorBrush x:Key="TextForeground" Color="{DynamicResource TextForegroundColor}"/>
     <SolidColorBrush x:Key="ButtonBackground" Color="{DynamicResource ButtonBackgroundColor}"/>
     <SolidColorBrush x:Key="ButtonBorder" Color="{DynamicResource ButtonBorderColor}"/>
-    <SolidColorBrush x:Key="ButtonForeground" Color="{DynamicResource ButtonForegroundColor}"/>
+    <SolidColorBrush x:Key="ButtonForeground" Color="{DynamicResource ButtonBorderColor}"/>
     <SolidColorBrush x:Key="PanelBackground" Color="{DynamicResource PanelBackgroundColor}"/>
     <SolidColorBrush x:Key="MenuBackground" Color="{DynamicResource PanelBackgroundColor}"/>
     <SolidColorBrush x:Key="BorderBrush" Color="{DynamicResource BorderBrushColor}"/>
