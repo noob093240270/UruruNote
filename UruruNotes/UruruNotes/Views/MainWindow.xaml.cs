@@ -949,11 +949,15 @@ namespace UruruNotes.Views
                 }
             }
         }
-        /*private void AddSubFolderMenuItem_Click(object sender, RoutedEventArgs e)
+
+        private void AddSubFolderMenuItem_Click(object sender, RoutedEventArgs e)
         {
             if (sender is MenuItem menuItem && menuItem.CommandParameter is FolderItem parentFolder)
             {
-                var newFolderWindow = new NewFolderWindow();
+                var viewModel = DataContext as MainViewModel;
+                if (viewModel == null) return;
+
+                var newFolderWindow = new NewFolderWindow(viewModel); // ✅ передаём MainViewModel
                 if (newFolderWindow.ShowDialog() == true)
                 {
                     var folderName = newFolderWindow.FolderName;
@@ -976,13 +980,13 @@ namespace UruruNotes.Views
                     parentFolder.SubFolders.Add(newFolder);
                 }
             }
-        }*/
+        }
 
 
 
     }
 
-    
+
 
 
 
