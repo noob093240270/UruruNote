@@ -176,9 +176,9 @@
             </Grid.ColumnDefinitions>
 
             <!-- Правая область -->
-            <Grid Grid.Column="1">
+            <Grid Grid.Column="1" Background="{DynamicResource MenuBackground}">
                 <!-- Панель с режимом редактирования и предпросмотра -->
-                <Grid x:Name="EditorAndPreviewContainer">
+                <Grid x:Name="EditorAndPreviewContainer" Background="{DynamicResource MenuBackground}">
                     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                         <RichTextBox Name="MarkdownRichTextBox" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Visible" />
                     </ScrollViewer>
@@ -192,38 +192,37 @@
             </Grid>
 
             <!-- Левое меню -->
-            <Grid Grid.Column="0" Background="#FFEBEBEB" x:Name="TreeViewGrid">
+            <Grid Grid.Column="0" Background="{DynamicResource MenuBackground}" x:Name="TreeViewGrid">
                 <materialDesign:Card x:Name="LeftMenu" Width="200" UniformCornerRadius="0" VerticalAlignment="Stretch">
-                    <materialDesign:Card.Background>
-                        <SolidColorBrush Color="#FFEBEBEB" Opacity="0"/>
-                    </materialDesign:Card.Background>
+                    
                     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                         <Grid>
                             <Grid.Background>
-                                <SolidColorBrush Color="#FFCCCCCC" Opacity="1"/>
+                                <SolidColorBrush Color="{DynamicResource BorderBrushColor}" Opacity="1"/>
                             </Grid.Background>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*" MinHeight="100"/>
                                 <RowDefinition Height="auto" />
                             </Grid.RowDefinitions>
-                            <ScrollViewer Grid.Row="0" Background="#FFF6F6F6" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Margin="3,0,3,3">
+                            <ScrollViewer Grid.Row="0" Background="{DynamicResource MenuBackground}" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Margin="3,0,3,3">
                                 <StackPanel>
                                     <!-- Первый TreeView для папок -->
                                     <TreeView x:Name="FoldersTreeView"
-          ItemsSource="{Binding Folders}"
-          Margin="10,10,10,10"
-          SelectedItemChanged="TreeView_SelectedItemChanged"
-          PreviewMouseLeftButtonDown="TreeView_PreviewMouseLeftButtonDown"
-          DragEnter="TreeView_DragEnter"
-          Drop="TreeView_Drop"
-          AllowDrop="True">
+                                              ItemsSource="{Binding Folders}"
+                                              Margin="10,10,10,10"
+                                              SelectedItemChanged="TreeView_SelectedItemChanged"
+                                              PreviewMouseLeftButtonDown="TreeView_PreviewMouseLeftButtonDown"
+                                              DragEnter="TreeView_DragEnter"
+                                              Drop="TreeView_Drop"
+                                              AllowDrop="True"
+                                              Background="{DynamicResource MenuBackground}" BorderThickness="0">
 
                                         <TreeView.Resources>
                                             <!-- Шаблон для папок -->
                                             <HierarchicalDataTemplate DataType="{x:Type local:FolderItem}" ItemsSource="{Binding CompositeSubItems}">
                                                 <TextBlock Text="{Binding FileName}" ToolTip="{Binding FilePath}">
-                                                    <TextBlock.ContextMenu>
-                                                        <ContextMenu>
+                                                    <TextBlock.ContextMenu >
+                                                        <ContextMenu Style="{StaticResource FileContextMenuStyle}">
                                                             <MenuItem Header="Добавить файл" Click="AddFileMenuItem_Click" />
                                                             <MenuItem Header="Добавить подпапку" Click="AddSubFolderMenuItem_Click" CommandParameter="{Binding}" />
                                                             <MenuItem Header="Удалить папку" Click="DeleteFolderButton_Click" CommandParameter="{Binding}" />
@@ -235,9 +234,9 @@
 
                                             <!-- Шаблон для файлов -->
                                             <DataTemplate DataType="{x:Type local:FileItem}">
-                                                <TextBlock Text="{Binding FileName}" ToolTip="{Binding FilePath}">
+                                                <TextBlock Text="{Binding FileName}" ToolTip="{Binding FilePath}" >
                                                     <TextBlock.ContextMenu>
-                                                        <ContextMenu>
+                                                        <ContextMenu Style="{StaticResource FileContextMenuStyle}">
                                                             <MenuItem Header="Удалить файл" Click="DeleteFileButton_Click" CommandParameter="{Binding}" />
                                                             <MenuItem Header="Перенести в..." Click="MoveToFolderMenuItem_Click" />
                                                         </ContextMenu>
@@ -251,12 +250,13 @@
                                         Margin="10,10,10,10" PreviewMouseLeftButtonDown="TreeView_PreviewMouseLeftButtonDown"
                                         DragEnter="TreeView_DragEnter"
                                         Drop="TreeView_Drop"
-                                        AllowDrop="True">
+                                        AllowDrop="True"
+                                        Background="{DynamicResource MenuBackground}" BorderThickness="0">
                                         <TreeView.ItemTemplate>
                                             <HierarchicalDataTemplate ItemsSource="{Binding CompositeSubItems}">
-                                                <TextBlock Text="{Binding FileName}" ToolTip="{Binding FilePath}">
+                                                <TextBlock Text="{Binding FileName}" ToolTip="{Binding FilePath}" >
                                                     <TextBlock.ContextMenu>
-                                                        <ContextMenu>
+                                                        <ContextMenu Style="{StaticResource FileContextMenuStyle}">
                                                             <MenuItem Header="Удалить файл" Click="DeleteFileButton_Click" CommandParameter="{Binding}" />
                                                             <MenuItem Header="Перенести в..." Click="MoveToFolderMenuItem_Click" />
                                                         </ContextMenu>
@@ -287,7 +287,7 @@
             </Grid>
 
             <!-- Основная область для страниц -->
-            <Frame x:Name="PageFrame" NavigationUIVisibility="Hidden" Grid.Column="1" Background="#FFEBEBEB" 
+            <Frame x:Name="PageFrame" NavigationUIVisibility="Hidden" Grid.Column="1" Background="{DynamicResource MenuBackground}" 
                HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Navigated="PageFrame_Navigated"/>
         </Grid>
     </Grid>

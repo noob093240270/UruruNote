@@ -30,7 +30,6 @@
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                 <TextBlock Text="Масштаб:" Width="120" VerticalAlignment="Center" Foreground="{DynamicResource TextForeground}" />
                 <Button Content="-" Command="{Binding DecreaseScaleCommand}" Style="{StaticResource ScaleButtonStyle}" Width="20" Height="NaN" ToolTip="Уменьшить масштаб"/>
-
                 <ComboBox x:Name="ScaleComboBox" Width="159"
                           ItemsSource="{Binding ScaleOptions}"
                           SelectedItem="{Binding SelectedScaleOption, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"

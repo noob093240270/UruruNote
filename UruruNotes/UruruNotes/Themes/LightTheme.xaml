@@ -15,7 +15,7 @@
     <!-- #FFF6F6F6 -->
     <Color x:Key="MenuBackgroundColor" A="255" R="243" G="242" B="248"/>
     <!-- #FFEBEBEB -->
-    <Color x:Key="BorderBrushColor" A="255" R="231" G="230" B="235"/>
+    <Color x:Key="BorderBrushColor" A="255" R="243" G="242" B="248"/>
     <!-- #FFCCCCCC -->
     <Color x:Key="TextBoxCaretColor" A="255" R="35" G="92" B="154"/>
     <!-- #FF235C9A****** -->
@@ -68,8 +68,8 @@
     <SolidColorBrush x:Key="ButtonBackground" Color="{DynamicResource ButtonBackgroundColor}"/>
     <SolidColorBrush x:Key="ButtonBorder" Color="{DynamicResource ButtonBorderColor}"/>
     <SolidColorBrush x:Key="ButtonForeground" Color="{DynamicResource ButtonBorderColor}"/>
-    <SolidColorBrush x:Key="PanelBackground" Color="{DynamicResource PanelBackgroundColor}"/>
-    <SolidColorBrush x:Key="MenuBackground" Color="{DynamicResource PanelBackgroundColor}"/>
+    <SolidColorBrush x:Key="PanelBackground" Color="{DynamicResource ContextMenuBackgroundColor}"/>
+    <SolidColorBrush x:Key="MenuBackground" Color="{DynamicResource ContextMenuBackgroundColor}"/>
     <SolidColorBrush x:Key="BorderBrush" Color="{DynamicResource BorderBrushColor}"/>
     <SolidColorBrush x:Key="TextBoxCaret" Color="{DynamicResource TextBoxCaretColor}"/>
     <SolidColorBrush x:Key="ControlBackground" Color="{DynamicResource ControlBackgroundColor}"/>
@@ -85,7 +85,7 @@
     <SolidColorBrush x:Key="TopPanelBackground" Color="{DynamicResource TopPanelBackgroundColor}"/>
     <SolidColorBrush x:Key="BottomPanelBackground" Color="{DynamicResource BottomPanelBackgroundColor}"/>
     <SolidColorBrush x:Key="ContextMenuBackground" Color="{DynamicResource ContextMenuBackgroundColor}"/>
-    <SolidColorBrush x:Key="ContextMenuBorder" Color="{DynamicResource ContextMenuBorderColor}"/>
+    <SolidColorBrush x:Key="ContextMenuBorder" Color="{DynamicResource ContextMenuBackgroundColor}"/>
     <SolidColorBrush x:Key="ContextMenuForeground" Color="{DynamicResource ContextMenuForegroundColor}"/>
     <SolidColorBrush x:Key="ContextMenuHighlightBackground" Color="{DynamicResource ContextMenuHighlightBackgroundColor}"/>
     <SolidColorBrush x:Key="ContextMenuPressedBackground" Color="{DynamicResource ContextMenuPressedBackgroundColor}"/>
