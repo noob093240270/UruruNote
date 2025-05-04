@@ -15,15 +15,14 @@ namespace UruruNotes.Models
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var currentView = (CalendarViewModel.ViewType)value;
-            var targetView = (CalendarViewModel.ViewType)Enum.Parse(
-                typeof(CalendarViewModel.ViewType),
-                parameter.ToString()
-            );
+            if (value == null || parameter == null)
+                return Visibility.Collapsed;
 
-            return currentView == targetView
-                ? System.Windows.Visibility.Visible
-                : System.Windows.Visibility.Collapsed;
+            if (!Enum.TryParse(parameter.ToString(), out CalendarViewModel.ViewType targetView))
+                return Visibility.Collapsed;
+
+            var currentView = (CalendarViewModel.ViewType)value;
+            return currentView == targetView ? Visibility.Visible : Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
