@@ -5,9 +5,69 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
-             mc:Ignorable="d">
+             mc:Ignorable="d"
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch"
+             Background="{DynamicResource WindowBackground}"
+             Foreground="{DynamicResource InputText}">
     <Grid>
-        <TabControl Name="TabControl" Width="Auto" SelectionChanged="TabControl_SelectionChanged">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <TabControl Name="TabControl" Grid.Row="0" SelectionChanged="TabControl_SelectionChanged" Width="Auto"
+                    Background="{DynamicResource PanelBackground}"
+                    BorderBrush="{DynamicResource BorderBrush}"
+                    Foreground="{DynamicResource TextForeground}">
+            <TabControl.Resources>
+                <!-- Стиль для TabItem -->
+                <!-- Стиль для TabItem -->
+                <Style TargetType="TabItem">
+                    <Setter Property="Foreground" Value="{DynamicResource PlaceholderForeground}" />
+                    <Setter Property="Background" Value="{DynamicResource PanelBackground}" />
+                    <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
+                    <Setter Property="Padding" Value="6,2" />
+                    <Setter Property="FontFamily" Value="{DynamicResource GlobalFont}" />
+                    <Setter Property="FontSize" Value="{DynamicResource GlobalFontSize}" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="TabItem">
+                                <Grid SnapsToDevicePixels="True">
+                                    <Border x:Name="Border"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="1,1,1,0"
+                            Margin="0,0,2,0">
+                                        <ContentPresenter x:Name="ContentSite"
+                                          VerticalAlignment="Center"
+                                          HorizontalAlignment="Center"
+                                          ContentSource="Header"
+                                          Margin="{TemplateBinding Padding}"/>
+                                    </Border>
+                                </Grid>
+                                <ControlTemplate.Triggers>
+                                    <!-- Выбранный TabItem -->
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter TargetName="Border" Property="Background" Value="White" />
+                                        <Setter Property="Foreground" Value="Gray"  />
+                                    </Trigger>
+                                    <!-- Наведение мыши -->
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="Border" Property="Background" Value="{DynamicResource ButtonBackground}" />
+                                    </Trigger>
+                                    <!-- Обычное состояние (чтобы явно вернуть цвет) -->
+                                    <Trigger Property="IsSelected" Value="False">
+                                        <Setter TargetName="Border" Property="Background" Value="{DynamicResource PanelBackground}" />
+                                        <Setter Property="Foreground" Value="{DynamicResource PlaceholderForeground}" />
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+
+            </TabControl.Resources>
+
             <TabItem Header="Редактирование">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -19,27 +79,38 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-
                     <RichTextBox Name="MarkdownRichTextBox"
-             VerticalScrollBarVisibility="Auto"
-             HorizontalScrollBarVisibility="Auto"
-             FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=OneWay}"
-             Margin="10"
-             MinWidth="300"
-             AcceptsReturn="True"
-             AcceptsTab="True"
-             PreviewKeyDown="MarkdownRichTextBox_PreviewKeyDown"
-             CaretBrush="#FF235C9A"
-             SelectionBrush="#FF235C9A"
-             SelectionTextBrush="#FF235C9A"
-             TextChanged="MarkdownRichTextBox_TextChanged"
-             Width="Auto">
+                                 VerticalScrollBarVisibility="Auto"
+                                 HorizontalScrollBarVisibility="Auto"
+                                 FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=OneWay}"
+                                 Margin="1"
+                                 MinWidth="300"
+                                 AcceptsReturn="True"
+                                 AcceptsTab="True"
+                                 PreviewKeyDown="MarkdownRichTextBox_PreviewKeyDown"
+                                 CaretBrush="{DynamicResource TextBoxCaret}"
+                                 SelectionBrush="{DynamicResource TextBoxCaret}"
+                                 SelectionTextBrush="{DynamicResource TextBoxCaret}"
+                                 TextChanged="MarkdownRichTextBox_TextChanged"
+                                 Background="{DynamicResource ControlBackground}"
+                                 BorderBrush="{DynamicResource ControlBorder}"
+                                 Foreground="{DynamicResource InputText}">      
                         <RichTextBox.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Header="Жирный (Ctrl+B)" Click="BoldMenuItem_Click" />
-                                <MenuItem Header="Курсив (Ctrl+I)" Click="ItalicMenuItem_Click" />
-                                <MenuItem Header="Зачеркнутый (Ctrl+K)" Click="StrikethroughMenuItem_Click" />
-                                <MenuItem Header="Выделенный (Ctrl+H)" Click="HighlightMenuItem_Click" />
+                            <ContextMenu Background="{DynamicResource PanelBackground}"
+                                         BorderBrush="{DynamicResource BorderBrush}"
+                                         Foreground="{DynamicResource TextForeground}">
+                                                    <MenuItem Header="Жирный" Click="BoldMenuItem_Click"
+                                          Background="{DynamicResource ControlBackground}"
+                                          Foreground="{DynamicResource TextForeground}" />
+                                                    <MenuItem Header="Курсив" Click="ItalicMenuItem_Click"
+                                          Background="{DynamicResource ControlBackground}"
+                                          Foreground="{DynamicResource TextForeground}" />
+                                                    <MenuItem Header="Зачеркнутый" Click="StrikethroughMenuItem_Click"
+                                          Background="{DynamicResource ControlBackground}"
+                                          Foreground="{DynamicResource TextForeground}" />
+                                                <MenuItem Header="Выделенный" Click="HighlightMenuItem_Click"
+                                          Background="{DynamicResource ControlBackground}"
+                                          Foreground="{DynamicResource TextForeground}" />  
                                 <Separator />
                                 <MenuItem Header="Заголовок 1" Click="Header1MenuItem_Click" />
                                 <MenuItem Header="Заголовок 2" Click="Header2MenuItem_Click" />
@@ -48,35 +119,57 @@
                                 <MenuItem Header="Сохранить (Ctrl+S)" Click="SaveButton_Click" />
                             </ContextMenu>
                         </RichTextBox.ContextMenu>
+                        <FlowDocument PagePadding="5">
+                            <Paragraph />
+                        </FlowDocument>
                     </RichTextBox>
+
                 </Grid>
+                
             </TabItem>
 
             <TabItem Header="Предпросмотр">
-                <Grid  Margin="10" MinWidth="300">
-                    <wv2:WebView2 Name="MarkdownPreview"
-              HorizontalAlignment="Stretch"
-              VerticalAlignment="Stretch"
-              Width="Auto"
-              Height="Auto"/>
-                    <Button Grid.Row="1" Content="" Click="LoadTestHtmlButton_Click"/>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" 
+                                  HorizontalScrollBarVisibility="Auto" 
+                                  Margin="1" 
+                                  VerticalAlignment="Stretch" 
+                                  HorizontalAlignment="Stretch"
+                                  >
+                        <!-- Добавляем белый фон -->
+                        <wv2:WebView2 Name="MarkdownPreview" Width="Auto" Visibility="Visible"/>
+                    </ScrollViewer>
+                    <Button Grid.Row="1" 
+                            Content="Загрузить тестовый текст" 
+                            Click="LoadTestHtmlButton_Click"
+                            Margin="10"
+                            Background="{DynamicResource ButtonBackground}"
+                            BorderBrush="{DynamicResource ButtonBorder}"
+                            Foreground="{DynamicResource ButtonForeground}"
+                            FontFamily="{DynamicResource GlobalFont}"
+                            FontSize="{DynamicResource GlobalFontSize}"/>
                 </Grid>
             </TabItem>
         </TabControl>
-
-
-
-        <!-- Кнопка "Сохранить" -->
-        <Button Grid.Row="1"
-                Content="Сохранить"
-                VerticalAlignment="Bottom"
-                HorizontalAlignment="Right"
-                Margin="10"
-                Click="SaveButton_Click"
-                Background="White"
-                BorderBrush="#FF235C9A"
-                FontFamily="{DynamicResource GlobalFont}" />
-
+        
+        <Border Grid.Row="1" Style="{StaticResource BottomPanelBorder}">
+            <Grid>
+                <Button Content="Сохранить"
+                        VerticalAlignment="Bottom"
+                        HorizontalAlignment="Right"
+                        Margin="10"
+                        Click="SaveButton_Click"
+                        Background="{DynamicResource ButtonBackground}"
+                        BorderBrush="{DynamicResource ButtonBorder}"
+                        Foreground="{DynamicResource ButtonForeground}"
+                        FontFamily="{DynamicResource GlobalFont}"
+                        FontSize="{DynamicResource GlobalFontSize}"/>
+            </Grid>
+        </Border>
         <!-- Размер шрифта -->
         <StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="10">
             <TextBlock Text="Размер шрифта:" VerticalAlignment="Bottom" HorizontalAlignment="Left" />

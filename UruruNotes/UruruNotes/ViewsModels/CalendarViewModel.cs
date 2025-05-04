@@ -189,7 +189,7 @@ namespace UruruNotes.ViewsModels
                 if (_newTaskContent != value)
                 {
                     _newTaskContent = value;
-                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(NewTaskContent));
                 }
             }
         }

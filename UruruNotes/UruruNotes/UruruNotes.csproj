@@ -12,7 +12,15 @@
 
   <ItemGroup>
     <None Remove="Resources\calendar.png" />
+    <None Remove="Resources\Dark\calendar.png" />
+    <None Remove="Resources\Dark\magnifier.png" />
+    <None Remove="Resources\Dark\settingsbutton.png" />
+    <None Remove="Resources\Dark\treeview.png" />
     <None Remove="Resources\homeButton.png" />
+    <None Remove="Resources\Light\calendar.png" />
+    <None Remove="Resources\Light\magnifier.png" />
+    <None Remove="Resources\Light\settingsbutton.png" />
+    <None Remove="Resources\Light\treeview.png" />
     <None Remove="Resources\magnifier.png" />
     <None Remove="Resources\settingsbutton.png" />
     <None Remove="Resources\treeview.png" />
@@ -41,18 +49,21 @@
     <PackageReference Include="MaterialDesignThemes" Version="5.1.0" />
     <PackageReference Include="MaterialDesignThemes.MahApps" Version="3.1.0" />
     <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.1.3" />
-    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3124.44" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3179.45" />
     <PackageReference Include="MvvmLightLibs" Version="5.4.1.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="TaskScheduler" Version="2.12.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Resources\calendar.png" />
-    <Resource Include="Resources\homeButton.png" />
-    <Resource Include="Resources\magnifier.png" />
-    <Resource Include="Resources\settingsbutton.png" />
-    <Resource Include="Resources\treeview.png" />
+    <Resource Include="Resources\Dark\calendar.png" />
+    <Resource Include="Resources\Dark\magnifier.png" />
+    <Resource Include="Resources\Dark\settingsbutton.png" />
+    <Resource Include="Resources\Dark\treeview.png" />
+    <Resource Include="Resources\Light\calendar.png" />
+    <Resource Include="Resources\Light\magnifier.png" />
+    <Resource Include="Resources\Light\settingsbutton.png" />
+    <Resource Include="Resources\Light\treeview.png" />
     <Resource Include="Views\calendar.png" />
     <Resource Include="Views\homeButton.png" />
     <Resource Include="Views\logo2.png" />

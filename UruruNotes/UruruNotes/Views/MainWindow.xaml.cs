@@ -172,8 +172,20 @@ namespace UruruNotes.Views
 
         private void TreeViewItem_Collapsed(object sender, RoutedEventArgs e)
         {
+            if (_lastSelectedFile == null) return;
+
+            if (sender is TreeViewItem collapsedItem && collapsedItem.DataContext is FolderItem collapsedFolder)
+            {
+                if (collapsedFolder.Files.Contains(_lastSelectedFile) || collapsedFolder.SubFolders.Any(f => f.Files.Contains(_lastSelectedFile)))
+                {
+                    Debug.WriteLine("Файл находится внутри свернутой папки, выделение не восстанавливается.");
+                    return;
+                }
+            }
+
             RestoreSelection();
         }
+
 
         /// <summary>
         /// Обработчик клика по кнопке создания нового файла
@@ -223,7 +235,7 @@ namespace UruruNotes.Views
         /// <summary>
         /// Обработчик изменения выбранного элемента в TreeView
         /// </summary>
-        private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        /*private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             // Игнорируем события, когда выделение меняется программно
             if (_isProgrammaticSelection) return;
@@ -242,7 +254,38 @@ namespace UruruNotes.Views
                 var treeView = sender as TreeView;
                 UnselectAll(treeView);
             }
+        }*/
+        private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            if (_isProgrammaticSelection) return;
+
+            if (e.NewValue is FileItem selectedFile)
+            {
+                if (selectedFile == _lastOpenedFile) return;
+
+                OpenFile(selectedFile);
+                _lastOpenedFile = selectedFile;
+                RestoreSelection();
+            }
+            // Папку трогать не нужно, просто ничего не делаем
         }
+        private void TreeView_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            var treeViewItem = VisualUpwardSearch<TreeViewItem>(e.OriginalSource as DependencyObject);
+            if (treeViewItem != null)
+            {
+                treeViewItem.Focus(); // вручную устанавливаем фокус
+                e.Handled = true; // предотвращаем автоматическое выделение
+            }
+        }
+        private static T VisualUpwardSearch<T>(DependencyObject source) where T : DependencyObject
+        {
+            while (source != null && !(source is T))
+                source = VisualTreeHelper.GetParent(source);
+
+            return source as T;
+        }
+
 
         /// <summary>
         /// Метод для снятия выделения со всех элементов TreeView
@@ -435,6 +478,15 @@ namespace UruruNotes.Views
             _viewModel.OpenSettingsCommand.Execute(null);
         }
 
+        /// <summary>
+        /// Обработчик для значка настроек
+        /// </summary>
+        private void SettingsIcon_Click(object sender, RoutedEventArgs e)
+        {
+            // Передаём _viewModel в SettingsWindow
+            var settingsWindow = new SettingsWindow(_viewModel);
+            settingsWindow.ShowDialog();
+        }
 
         /// <summary>
         /// Обработчик для поля поиска при нажатии Enter
@@ -897,7 +949,47 @@ namespace UruruNotes.Views
                 }
             }
         }
+
+        private void AddSubFolderMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuItem menuItem && menuItem.CommandParameter is FolderItem parentFolder)
+            {
+                var viewModel = DataContext as MainViewModel;
+                if (viewModel == null) return;
+
+                var newFolderWindow = new NewFolderWindow(viewModel); // ✅ передаём MainViewModel
+                if (newFolderWindow.ShowDialog() == true)
+                {
+                    var folderName = newFolderWindow.FolderName;
+
+                    if (parentFolder.SubFolders.Any(f => f.FileName == folderName))
+                    {
+                        MessageBox.Show("Папка с таким именем уже существует.");
+                        return;
+                    }
+
+                    var newFolderPath = Path.Combine(parentFolder.FilePath, folderName);
+                    Directory.CreateDirectory(newFolderPath);
+
+                    var newFolder = new FolderItem
+                    {
+                        FileName = folderName,
+                        FilePath = newFolderPath
+                    };
+
+                    parentFolder.SubFolders.Add(newFolder);
+                }
+            }
+        }
+
+
+
     }
+
+
+
+
+
 
     public static class TreeViewExtensions
     {
