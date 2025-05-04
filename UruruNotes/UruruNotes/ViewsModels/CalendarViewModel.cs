@@ -703,36 +703,42 @@ namespace UruruNotes.ViewsModels
         {
             if (selectedDay?.Date == null) return;
 
-            SelectedDate = selectedDay.Date; // Фиксируем выбранную дату
+            SelectedDate = selectedDay.Date;
             IsTaskPanelVisible = true;
             IsEditorVisible = true;
 
-            // Проверяем наличие записей для активной вкладки
-            bool hasNotes = Notes.Any(n => n.Date.Date == SelectedDate.Value.Date);
-            bool hasReminders = Reminders.Any(r => r.Date.Date == SelectedDate.Value.Date);
-
-            IsEditing = (CurrentView == ViewType.Notes && hasNotes)
-                      || (CurrentView == ViewType.Reminders && hasReminders);
-
-            // Обновляем данные для текущей вкладки
+            // Загружаем данные для активной вкладки
             if (CurrentView == ViewType.Notes)
             {
-                LoadNoteForDate(SelectedDate.Value);
-                if (!IsEditing)
+                var existingNote = Notes.FirstOrDefault(n => n.Date.Date == SelectedDate.Value.Date);
+                if (existingNote != null)
                 {
+                    SelectedNote = existingNote; // Устанавливаем найденную заметку
+                    IsEditing = true;
+                    LoadNoteForDate(SelectedDate.Value);
+                }
+                else
+                {
+                    IsEditing = false;
                     NewTaskContent = $"Создание задачи на {SelectedDate.Value:dd MMMM yyyy}\n";
                 }
             }
             else
             {
-                LoadReminderForDate(SelectedDate.Value);
-                if (!IsEditing)
+                var existingReminder = Reminders.FirstOrDefault(r => r.Date.Date == SelectedDate.Value.Date);
+                if (existingReminder != null)
                 {
+                    SelectedReminder = existingReminder;
+                    IsEditing = true;
+                    LoadReminderForDate(SelectedDate.Value);
+                }
+                else
+                {
+                    IsEditing = false;
                     NewTaskContentRemind = $"Создание напоминания на {SelectedDate.Value:dd MMMM yyyy}\n";
                 }
             }
 
-            // Принудительное обновление UI
             OnPropertyChanged(nameof(NewTaskContent));
             OnPropertyChanged(nameof(NewTaskContentRemind));
             OnPropertyChanged(nameof(EditorTitle));
@@ -755,11 +761,13 @@ namespace UruruNotes.ViewsModels
             var note = Notes.FirstOrDefault(n => n.Date.Date == date.Date);
             if (note != null)
             {
+                SelectedNote = note;
                 NewTaskContent = note.Content;
                 IsEditing = true;
             }
             else
             {
+                SelectedNote = null; // Сбрасываем при отсутствии заметки
                 IsEditing = false;
             }
         }
@@ -768,7 +776,6 @@ namespace UruruNotes.ViewsModels
         {
             try
             {
-                // Ищем все файлы напоминаний для выбранной даты
                 var reminders = Reminders
                     .Where(r => r.Date.Date == date.Date)
                     .OrderBy(r => r.Time)
@@ -776,9 +783,16 @@ namespace UruruNotes.ViewsModels
 
                 if (reminders.Any())
                 {
-                    // Берём первое напоминание (или реализуйте выбор через UI)
                     var reminder = reminders.First();
-                    NewTaskContentRemind = reminder.Content;
+                    SelectedReminder = reminder;
+
+                    // Удаляем строку с временем из содержимого
+                    NewTaskContentRemind = Regex.Replace(
+                        reminder.Content,
+                        @"\*\*Время:\*\* \d{2}:\d{2}",
+                        string.Empty
+                    ).Trim();
+
                     SelectedHour = reminder.Time.Hours;
                     SelectedMinute = reminder.Time.Minutes;
                     IsEditing = true;
@@ -804,46 +818,33 @@ namespace UruruNotes.ViewsModels
 
         private void SaveNote()
         {
-            try
+            if (!ValidateNoteData()) return;
+
+            if (IsEditing && SelectedNote != null)
             {
-                if (!ValidateNoteData()) return;
-
-                if (!SelectedDate.HasValue)
-                {
-                    MessageBox.Show("Выберите дату!");
-                    return;
-                }
-
-                if (IsEditing && SelectedNote != null)
-                {
-                    SelectedNote.Content = NewTaskContent;
-                    SaveToFile(SelectedNote);
-                    MessageBox.Show("Изменения сохранены!");
-                }
-                else
-                {
-                    var note = new NoteItem
-                    {
-                        Date = SelectedDate.Value,
-                        Title = GetTitleFromContent(NewTaskContent),
-                        Content = NewTaskContent
-                    };
-                    Notes.Add(note);
-                    SaveToFile(note);
-                    SelectedNote = note; // Привязываем новую заметку
-                    OnPropertyChanged(nameof(Notes));
-                    IsEditing = true;
-                    MessageBox.Show("Новая заметка создана!");
-                }
-
-                UpdateCalendar();
-                OnPropertyChanged(nameof(EditorButtonText));
-                OnPropertyChanged(nameof(EditorTitle));
+                // Обновляем существующую заметку
+                SelectedNote.Content = NewTaskContent;
+                SaveToFile(SelectedNote);
+                MessageBox.Show("Изменения сохранены!");
             }
-            catch (Exception ex)
+            else
             {
-                MessageBox.Show($"Ошибка: {ex.Message}");
+                // Создаем новую заметку
+                var note = new NoteItem
+                {
+                    Date = SelectedDate.Value,
+                    Title = GetTitleFromContent(NewTaskContent),
+                    Content = NewTaskContent
+                };
+                Notes.Add(note);
+                SaveToFile(note);
+                SelectedNote = note; // Привязываем новую заметку
+                IsEditing = true; // Переключаем в режим редактирования
+                MessageBox.Show("Новая заметка создана!");
             }
+
+            UpdateCalendar();
+            OnPropertyChanged(nameof(Notes));
         }
 
         /// <summary>
@@ -937,12 +938,16 @@ namespace UruruNotes.ViewsModels
                     return;
                 }
 
-                if (SelectedReminder != null)
+                // Основное изменение: проверяем флаг редактирования и наличие выбранного напоминания
+                if (IsEditing && SelectedReminder != null)
                 {
+                    // Обновляем существующее напоминание
                     UpdateExistingReminder();
+                    MessageBox.Show("Изменения сохранены!");
                 }
                 else
                 {
+                    // Создаем новое только если не в режиме редактирования
                     var reminder = new ReminderItem
                     {
                         Date = SelectedDate.Value,
@@ -952,15 +957,16 @@ namespace UruruNotes.ViewsModels
                     };
                     Reminders.Add(reminder);
                     SaveToFile(reminder);
-                    SelectedReminder = reminder; // Привязываем новое напоминание
-                    OnPropertyChanged(nameof(Reminders));
+                    SelectedReminder = reminder;
+                    IsEditing = true; // Важно: переключаем в режим редактирования
                     ScheduleReminderTask(reminder.Date + reminder.Time, reminder.Content);
-                    IsEditing = true;
+                    MessageBox.Show("Новое напоминание создано!");
                 }
 
                 UpdateCalendar();
                 OnPropertyChanged(nameof(EditorButtonText));
                 OnPropertyChanged(nameof(EditorTitle));
+                OnPropertyChanged(nameof(Reminders)); // Добавлено для обновления UI
             }
             catch (Exception ex)
             {
@@ -988,7 +994,7 @@ namespace UruruNotes.ViewsModels
             SelectedReminder.Title = GetTitleFromContent(NewTaskContentRemind);
             SelectedReminder.Content = NewTaskContentRemind;
             SelectedReminder.Date = SelectedDate.Value;
-            SelectedReminder.Time = SelectedReminderTime;
+            SelectedReminder.Time = new TimeSpan(SelectedHour, SelectedMinute, 0);
             SaveToFile(SelectedReminder);
         }
 
@@ -1259,7 +1265,8 @@ namespace UruruNotes.ViewsModels
 
             if (item is ReminderItem reminder)
             {
-                content = $"{reminder.Content}\n**Время:** {reminder.Time:hh\\:mm}";
+                // Убираем автоматическое добавление времени в текст
+                content = reminder.Content;
                 path = GetReminderPath(reminder.Date, reminder.Id);
             }
             else
