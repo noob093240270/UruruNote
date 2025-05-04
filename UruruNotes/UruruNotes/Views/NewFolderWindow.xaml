@@ -7,6 +7,43 @@
         <ScaleTransform ScaleX="{Binding Scale, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                 ScaleY="{Binding Scale, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
     </Window.LayoutTransform>
+    <Window.Resources>
+        <Style x:Key="StyledButton" TargetType="Button">
+            <Setter Property="Padding" Value="6,3"/>
+            <Setter Property="Width" Value="130"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="#5C6D93"/>
+            <Setter Property="Background" Value="#F8F9FC"/>
+            <Setter Property="BorderBrush" Value="#C5CDE6"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border"
+            Background="{TemplateBinding Background}"
+            BorderBrush="{TemplateBinding BorderBrush}"
+            BorderThickness="{TemplateBinding BorderThickness}"
+            CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center"
+                          VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#E3EAF8"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="#B0BADF"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#D6E0F5"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="#A1AAD3"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
     <Grid Margin="10">
         <Grid.DataContext>
             <local:MainViewModel />
@@ -34,6 +71,6 @@
                        IsHitTestVisible="False"
                        Visibility="{Binding ElementName=FolderNameTextBox, Path=Text.Length, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter='False'}" />
         </Grid>
-        <Button Grid.Row="2" Content="Создать" Click="CreateButton_Click" Margin="5,10,0,5" HorizontalAlignment="Left" Width="84" Background="#FFF6F6F6" BorderBrush="#FF235C9A"/>
+        <Button Grid.Row="2" Style="{StaticResource StyledButton}" Content="Создать" Click="CreateButton_Click" Margin="5,10,0,5" HorizontalAlignment="Left" Width="84" />
     </Grid>
 </Window>

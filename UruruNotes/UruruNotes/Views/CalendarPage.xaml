@@ -359,10 +359,11 @@ ConverterParameter=20}"
                         <Button Content="Сохранить" Command="{Binding SaveNoteCommand}" 
                                 MinWidth="80" MinHeight="25" 
                                 Margin="20,5,5,10" HorizontalAlignment="Left" 
-                                Background="White" BorderBrush="#FF235C9A" FontSize="{Binding NoteFontSize}" Style="{StaticResource StyledButton}"/>
+                                 FontSize="{Binding NoteFontSize}" Style="{StaticResource StyledButton}"/>
 
                         <!-- Напоминание -->
                         <TextBlock Text="Создать напоминание" FontSize="{Binding NoteTitleFontSize}" FontWeight="Bold" Margin="10" HorizontalAlignment="Stretch"/>
+                               
                               <TextBox TextWrapping="Wrap" Text="{Binding NewTaskContentRemind}" 
                AcceptsReturn="True" AcceptsTab="True" 
                VerticalScrollBarVisibility="Auto" 
@@ -376,7 +377,7 @@ ConverterParameter=20}"
                PreviewKeyDown="TextBox_PreviewKeyDown" Loaded="TextBox_Loaded" />
                         <Button Content="Сохранить" Command="{Binding SaveReminderCommand}" 
                                 MinWidth="80" MinHeight="25" Margin="20,5,5,10"
-                                Background="White" BorderBrush="#FF235C9A" FontSize="{Binding NoteFontSize}" Style="{StaticResource StyledButton}" HorizontalAlignment="Left" />
+                                 FontSize="{Binding NoteFontSize}" Style="{StaticResource StyledButton}" HorizontalAlignment="Left" />
                         <TextBlock Text="Время напоминания:" FontSize="{Binding NoteFontSize}" Height="Auto" Width="Auto" Margin="20,0,0,0" HorizontalAlignment="Left" />
                         <StackPanel Orientation="Horizontal" Margin="10,5,10,10">
                             <ComboBox x:Name="HourPicker" SelectedItem="{Binding SelectedHour}" 
