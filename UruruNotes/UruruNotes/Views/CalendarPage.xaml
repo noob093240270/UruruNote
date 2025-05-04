@@ -42,7 +42,7 @@
                      Storyboard.TargetProperty="Width" 
                      From="0" 
                      To="{StaticResource PanelWidth}" 
-                     Duration="0:0:0.5"/>            
+                     Duration="0:0:0.5"/>
         </Storyboard>
 
         <Style x:Key="NoHoverButtonStyle" TargetType="Button">
@@ -288,7 +288,7 @@
                                     HorizontalContentAlignment="Center"
                                     Foreground="{DynamicResource CalendarDayForeground}"
                                     Margin="{Binding DataContext.MarginButtons, RelativeSource={RelativeSource AncestorType=Window}}">
-                                    <Button.Style>
+                                <Button.Style>
                                     <Style TargetType="Button">
                                         <Setter Property="Background" Value="{DynamicResource WindowBackground}" />
                                         <Style.Triggers>
@@ -301,7 +301,7 @@
                                         </Style.Triggers>
                                     </Style>
                                 </Button.Style>
-                               
+
                                 <Grid VerticalAlignment="Stretch">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*" />
@@ -340,7 +340,7 @@
         </Grid>
 
         <!-- Поле редактирования и создания заметок/напоминаний -->
-        <Grid x:Name="EditBox" Grid.Column="0" Visibility="{Binding IsEditorVisible, Converter={StaticResource BoolToVisibilityConverter}}"  VerticalAlignment="Stretch">
+        <Grid x:Name="EditBox" Grid.Column="0" Visibility="{Binding IsEditorVisible, Converter={StaticResource BoolToVisibilityConverter}}"  VerticalAlignment="Stretch" Background="{DynamicResource ContextMenuBorder}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <!-- Кнопка "Назад" -->
@@ -357,13 +357,13 @@
             <ScrollViewer Grid.Row="1"
                   VerticalScrollBarVisibility="Auto"
                   HorizontalScrollBarVisibility="Disabled"
-                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{DynamicResource ContextMenuBorder}">
 
                 <StackPanel Grid.Row="1" Margin="10"
                 MaxWidth="{Binding ActualWidth, 
                     RelativeSource={RelativeSource AncestorType=ScrollViewer}, 
                     Converter={StaticResource SubtractMarginConverter}, 
-                    ConverterParameter=40}">
+                    ConverterParameter=40}" Background="{DynamicResource ContextMenuBorder}">
 
                     <Grid>
                         <Grid.RowDefinitions>
@@ -374,7 +374,7 @@
                         </Grid.RowDefinitions>
 
                         <!-- Секция заметок -->
-                        <StackPanel Visibility="{Binding CurrentView, Converter={StaticResource ViewToVisibilityConverter}, ConverterParameter=Notes}">
+                        <StackPanel Visibility="{Binding CurrentView, Converter={StaticResource ViewToVisibilityConverter}, ConverterParameter=Notes}" >
                             <TextBlock Grid.Row="0" Text="{Binding EditorTitle}" FontSize="{Binding NoteTitleFontSize}" FontWeight="Bold" Margin="10" HorizontalAlignment="Stretch"/>
                             <TextBox Grid.Row="1" TextWrapping="Wrap" Text="{Binding NewTaskContent, UpdateSourceTrigger=PropertyChanged}"
                             AcceptsReturn="True" AcceptsTab="True" 
@@ -489,20 +489,21 @@
         <!-- Панель задач -->
         <Border Grid.Column="1" Width="Auto" 
                     Visibility="{Binding IsTaskPanelVisible, Converter={StaticResource BoolToVisibilityConverter}}" 
-                    Margin="10">
-            <Grid Margin="-39,0,0,0">
+                    Margin="10" Background="{DynamicResource ContextMenuBorder}">
+            <Grid Margin="-39,0,0,0" Background="{DynamicResource ContextMenuBorder}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition x:Name="TaskPanelColumn" Width="Auto"/>
+                    <ColumnDefinition x:Name="TaskPanelColumn" Width="80"/>
+                    <ColumnDefinition Width="320"/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="ToggleButtonOpen" Grid.Column="0"
+                <Button x:Name="ToggleButtonOpen"
                             Width="20" Height="50"
-                             HorizontalAlignment="Right"
-                             VerticalAlignment="Bottom"
+                             HorizontalAlignment="Center"
+                             VerticalAlignment="Top"
                              Background="Transparent"
                              Click="TogglePanel_Click"
                              BorderThickness="0"
-                            Visibility="Collapsed">
+                            Visibility="Collapsed" Margin="0,564,0,0">
                     <Button.Template>
                         <ControlTemplate TargetType="Button">
                             <Grid>
@@ -517,13 +518,13 @@
                         </ControlTemplate>
                     </Button.Template>
                 </Button>
-                <Button x:Name="ToggleButtonClose" Grid.Column="0"
+                <Button x:Name="ToggleButtonClose"
                             Width="20" Height="50"
-                             HorizontalAlignment="Right"
-                             VerticalAlignment="Bottom"
+                             HorizontalAlignment="Center"
+                             VerticalAlignment="Top"
                              Background="Transparent"
                              Click="TogglePanel_Click"
-                             BorderThickness="0" 
+                             BorderThickness="0" Margin="0,564,0,0" 
                             >
                     <Button.Template>
                         <ControlTemplate TargetType="Button">
@@ -539,10 +540,12 @@
                         </ControlTemplate>
                     </Button.Template>
                 </Button>
-                <Grid x:Name="TaskPanel" Grid.Column="1" Background="LightGray" Width="{StaticResource PanelWidth}">
+                <Grid x:Name="TaskPanel" Grid.Column="1" Background="LightGray" Width="{StaticResource PanelWidth}" Grid.ColumnSpan="2">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>    <!-- Для кнопок переключения -->
-                        <RowDefinition Height="*"/>       <!-- Для TreeView (занимает всё оставшееся пространство) -->
+                        <RowDefinition Height="Auto"/>
+                        <!-- Для кнопок переключения -->
+                        <RowDefinition Height="*"/>
+                        <!-- Для TreeView (занимает всё оставшееся пространство) -->
                     </Grid.RowDefinitions>
                     <!-- Кнопки переключения -->
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10,5">
