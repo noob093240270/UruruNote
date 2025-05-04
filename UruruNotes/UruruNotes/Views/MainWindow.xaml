@@ -94,111 +94,119 @@
         <SolidColorBrush Color="{DynamicResource TextForegroundColor}" Opacity="0.2"/>
     </Window.Foreground>
 
-    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-        <Grid>
-            <Grid.LayoutTransform>
-                <ScaleTransform ScaleX="{Binding Scale}" ScaleY="{Binding Scale}" />
-            </Grid.LayoutTransform>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <!-- Для TreeViewGrid -->
-                <ColumnDefinition Width="*"/>
-                <!-- Для PageFrame -->
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="30" />
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
+    <Grid>
+        <Grid.LayoutTransform>
+            <ScaleTransform ScaleX="{Binding Scale}" ScaleY="{Binding Scale}" />
+        </Grid.LayoutTransform>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <!-- Для TreeViewGrid -->
+            <ColumnDefinition Width="*"/>
+            <!-- Для PageFrame -->
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30" />
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-            <Border Grid.ColumnSpan="2" Style="{StaticResource TopPanelBorder}">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <StackPanel Orientation="Horizontal">
-                        <Button x:Name="ButtonOpen" Width="21" Height="21" Margin="3,0" Click="ToggleVisibilityButton_Click" Focusable="False" BorderThickness="0"
+        <Border Grid.ColumnSpan="2" Style="{StaticResource TopPanelBorder}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="ButtonOpen" Width="21" Height="21" Margin="3,0" Click="ToggleVisibilityButton_Click" Focusable="False" BorderThickness="0"
                                 HorizontalAlignment="Left" Visibility="Collapsed">
-                            <Button.Background>
-                                <ImageBrush>
-                                    <ImageBrush.ImageSource>
-                                        <Binding Path="IsDarkModeEnabled" Converter="{StaticResource ThemeToIconPathConverter}" ConverterParameter="treeview"/>
-                                    </ImageBrush.ImageSource>
-                                </ImageBrush>
-                            </Button.Background>
-                        </Button>
-                        <Button x:Name="ButtonClose" Width="22" Height="22" Margin="3,0" Click="ToggleVisibilityButton_Click" Focusable="False" BorderThickness="0"
-                                HorizontalAlignment="Left">
-                            <Button.Background>
-                                <ImageBrush>
-                                    <ImageBrush.ImageSource>
-                                        <Binding Path="IsDarkModeEnabled" Converter="{StaticResource ThemeToIconPathConverter}" ConverterParameter="treeview"/>
-                                    </ImageBrush.ImageSource>
-                                </ImageBrush>
-                            </Button.Background>
-                        </Button>
-                        <Button x:Name="Сalendar" Width="23" Height="23" Margin="5,0" Command="{Binding OpenCalendarCommand}" BorderThickness="0">
-                            <Button.BorderBrush>
-                                <ImageBrush/>
-                            </Button.BorderBrush>
-                            <Button.Background>
-                                <ImageBrush>
-                                    <ImageBrush.ImageSource>
-                                        <Binding Path="IsDarkModeEnabled" Converter="{StaticResource ThemeToIconPathConverter}" ConverterParameter="calendar"/>
-                                    </ImageBrush.ImageSource>
-                                </ImageBrush>
-                            </Button.Background>
-                        </Button>
-                        <Image Width="23" Height="23" Margin="5,0" Focusable="False">
-                            <Image.Source>
-                                <Binding Path="IsDarkModeEnabled" Converter="{StaticResource ThemeToIconPathConverter}" ConverterParameter="magnifier"/>
-                            </Image.Source>
-                        </Image>
-                        <TextBox x:Name="SearchTextBox" Width="180" Height="34" Margin="10,0,0,0" KeyDown="SearchTextBox_KeyDown" VerticalAlignment="Center" Style="{DynamicResource SearchTextBoxStyle}" />
-                    </StackPanel>
-                    <Button Width="23" Height="23" Margin="5,0" HorizontalAlignment="Center" Grid.Column="1" Click="SettingsIcon_Click" ToolTip="Настройки" BorderThickness="0" VerticalAlignment="Top">
                         <Button.Background>
                             <ImageBrush>
                                 <ImageBrush.ImageSource>
-                                    <Binding Path="IsDarkModeEnabled" Converter="{StaticResource ThemeToIconPathConverter}" ConverterParameter="settingsbutton"></Binding>
+                                    <Binding Path="IsDarkModeEnabled" Converter="{StaticResource ThemeToIconPathConverter}" ConverterParameter="treeview"/>
                                 </ImageBrush.ImageSource>
                             </ImageBrush>
-                           
                         </Button.Background>
                     </Button>
-                </Grid>
-            </Border>
+                    <Button x:Name="ButtonClose" Width="22" Height="22" Margin="3,0" Click="ToggleVisibilityButton_Click" Focusable="False" BorderThickness="0"
+                                HorizontalAlignment="Left">
+                        <Button.Background>
+                            <ImageBrush>
+                                <ImageBrush.ImageSource>
+                                    <Binding Path="IsDarkModeEnabled" Converter="{StaticResource ThemeToIconPathConverter}" ConverterParameter="treeview"/>
+                                </ImageBrush.ImageSource>
+                            </ImageBrush>
+                        </Button.Background>
+                    </Button>
+                    <Button x:Name="Сalendar" Width="23" Height="23" Margin="5,0" Command="{Binding OpenCalendarCommand}" BorderThickness="0">
+                        <Button.BorderBrush>
+                            <ImageBrush/>
+                        </Button.BorderBrush>
+                        <Button.Background>
+                            <ImageBrush>
+                                <ImageBrush.ImageSource>
+                                    <Binding Path="IsDarkModeEnabled" Converter="{StaticResource ThemeToIconPathConverter}" ConverterParameter="calendar"/>
+                                </ImageBrush.ImageSource>
+                            </ImageBrush>
+                        </Button.Background>
+                    </Button>
+                    <Image Width="23" Height="23" Margin="5,0" Focusable="False">
+                        <Image.Source>
+                            <Binding Path="IsDarkModeEnabled" Converter="{StaticResource ThemeToIconPathConverter}" ConverterParameter="magnifier"/>
+                        </Image.Source>
+                    </Image>
+                    <TextBox x:Name="SearchTextBox" Width="180" Height="34" Margin="10,0,0,0" KeyDown="SearchTextBox_KeyDown" VerticalAlignment="Center" Style="{DynamicResource SearchTextBoxStyle}" />
+                </StackPanel>
+                <Button Width="23" Height="23" Margin="5,0" HorizontalAlignment="Center" Grid.Column="1" Click="SettingsIcon_Click" ToolTip="Настройки" BorderThickness="0" VerticalAlignment="Top">
+                    <Button.Background>
+                        <ImageBrush>
+                            <ImageBrush.ImageSource>
+                                <Binding Path="IsDarkModeEnabled" Converter="{StaticResource ThemeToIconPathConverter}" ConverterParameter="settingsbutton"></Binding>
+                            </ImageBrush.ImageSource>
+                        </ImageBrush>
 
-            <!-- Основная область -->
-            <Grid Grid.Row="1" x:Name="MainGrid" Grid.ColumnSpan="2">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" MaxWidth="300" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
+                    </Button.Background>
+                </Button>
+            </Grid>
+        </Border>
 
-                <!-- Правая область -->
-                <Grid Grid.Column="1">
-                    <!-- Панель с режимом редактирования и предпросмотра -->
-                    <Grid x:Name="EditorAndPreviewContainer">
-                        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-                            <RichTextBox Name="MarkdownRichTextBox" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Visible" />
-                        </ScrollViewer>
-                        <WebBrowser Name="MarkdownPreview" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed"/>
-                    </Grid>
+        <!-- Основная область -->
+        <Grid Grid.Row="1" x:Name="MainGrid" Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" MaxWidth="300" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Правая область -->
+            <Grid Grid.Column="1">
+                <!-- Панель с режимом редактирования и предпросмотра -->
+                <Grid x:Name="EditorAndPreviewContainer">
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                        <RichTextBox Name="MarkdownRichTextBox" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Visible" />
+                    </ScrollViewer>
+
+
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Visibility="Collapsed">
+                        <WebBrowser Name="MarkdownPreview" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                    </ScrollViewer>
+
                 </Grid>
-                <!-- Левое меню -->
-                <Grid Grid.Column="0" Background="{DynamicResource MenuBackground}" x:Name="TreeViewGrid">
-                    <materialDesign:Card x:Name="LeftMenu" Width="200" UniformCornerRadius="0" VerticalAlignment="Stretch"
-                                        Background="{DynamicResource MenuBackground}">
+            </Grid>
+
+            <!-- Левое меню -->
+            <Grid Grid.Column="0" Background="#FFEBEBEB" x:Name="TreeViewGrid">
+                <materialDesign:Card x:Name="LeftMenu" Width="200" UniformCornerRadius="0" VerticalAlignment="Stretch">
+                    <materialDesign:Card.Background>
+                        <SolidColorBrush Color="#FFEBEBEB" Opacity="0"/>
+                    </materialDesign:Card.Background>
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                         <Grid>
                             <Grid.Background>
-                                <SolidColorBrush Color="{DynamicResource BorderBrushColor}" Opacity="1"/>
+                                <SolidColorBrush Color="#FFCCCCCC" Opacity="1"/>
                             </Grid.Background>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*" MinHeight="100"/>
                                 <RowDefinition Height="auto" />
                             </Grid.RowDefinitions>
-                            <ScrollViewer Grid.Row="0" Background="{DynamicResource PanelBackground}" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Margin="3,0,3,3">
+                            <ScrollViewer Grid.Row="0" Background="#FFF6F6F6" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Margin="3,0,3,3">
                                 <StackPanel>
                                     <!-- Первый TreeView для папок -->
                                     <TreeView x:Name="FoldersTreeView"
@@ -265,23 +273,22 @@
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
                                 <StackPanel Grid.Column="0" HorizontalAlignment="Center">
-                                    <Button Content="Новый файл" Click="CreateNewFileButton_Click" Padding="3" Width="90"
-                                           Style="{StaticResource FolderFileButtonStyle}"/>
+                                    <Button Content="Новый файл" Click="CreateNewFileButton_Click" Padding="3" Width="90" BorderBrush="#FF235C9A" Background="#FFF6F6F6"
+                                    Style="{StaticResource StyledButton}"/>
                                 </StackPanel>
                                 <StackPanel Grid.Column="1" HorizontalAlignment="Center">
-                                    <Button Click="CreateNewFolderButton_Click" Padding="3" Content="Новая папка" 
-                                            Width="90" Style="{StaticResource FolderFileButtonStyle}"/>
+                                    <Button Click="CreateNewFolderButton_Click" Padding="3" Content="Новая папка" Background="#FFF6F6F6" Width="92" BorderBrush="#FF235C9A"
+                                    Style="{StaticResource StyledButton}"/>
                                 </StackPanel>
                             </Grid>
                         </Grid>
-                    </materialDesign:Card>
-                </Grid>
-
-                <!-- Основная область для страниц -->
-                <Frame x:Name="PageFrame" NavigationUIVisibility="Hidden" Grid.Column="1" HorizontalAlignment="Stretch"
-                       
-                       Navigated="PageFrame_Navigated" Grid.ColumnSpan="2"/>
+                    </ScrollViewer>
+                </materialDesign:Card>
             </Grid>
+
+            <!-- Основная область для страниц -->
+            <Frame x:Name="PageFrame" NavigationUIVisibility="Hidden" Grid.Column="1" Background="#FFEBEBEB" 
+               HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Navigated="PageFrame_Navigated"/>
         </Grid>
-    </ScrollViewer>
+    </Grid>
 </Window>
