@@ -82,8 +82,10 @@ namespace UruruNotes
                 }
 
                 // Проверяем IsNotificationsEnabled перед показом уведомления
+                Debug.WriteLine($"Проверяем IsNotificationsEnabled перед показом уведомления {_mainViewModel.IsNotificationsEnabled}");
                 if (_mainViewModel.IsNotificationsEnabled)
                 {
+                    Debug.WriteLine($"Проверили IsNotificationsEnabled перед показом уведомления {_mainViewModel.IsNotificationsEnabled}");
                     string message = e.Args[0];
                     Debug.WriteLine($"Показ уведомления: {message}");
                     ShowToastNotification("Напоминание", message);
@@ -156,12 +158,17 @@ namespace UruruNotes
 
         private void ShowToastNotification(string title, string message)
         {
+            Console.WriteLine("Попытка показать уведомление");
+
+            Console.WriteLine($"IsNotificationsEnabled: {_mainViewModel.IsNotificationsEnabled}");
+
             // Проверяем, включены ли уведомления
             if (!_mainViewModel.IsNotificationsEnabled)
             {
-                Debug.WriteLine("Уведомления отключены, уведомление не показано.");
+                Console.WriteLine("Уведомления отключены, уведомление не показано.");
                 return;
             }
+            Console.WriteLine($"IsReminderWindowOpen: {IsReminderWindowOpen}");
 
             if (!IsReminderWindowOpen)
             {

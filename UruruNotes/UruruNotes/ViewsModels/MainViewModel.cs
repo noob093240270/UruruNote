@@ -175,7 +175,8 @@ namespace UruruNote.ViewsModels
                 {
                     _isNotificationsEnabled = value;
                     OnPropertyChanged();
-                    SettingsManager.SaveSettings(SelectedFontSize, Scale, value);
+                    Debug.WriteLine($"ПРИМЕНЕНИЕ НАСТРОЕК ---------------------------------{_isNotificationsEnabled}");
+                    SettingsManager.SaveSettings(SelectedFontSize, Scale, _isNotificationsEnabled);
                 }
             }
         }
