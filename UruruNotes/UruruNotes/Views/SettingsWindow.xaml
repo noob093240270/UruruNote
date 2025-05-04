@@ -32,11 +32,11 @@
                 <Button Content="-" Command="{Binding DecreaseScaleCommand}" Style="{StaticResource ScaleButtonStyle}" Width="20" Height="NaN" ToolTip="Уменьшить масштаб"/>
 
                 <ComboBox x:Name="ScaleComboBox" Width="159"
-          ItemsSource="{Binding ScaleOptions}"
-          SelectedItem="{Binding SelectedScaleOption, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-          IsEditable="False"
-          SelectionChanged="ScaleComboBox_SelectionChanged"
-          Background="{DynamicResource ControlBackground}">
+                          ItemsSource="{Binding ScaleOptions}"
+                          SelectedItem="{Binding SelectedScaleOption, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          IsEditable="False"
+                          SelectionChanged="ScaleComboBox_SelectionChanged"
+                          Background="{DynamicResource ControlBackground}">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding StringFormat={}{0:P0}}" 

@@ -5,7 +5,7 @@
     <!-- #282828 -->
     <Color x:Key="TextForegroundColor" A="255" R="131" G="190" B="235"/>
     <!-- #4A90E2, синий для всего текста -->
-    <Color x:Key="InputTextForegroundColor" A="255" R="230" G="230" B="230"/>
+    <Color x:Key="InputTextForegroundColor"  A="255" R="72" G="72" B="75"/>
     <!-- #E6E6E6, белый для полей ввода -->
     <Color x:Key="ButtonBackgroundColor" A="255" R="72" G="72" B="75"/>
     <!-- #323232 -->
