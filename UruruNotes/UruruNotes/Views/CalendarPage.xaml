@@ -238,7 +238,7 @@
         </Grid.ColumnDefinitions>
 
         <Grid Grid.Column="0" Visibility="{Binding IsCalendarVisible,
-                Converter={StaticResource BoolToVisibilityConverter}}">
+                Converter={StaticResource BoolToVisibilityConverter}}" Background="{DynamicResource ContextMenuBorder}">
             <!-- Календарь -->
             <Grid Grid.Column="0">
                 <Grid.RowDefinitions>
@@ -252,9 +252,9 @@
 
                 <!-- Заголовок и кнопки -->
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="{Binding MarginTop}" Grid.Row="0">
-                    <Button Content="⟨" Width="{Binding ButtonWidth}" Height="{Binding ButtonHeight}" Command="{Binding PreviousMonthCommand}" Background="White" BorderBrush="{x:Null}" Style="{StaticResource NoHoverButtonStyle}"/>
+                    <Button Content="⟨" Width="{Binding ButtonWidth}" Height="{Binding ButtonHeight}" Command="{Binding PreviousMonthCommand}" Background="{DynamicResource ContextMenuBorder}" BorderBrush="{x:Null}" Style="{StaticResource NoHoverButtonStyle}"/>
                     <TextBlock Text="{Binding CurrentMonthYear}" FontSize="{Binding TitleFontSize}" FontWeight="Bold" Margin="{Binding MarginMiddle}" />
-                    <Button Content="⟩" Width="{Binding ButtonWidth}" Height="{Binding ButtonHeight}" Command="{Binding NextMonthCommand}" Background="White" BorderBrush="{x:Null}" Style="{StaticResource NoHoverButtonStyle}"/>
+                    <Button Content="⟩" Width="{Binding ButtonWidth}" Height="{Binding ButtonHeight}" Command="{Binding NextMonthCommand}" Background="{DynamicResource ContextMenuBorder}" BorderBrush="{x:Null}" Style="{StaticResource NoHoverButtonStyle}"/>
                 </StackPanel>
 
                 <!-- Дни недели -->
@@ -280,13 +280,28 @@
                             <Button Command="{Binding DataContext.OpenTaskAreaCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
                                     CommandParameter="{Binding}" 
                                     Padding="0"
-                                    Background="{Binding IsCurrentMonth, Converter={StaticResource BoolToBrushConverter}}"
-                                    BorderBrush="Transparent" BorderThickness="0"
+                                    Background="{DynamicResource MenuBackground}"
+                                    BorderBrush="Transparent" BorderThickness="0.5"
                                     HorizontalAlignment="Stretch"
                                     VerticalAlignment="Stretch"
                                     VerticalContentAlignment="Center"
                                     HorizontalContentAlignment="Center"
+                                    Foreground="{DynamicResource CalendarDayForeground}"
                                     Margin="{Binding DataContext.MarginButtons, RelativeSource={RelativeSource AncestorType=Window}}">
+                                    <Button.Style>
+                                    <Style TargetType="Button">
+                                        <Setter Property="Background" Value="{DynamicResource WindowBackground}" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsCurrentMonth}" Value="True">
+                                                <Setter Property="Background" Value="{DynamicResource ControlBackground}" />
+                                            </DataTrigger>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="{DynamicResource ButtonHoverBackground}" />
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                               
                                 <Grid VerticalAlignment="Stretch">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*" />
